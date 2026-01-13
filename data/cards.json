@@ -1,0 +1,5 @@
+[
+  {"id": 1, "type": "Hero", "name": "V", "faction": "Merc", "strength": 15, "effect": null},
+  {"id": 2, "type": "Unit", "name": "Grunt", "faction": "Arasaka", "strength": 2, "effect": "close bond"},
+  {"id": 3, "type": "Effect", "name": "Ice", "faction": null, "strength": null, "effect": "ice"}
+]
