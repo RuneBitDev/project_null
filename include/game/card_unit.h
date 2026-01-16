@@ -6,14 +6,18 @@
 class card_unit : public card {
     private:
     int strength;
-    bool is_hero;
+    std::string range_type;
 
     public:
-    card_unit(int id, std::string name, std::string faction, int strength, bool is_hero);
+    card_unit(std::string card_id, std::string name, std::string faction_id, std::string card_type,
+        std::string rarity, int slots, bool is_unlocked, int strength, std::string range_type);
     void display() const override;
+
     int get_strength() const;
-    void set_strength(int strength);
-    bool get_is_hero() const;
+    std::string get_range_type() const;
+
+    void set_strength(int new_strength);
+    void set_range_type(std::string new_range_type);
 
 };
 

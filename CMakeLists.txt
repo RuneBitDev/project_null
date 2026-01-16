@@ -4,35 +4,25 @@ project(project_null)
 set(CMAKE_CXX_STANDARD 20)
 
 # ------------------------------------------------------------------
-# External dependency: nlohmann/json
+# Compile SQLite as a separate static library
 # ------------------------------------------------------------------
 
-include(FetchContent)
-FetchContent_Declare(
-        json
-        GIT_REPOSITORY https://github.com/nlohmann/json.git
-        GIT-TAG v3.11.3
-)
-FetchContent_MakeAvailable(json)
+add_library(sqlite3_lib STATIC src/sqlite3.c)
 
 # ------------------------------------------------------------------
 # Add the executable target
 # ------------------------------------------------------------------
 
-add_executable(project_null src/main.cpp
-        include/game/Card.h
-        include/game/Deck.h
+add_executable(project_null
+        src/main.cpp
         src/core/Card.cpp
         src/core/Deck.cpp
-        include/game/card_unit.h
-        include/game/card_effect.h
         src/core/card_unit.cpp
-        src/core/card_effect.cpp
-        include/game/factory.h
         src/core/factory.cpp)
 
 # ------------------------------------------------------------------
 # Link dependencies and set include directories
 # ------------------------------------------------------------------
 
-target_link_libraries(project_null PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(project_null PRIVATE sqlite3_lib)
+target_include_directories(project_null PRIVATE include)
