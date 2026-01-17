@@ -2,21 +2,24 @@
 #define PROJECT_NULL_FACTORY_H
 #include <string>
 #include <vector>
+#include <utility>
 #include "card.h"
 #include "card_unit.h"
+#include "deck.h"
 
 
 class factory {
     private:
-    std::vector<card> card_library;         // Leader and Special cards
-    std::vector<card_unit> unit_library;    // Unit cards
+    std::vector<card> special_library;          // Leader and Special cards
+    std::vector<card_unit> unit_library;        // Unit cards
 
 
     public:
     bool load_master_data(const std::string& filepath);
+    deck build_deck(const std::string& faction);
 
-    std::vector<card>& get_card_library();
-    std::vector<card_unit>& get_unit_library();
+    const std::vector<card>& get_special_library() const;
+    const std::vector<card_unit>& get_unit_library() const;
 
 };
 

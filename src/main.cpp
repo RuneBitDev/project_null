@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "game/factory.h"
+#include "game/deck.h"
 
 int main() {
     std::cout << "--- Initializing Card Engine ---" << std::endl;
@@ -11,17 +12,18 @@ int main() {
     if (game_factory.load_master_data("../data.sqlite")) {
         std::cout << "Database loaded successfully!\n" << std::endl;
 
-        std::cout << "=== CARD LIBRARY (Special/Leaders) ===" << std::endl;
-        // We use a getter or make the vectors public/friends to access them
-        // Assuming you add a getter like get_cards() or make vectors public for this test:
-        for (const auto& c : game_factory.get_card_library()) {
-            c.display();
+        deck deck1 = game_factory.build_deck("arasaka");
+        deck deck2 = game_factory.build_deck("barghest");
+
+        for (auto& unit: deck1.get_units()) {
+            unit.display();
         }
 
-        std::cout << "\n=== UNIT LIBRARY ===" << std::endl;
-        for (const auto& u : game_factory.get_unit_library()) {
-            u.display();
+        for (auto& special: deck1.get_special()) {
+            special.display();
         }
+
+        deck1.get_leader().display();
 
     } else {
         std::cerr << "CRITICAL ERROR: Could not load data.sqlite" << std::endl;

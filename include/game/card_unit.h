@@ -1,6 +1,7 @@
 #ifndef PROJECT_NULL_CARD_UNIT_H
 #define PROJECT_NULL_CARD_UNIT_H
 #include "card.h"
+#include "card_unit.h"
 #include <string>
 
 class card_unit : public card {

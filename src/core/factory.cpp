@@ -43,7 +43,7 @@ bool factory::load_master_data(const std::string &filepath) {
 
             unit_library.emplace_back(card_id, name, faction_id, card_type, rarity, slots, is_unlocked, strength, range_type);
         } else {
-            card_library.emplace_back(card_id, name, faction_id, card_type, rarity, slots, is_unlocked);
+            special_library.emplace_back(card_id, name, faction_id, card_type, rarity, slots, is_unlocked);
         }
     }
 
@@ -54,11 +54,35 @@ bool factory::load_master_data(const std::string &filepath) {
 
 }
 
-
-std::vector<card_unit>& factory::get_unit_library() {
+const std::vector<card_unit>& factory::get_unit_library() const{
     return unit_library;
 }
 
-std::vector<card>& factory::get_card_library() {
-    return card_library;
+const std::vector<card>& factory::get_special_library() const{
+    return special_library;
+}
+
+
+deck factory::build_deck(const std::string& faction) {
+    std::vector<card_unit> deck_units;
+    std::vector<card> deck_specials;
+    card* leader_ptr = nullptr;
+
+    for (const auto& unit : unit_library) {
+        if (unit.get_faction_id() == faction) {
+            deck_units.push_back(unit);
+        }
+    }
+
+    for (const auto& special : special_library) {
+        if (special.get_faction_id() == faction) {
+            if (special.get_card_type() == "LEADER") {
+                leader_ptr = const_cast<card*>(&special);
+            } else {
+                deck_specials.push_back(special);
+            }
+        }
+    }
+
+    return deck(*leader_ptr, std::move(deck_specials), std::move(deck_units));
 }
