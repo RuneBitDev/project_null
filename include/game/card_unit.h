@@ -3,6 +3,7 @@
 #include "card.h"
 #include "card_unit.h"
 #include <string>
+#include <memory>
 
 class card_unit : public card {
     private:
@@ -13,6 +14,8 @@ class card_unit : public card {
     card_unit(std::string card_id, std::string name, std::string faction_id, std::string card_type,
         std::string rarity, int slots, bool is_unlocked, int strength, std::string range_type);
     void display() const override;
+
+    std::unique_ptr<card> clone() const override;
 
     int get_strength() const;
     std::string get_range_type() const;

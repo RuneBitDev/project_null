@@ -22,6 +22,9 @@ void card::display() const {
 
 }
 
+std::unique_ptr<card> card::clone() const {
+    return std::make_unique<card>(*this);
+}
 
 
 // -----------------------------------------

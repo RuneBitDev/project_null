@@ -19,6 +19,9 @@ void card_unit::display() const {
     std::cout << "---------" << std::endl;
 }
 
+std::unique_ptr<card> card_unit::clone() const {
+    return std::make_unique<card_unit>(*this);
+}
 
 // Getter
 int card_unit::get_strength() const {

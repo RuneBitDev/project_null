@@ -2,6 +2,7 @@
 #define PROJECT_NULL_CARD_H
 #include <string>
 #include <iostream>
+#include <memory>
 
 class card {
     private:
@@ -19,6 +20,7 @@ class card {
         std::string rarity, int slots, bool is_unlocked);
     virtual ~card() = default;
     virtual void display() const;
+    virtual std::unique_ptr<card> clone() const;
 
     std::string get_id() const;
     std::string get_name() const;
@@ -30,6 +32,8 @@ class card {
 
     void set_slots(int new_slots);
     void set_is_unlocked(bool new_value);
+
+
 
 };
 
