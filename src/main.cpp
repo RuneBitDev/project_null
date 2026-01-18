@@ -1,3 +1,4 @@
+#include "raylib.h"
 #include <iostream>
 #include "game/factory.h"
 #include "game/player.h"
@@ -5,11 +6,18 @@
 #include "game/engine/state_manager.h"
 
 int main() {
+    const int screenWidth = 1280;
+    const int screenHeight = 720;
+
+    InitWindow(screenWidth, screenHeight, "PROJECT NULL");
+    SetTargetFPS(60);
+
     state_manager manager;
     factory game_factory;
 
     if (!game_factory.load_master_data("../data.sqlite")) {
         std::cerr << "CRITICAL ERROR: Could not load data.sqlite" << std::endl;
+        CloseWindow();
         return 1;
     }
 
@@ -18,11 +26,17 @@ int main() {
 
     manager.push_state(std::make_unique<game_state>(std::move(p1), std::move(p2)));
 
-    while (true) {
-        manager.render();
+    while (!WindowShouldClose()) {
         manager.handle_input();
 
+        BeginDrawing();
+        ClearBackground(BLACK);
+        manager.render();
+
+        DrawFPS(10, 10);
+        EndDrawing();
     }
 
+    CloseWindow();
     return 0;
 }

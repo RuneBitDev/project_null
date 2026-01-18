@@ -10,6 +10,17 @@ set(CMAKE_CXX_STANDARD 20)
 add_library(sqlite3_lib STATIC src/sqlite3.c)
 
 # ------------------------------------------------------------------
+# Fetch Raylib
+# ------------------------------------------------------------------
+
+include(FetchContent)
+FetchContent_Declare(
+        raylib
+        URL https://github.com/raysan5/raylib/archive/master.tar.gz
+)
+FetchContent_MakeAvailable(raylib)
+
+# ------------------------------------------------------------------
 # Add the executable target
 # ------------------------------------------------------------------
 
@@ -31,5 +42,8 @@ add_executable(project_null
 # Link dependencies and set include directories
 # ------------------------------------------------------------------
 
-target_link_libraries(project_null PRIVATE sqlite3_lib)
-target_include_directories(project_null PRIVATE include)
+target_link_libraries(project_null PRIVATE sqlite3_lib raylib)
+target_include_directories(project_null PRIVATE
+        include
+        ${raylib_SOURCE_DIR}/src
+)
