@@ -64,25 +64,23 @@ const std::vector<card>& factory::get_special_library() const{
 
 
 deck factory::build_deck(const std::string& faction) {
-    std::vector<card_unit> deck_units;
-    std::vector<card> deck_specials;
-    card* leader_ptr = nullptr;
-
+    std::vector<std::unique_ptr<card>> deck_cards;
+    std::unique_ptr<card> leader_ptr;
     for (const auto& unit : unit_library) {
         if (unit.get_faction_id() == faction) {
-            deck_units.push_back(unit);
+            deck_cards.push_back(unit.clone());
         }
     }
 
     for (const auto& special : special_library) {
         if (special.get_faction_id() == faction) {
             if (special.get_card_type() == "LEADER") {
-                leader_ptr = const_cast<card*>(&special);
+                leader_ptr = special.clone();
             } else {
-                deck_specials.push_back(special);
+                deck_cards.push_back(special.clone());
             }
         }
     }
 
-    return deck(*leader_ptr, std::move(deck_specials), std::move(deck_units));
+    return deck(std::move(leader_ptr), std::move(deck_cards));
 }

@@ -16,6 +16,7 @@ class board {
 
     public:
     board();
+    void display_board() const;
 
     void add_card(card_unit c, row_side side, row_type type);
     int calculate_row_score(row_side side, row_type type) const;

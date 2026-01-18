@@ -18,7 +18,14 @@ add_executable(project_null
         src/core/Card.cpp
         src/core/Deck.cpp
         src/core/card_unit.cpp
-        src/core/factory.cpp)
+        src/core/factory.cpp
+        src/core/board.cpp
+        src/core/player.cpp
+        src/core/engine/game_state.cpp
+        src/core/engine/deck_state.cpp
+        src/core/engine/menu_state.cpp
+        src/core/engine/state_manager.cpp
+)
 
 # ------------------------------------------------------------------
 # Link dependencies and set include directories

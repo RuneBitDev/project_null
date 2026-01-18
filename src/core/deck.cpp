@@ -1,35 +1,33 @@
 #include <iostream>
+#include <algorithm>
+#include <random>
 #include "game/deck.h"
 #include "game/game_config.h"
 
-deck::deck(card c_leader, std::vector<card> c_special_cards, std::vector<card_unit> c_unit_cards)
-    : leader(c_leader), special_cards(c_special_cards), unit_cards(c_unit_cards) {}
+deck::deck(std::unique_ptr<card> c_leader, std::vector<std::unique_ptr<card>> c_cards)
+    : leader(std::move(c_leader)), cards(std::move(c_cards)) {}
 
 bool deck::is_valid() {
-    int unit_count = unit_cards.size();
-    int special_count = special_cards.size();
 
-    if (unit_count < game_config::deck_rules::MIN_UNIT_CARDS) {
-        std::cout << "Error: Not enough unit cards!" << std::endl;
-        return false;
-    }
-
-    if (special_count < game_config::deck_rules::MIN_SPECIAL_CARDS) {
-        std::cout << "Error: Not enough special cards!" << std::endl;
-        return false;
-    }
 
     return true;
 }
 
-card  deck::get_leader() const{
-    return leader;
+std::unique_ptr<card> deck::draw_top_card() {
+    if (cards.empty()) return nullptr;
+
+    std::unique_ptr<card> top_card = std::move(cards.back());
+    cards.pop_back();
+    return top_card;
 }
 
-const std::vector<card>& deck::get_special() const {
-    return special_cards;
+int deck::get_size() const{
+    return cards.size();
 }
 
-const std::vector<card_unit>& deck::get_units() const {
-    return unit_cards;
+void deck::shuffle() {
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(cards.begin(), cards.end(), g);
 }
+

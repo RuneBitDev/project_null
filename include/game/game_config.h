@@ -6,6 +6,10 @@ namespace game_config {
         constexpr int MIN_UNIT_CARDS = 22;
         constexpr int MIN_SPECIAL_CARDS = 10;
     }
+
+    namespace player_config {
+        constexpr int LIVES = 2;
+    }
 }
 
 

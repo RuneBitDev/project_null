@@ -9,7 +9,11 @@ game_state::game_state(player player1, player player2)
 void game_state::handle_input(state_manager &manager) {
     char input;
     std::cin >> input;
-    if (input == 'd') p1.draw_card();
+    if (input == 'p') {
+        int input_int;
+        std::cin >> input_int;
+        p1.play_card((input_int),game_board);
+    }
 }
 
 void game_state::update(float dt) {
@@ -21,10 +25,16 @@ void game_state::render() {
 }
 
 void game_state::debug_display() {
-    std::cout << "\n=== ROUND: " << current_round << " ===" << std::endl;
+    std::cout << "\n";
+    std::cout << "\n=== STATE: " << get_name() << " | ROUND: " << current_round << " ===" <<std::endl;
 
-    std::cout << "P1 Score: " << game_board.calculate_total_score(row_side::PLAYER) << std::endl;
-    std::cout << "P2 Score: " << game_board.calculate_total_score(row_side::OPPONENT) << std::endl;
+    game_board.display_board();
+
+    // std::cout << "Opponent Hand Size: " << game_board.get_hand_size() << std::endl;
+
+    p1.display_hand();
+
+    std::cout << "\nCommands: [p] Play Card (index) | [q] Quit" << std::endl;
 
 
 }
