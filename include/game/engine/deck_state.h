@@ -1,0 +1,8 @@
+//
+// Created by RuneBit on 17.01.2026.
+//
+
+#ifndef PROJECT_NULL_DECK_STATE_H
+#define PROJECT_NULL_DECK_STATE_H
+
+#endif //PROJECT_NULL_DECK_STATE_H
