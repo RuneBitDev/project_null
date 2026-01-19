@@ -20,7 +20,7 @@ void game_state::update(float dt) {
 
 }
 
-void game_state::render() {
+void game_state::render(renderer& renderer) {
     debug_display();
 }
 

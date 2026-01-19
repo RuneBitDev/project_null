@@ -10,6 +10,8 @@ namespace game_config {
     namespace player_config {
         constexpr int LIVES = 2;
     }
+
+
 }
 
 

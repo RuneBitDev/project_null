@@ -20,8 +20,8 @@ void state_manager::update(float dt) {
     if (!states.empty()) states.top()->update(dt);
 }
 
-void state_manager::render() {
-    if (!states.empty()) states.top()->render();
+void state_manager::render(renderer& renderer) {
+    if (!states.empty()) states.top()->render(renderer);
 }
 
 void state_manager::handle_input() {

@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <random>
 #include "game/deck.h"
-#include "game/game_config.h"
+#include "../../include/game/game_config.h"
 
 deck::deck(std::unique_ptr<card> c_leader, std::vector<std::unique_ptr<card>> c_cards)
     : leader(std::move(c_leader)), cards(std::move(c_cards)) {}

@@ -36,6 +36,7 @@ add_executable(project_null
         src/core/engine/deck_state.cpp
         src/core/engine/menu_state.cpp
         src/core/engine/state_manager.cpp
+        src/visual/renderer.cpp
 )
 
 # ------------------------------------------------------------------

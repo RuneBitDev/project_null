@@ -3,6 +3,7 @@
 #include "game/factory.h"
 #include "game/player.h"
 #include "game/engine/game_state.h"
+#include "game/engine/menu_state.h"
 #include "game/engine/state_manager.h"
 
 int main() {
@@ -14,6 +15,7 @@ int main() {
 
     state_manager manager;
     factory game_factory;
+    renderer renderer;
 
     if (!game_factory.load_master_data("../data.sqlite")) {
         std::cerr << "CRITICAL ERROR: Could not load data.sqlite" << std::endl;
@@ -24,15 +26,17 @@ int main() {
     player p1("Arasaka", game_factory.build_deck("arasaka"));
     player p2("Barghest", game_factory.build_deck("barghest"));
 
-    manager.push_state(std::make_unique<game_state>(std::move(p1), std::move(p2)));
+    manager.push_state(std::make_unique<menu_state>());
 
     while (!WindowShouldClose()) {
+
         manager.handle_input();
 
-        BeginDrawing();
-        ClearBackground(BLACK);
-        manager.render();
+        float dt = GetFrameTime();
+        manager.update(dt);
 
+        BeginDrawing();
+        manager.render(renderer);
         DrawFPS(10, 10);
         EndDrawing();
     }

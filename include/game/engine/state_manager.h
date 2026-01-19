@@ -13,7 +13,7 @@ class state_manager {
     void pop_state();
     void change_state(std::unique_ptr<state> state);
     void update(float dt);
-    void render();
+    void render(renderer& renderer);
     void handle_input();
 
 
