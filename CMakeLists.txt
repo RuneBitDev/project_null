@@ -37,6 +37,7 @@ add_executable(project_null
         src/core/engine/menu_state.cpp
         src/core/engine/state_manager.cpp
         src/visual/renderer.cpp
+        src/visual/ui_element.cpp
 )
 
 # ------------------------------------------------------------------

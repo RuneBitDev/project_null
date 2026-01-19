@@ -12,7 +12,7 @@ public:
     void draw_game( const board& b, const player& p1, player& p2);
 
 private:
-    void draw_button(Rectangle bounds, const char* text, bool hovered);
+    void draw_button(float x, float y, float w, float h, const char* text);
     void draw_text_centered(const char* text, int y, int size, Color color);
 
 
