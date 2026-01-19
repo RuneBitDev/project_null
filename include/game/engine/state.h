@@ -1,6 +1,7 @@
 #ifndef PROJECT_NULL_STATE_H
 #define PROJECT_NULL_STATE_H
 #include <string>
+#include "visual/renderer.h"
 
 class state_manager;
 class renderer;

@@ -1,5 +1,4 @@
 #include "game/engine/state_manager.h"
-
 #include <iostream>
 
 void state_manager::push_state(std::unique_ptr<state> state) {

@@ -1,5 +1,4 @@
 #include "game/engine/game_state.h"
-
 #include <iostream>
 #include <ostream>
 
@@ -37,8 +36,4 @@ void game_state::debug_display() {
     std::cout << "\nCommands: [p] Play Card (index) | [q] Quit" << std::endl;
 
 
-}
-
-std::string game_state::get_name() const {
-    return "game_state";
 }
