@@ -14,7 +14,7 @@ public:
 private:
     void draw_button(float x, float y, float w, float h, const char* text);
     void draw_text_centered(const char* text, int y, int size, Color color);
-
+    void draw_card(const std::unique_ptr<card>& card, float x, float y, bool is_reverse);
 
 };
 

@@ -20,7 +20,8 @@ void game_state::update(float dt) {
 }
 
 void game_state::render(renderer& renderer) {
-    debug_display();
+    renderer.draw_game(game_board, p1, p2);
+    // debug_display();
 }
 
 void game_state::debug_display() {
