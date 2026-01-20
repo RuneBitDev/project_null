@@ -1,6 +1,7 @@
 #include "game/engine/menu_state.h"
 #include "game/engine/game_state.h"
 #include "game/engine/state_manager.h"
+#include "visual/render_config.h"
 #include "visual/ui_element.h"
 
 menu_state::menu_state(player p1, player p2)
@@ -14,7 +15,7 @@ void menu_state::handle_input(state_manager &manager) {
         if (IsKeyPressed(KEY_ENTER)) show_start_screen = false;
     } else {
 
-        if (ui_element.button((float)GetScreenWidth()/2 - 100, 300, 200, 50)) {
+        if (ui_element.button_rec(render_config::ui::START_BUTTON)) {
             manager.change_state(std::make_unique<game_state>(std::move(p1), std::move(p2)));
         }
     }

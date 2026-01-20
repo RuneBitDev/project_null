@@ -4,7 +4,7 @@
 
 class ui_element {
 public:
-    bool button(float x, float y, float w, float h);
+    bool button_rec(Rectangle rec);
 
 };
 

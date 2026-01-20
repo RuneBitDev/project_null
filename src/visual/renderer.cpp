@@ -4,24 +4,23 @@
 
 void renderer::draw_start_screen() {
     ClearBackground(BLACK);
-    draw_text_centered("PROJECT NULL", 150, 40, GREEN);
-    draw_text_centered("PROJECT NULL", 250, 20, GREEN);
-    draw_text_centered("Press Enter", 500, 15, GREEN);
+    draw_text_centered("PROJECT NULL", 300, 80, GREEN);
+    draw_text_centered("PROJECT NULL", 500, 40, GREEN);
+    draw_text_centered("Press Enter", 1000, 30, GREEN);
 }
 
 void renderer::draw_menu() {
     ClearBackground(BLACK);
-
-    draw_button((float)GetScreenWidth()/2 - 100, 300, 200, 50, "START GAME");
+    draw_button_rec(render_config::ui::START_BUTTON, "START GAME");
 }
 
 void renderer::draw_game(const board &b, const player &p1, player &p2) {
     ClearBackground(BLACK);
 
     // draw hand
-    float x_offset = 50.0f;
+    float x_offset = 100.0f;
     for (auto& card_ptr : p1.get_hand()) {
-        draw_card(card_ptr, x_offset, 550, false);
+        draw_card(card_ptr, x_offset, 1100, false);
         x_offset += render_config::card::CARD_WIDTH + 10;
     }
 
@@ -41,25 +40,24 @@ void renderer::draw_game(const board &b, const player &p1, player &p2) {
 // ---------------------------------------------------------------------
 
 
-void renderer::draw_button(float x, float y, float w, float h, const char *text) {
-    Rectangle rect = {x, y, w, h};
-    bool hovered = CheckCollisionPointRec(GetMousePosition(), rect);
+void renderer::draw_button_rec(Rectangle rec, const char *text) {
+    bool hovered = CheckCollisionPointRec(render_config::get_virtual_mouse(), rec);
     Color tint = hovered ? LIME : BLACK;
 
-    DrawRectangleRec(rect, tint);
-    DrawRectangleLinesEx(rect, 2 , GREEN);
+    DrawRectangleRec(rec, tint);
+    DrawRectangleLinesEx(rec, 2 , GREEN);
 
-    int fontSize = 20;
+    int fontSize = 40;
     int textWidth = MeasureText(text, fontSize);
     DrawText(text,
-        x + (w / 2 - textWidth / 2),
-        y + (h / 2 - fontSize / 2),
+        rec.x + (rec.width / 2 - textWidth / 2),
+        rec.y + (rec.height / 2 - fontSize / 2),
         fontSize, GREEN);
 }
 
 void renderer::draw_text_centered(const char* text, int y, int size, Color color) {
     int width = MeasureText(text, size);
-    DrawText(text, GetScreenWidth() / 2 - width / 2, y, size, color);
+    DrawText(text, render_config::VIRTUAL_WIDTH / 2 - width / 2, y, size, color);
 }
 
 void renderer::draw_card(const std::unique_ptr<card>& card, float x, float y, bool is_reverse) {
@@ -78,7 +76,7 @@ void renderer::draw_card(const std::unique_ptr<card>& card, float x, float y, bo
         }
 
         std::string name = card->get_name();
-        int name_size = 12;
+        int name_size = 24;
         int name_width = MeasureText(name.c_str(), name_size);
 
         float name_x = x + (render_config::card::CARD_WIDTH / 2) - (name_width / 2);

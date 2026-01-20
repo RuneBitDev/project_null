@@ -1,17 +1,19 @@
 #include "raylib.h"
 #include <iostream>
 #include "game/factory.h"
-#include "game/player.h"
 #include "game/engine/game_state.h"
 #include "game/engine/menu_state.h"
 #include "game/engine/state_manager.h"
+#include "visual/render_config.h"
 
 int main() {
-    const int screenWidth = 1280;
-    const int screenHeight = 720;
 
-    InitWindow(screenWidth, screenHeight, "PROJECT NULL");
+    render_config::Res current_res = render_config::screen_1440p;
+    InitWindow(current_res.width, current_res.height, "PROJECT NULL");
     SetTargetFPS(60);
+
+    RenderTexture2D target = LoadRenderTexture(render_config::VIRTUAL_WIDTH, render_config::VIRTUAL_HEIGHT);
+    SetTextureFilter(target.texture, TEXTURE_FILTER_BILINEAR);
 
     state_manager manager;
     factory game_factory;
@@ -31,16 +33,28 @@ int main() {
     while (!WindowShouldClose()) {
 
         manager.handle_input();
-
         float dt = GetFrameTime();
         manager.update(dt);
 
+        if (IsKeyPressed(KEY_F1)) render_config::apply_resolution(render_config::screen_720p);
+        if (IsKeyPressed(KEY_F2)) render_config::apply_resolution(render_config::screen_1080p);
+        if (IsKeyPressed(KEY_F3)) render_config::apply_resolution(render_config::screen_1440p);
+
+        BeginTextureMode(target);
+            manager.render(renderer);
+        EndTextureMode();
+
         BeginDrawing();
-        manager.render(renderer);
-        DrawFPS(10, 10);
+            DrawTexturePro(target.texture,
+                { 0, 0, (float)target.texture.width, (float)-target.texture.height },
+                { 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() },
+                { 0, 0}, 0.0f, WHITE);
+
+            DrawFPS(10, 10);
         EndDrawing();
     }
 
+    UnloadRenderTexture(target);
     CloseWindow();
     return 0;
 }
