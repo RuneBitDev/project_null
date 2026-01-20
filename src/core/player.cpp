@@ -37,9 +37,10 @@ void player::play_card(int index, board &b) {
         else if (range == "HEAVY") target_row = row_type::HEAVY;
         else if (range == "NET") target_row = row_type::NET;
 
-        b.add_card(*unit_ptr, row_side::PLAYER, target_row);
-
+        std::unique_ptr<card> card_to_play = std::move(hand[index]);
         hand.erase(hand.begin() + index);
+
+        b.add_card(std::move(card_to_play), row_side::PLAYER, target_row);
     }
 
 }

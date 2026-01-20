@@ -9,19 +9,18 @@ enum class row_side { PLAYER, OPPONENT };
 enum class row_type { MELEE = 0, RANGED = 1, HEAVY = 2, NET = 3};
 
 class board {
-    private:
-    std::array<std::array<std::vector<card_unit>, 4>, 2> rows;
-
-    std::vector<card> active_specials;
-
-    public:
+public:
     board();
-    void display_board() const;
 
-    void add_card(card_unit c, row_side side, row_type type);
+    void add_card(std::unique_ptr<card> c, row_side side, row_type type);
+    const std::vector<std::unique_ptr<card>>& get_row_cards(int side, int type) const;
     int calculate_row_score(row_side side, row_type type) const;
     int calculate_total_score(row_side side) const;
     void clear_board();
+
+private:
+    std::array<std::array<std::vector<std::unique_ptr<card>>, 4>, 2> rows;
+    std::vector<std::unique_ptr<card>> active_specials;
 };
 
 #endif //PROJECT_NULL_BOARD_H

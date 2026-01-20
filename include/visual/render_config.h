@@ -22,8 +22,8 @@ namespace render_config {
     }
 
     namespace card {
-        constexpr float CARD_WIDTH = 200.0f;
-        constexpr float CARD_HEIGHT = 300.0f;
+        constexpr float CARD_WIDTH = 100.0f;
+        constexpr float CARD_HEIGHT = 150.0f;
     }
 
 

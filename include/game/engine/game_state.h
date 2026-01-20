@@ -13,7 +13,6 @@ public:
     void handle_input(state_manager& manager) override;
     void update(float dt) override;
     void render(renderer& ren) override;
-    void debug_display();
 
     std::string get_name() const override { return "game_state"; };
 

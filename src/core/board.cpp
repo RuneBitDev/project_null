@@ -4,7 +4,7 @@
 board::board() {
 }
 
-void board::add_card(card_unit c, row_side side, row_type type) {
+void board::add_card(std::unique_ptr<card> c, row_side side, row_type type) {
     int i = static_cast<int>(side);
     int j = static_cast<int>(type);
 
@@ -13,38 +13,23 @@ void board::add_card(card_unit c, row_side side, row_type type) {
     }
 }
 
-void board::display_board() const {
-    std::cout << "\n================= BOARD =================\n";
-
-    for (int i = 1; i >= 0; --i) {
-        std::string side_name = (i == 1) ? "OPPONENT" : "PLAYER";
-        std::cout << "--- " << side_name << " (Total: " <<calculate_total_score(static_cast<row_side>(i)) << ") ---\n";
-
-        for (int j = 3; j >= 0; --j) {
-            std::cout << "Row [" << i << "]: ";
-            if (rows[i][j].empty()) {
-                std::cout << "[ Empty ]";
-            } else {
-                for (const auto& unit : rows[i][j]) {
-                    std::cout << "[" << unit.get_name() << " (" << unit.get_strength() << ")] ";
-                }
-            }
-            std::cout << " | SCORE: " <<calculate_row_score(static_cast<row_side>(i), static_cast<row_type>(j)) << "\n";
-        }
-        if (i == 1) std::cout << "-------------------------------------------\n";
-    }
-    std::cout << "============================================\n" << std::endl;
-
-
+const std::vector<std::unique_ptr<card>>& board::get_row_cards(int side, int type) const {
+    return rows[side][type];
 }
+
 
 int board::calculate_row_score(row_side side, row_type type) const {
     int score = 0;
     int s = static_cast<int>(side);
     int t = static_cast<int>(type);
 
-    for (const auto& unit : rows[s][t]) {
-        score += unit.get_strength();       // replace with get_current_strength later (buffs/debuffs)
+    for (const auto& card_ptr : rows[s][t]) {
+        card_unit* unit = dynamic_cast<card_unit*>(card_ptr.get());
+
+        if (unit) {
+            score += unit->get_strength();
+        }
+               // replace with get_current_strength later (buffs/debuffs)
     }
 
     return score;
