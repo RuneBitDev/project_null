@@ -5,6 +5,7 @@
 class ui_element {
 public:
     bool button_rec(Rectangle rec);
+    bool card_rec(Rectangle rec);
 
 };
 

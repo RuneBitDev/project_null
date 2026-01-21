@@ -50,6 +50,13 @@ void renderer::draw_text_centered(const char* text, int y, int size, Color color
     DrawText(text, render_config::VIRTUAL_WIDTH / 2 - width / 2, y, size, color);
 }
 
+void renderer::draw_text_in_rect(const char* text, Rectangle rect, int y_offset, int size, Color color) {
+    int textWidth = MeasureText(text, size);
+    float posX = rect.x + (rect.width / 2.0f) - (textWidth / 2.0f);
+
+    DrawText(text, (int)posX, (int)rect.y + y_offset, size, color);
+}
+
 void renderer::draw_card(const std::unique_ptr<card>& card, float x, float y, bool is_reverse) {
     Rectangle rect = {x, y , render_config::card::CARD_WIDTH, render_config::card::CARD_HEIGHT};
     DrawRectangleLinesEx(rect, 2 , GREEN);
@@ -78,10 +85,52 @@ void renderer::draw_card(const std::unique_ptr<card>& card, float x, float y, bo
 
 void renderer::draw_hand(const player &player) {
     float x_offset = render_config::hand::X_OFFSET;
-    for (auto& card_ptr : player.get_hand()) {
-        draw_card(card_ptr, x_offset, render_config::hand::Y_OFFSET, false);
-        x_offset += render_config::card::CARD_WIDTH + 10;
+    Vector2 mouse_pos = render_config::get_virtual_mouse();
+
+    const auto& hand = player.get_hand();
+
+    for (size_t i = 0; i < hand.size(); ++i) {
+        float x = x_offset;
+        float y = render_config::hand::Y_OFFSET;
+        float width = render_config::card::CARD_WIDTH;
+        float height = render_config::card::CARD_HEIGHT;
+
+        Rectangle card_rect = { x, y, width, height };
+        bool is_hovered = CheckCollisionPointRec(mouse_pos, card_rect);
+
+        if (is_hovered) {
+            float scale = 1.1f;
+            float new_w = width * scale;
+            float new_h = height * scale;
+
+            float diff_w = new_w - width;
+            float diff_h = new_h - height;
+
+            draw_card_scaled(hand[i], x - diff_w/2, y - diff_h/2, new_w, new_h);
+        } else {
+            draw_card(hand[i], x, y, false);
+        }
+
+        x_offset += width + 10;
     }
+}
+
+void renderer::draw_card_scaled(const std::unique_ptr<card>& card, float x, float y, float w, float h) {
+    Rectangle rect = { x, y, w, h };
+    DrawRectangle(x, y, w, h, BLACK);
+    DrawRectangleLinesEx(rect, 3, GREEN);
+
+    if (auto* unit = dynamic_cast<card_unit*>(card.get())) {
+        DrawCircleLines(x + 25, y + 25, 18, GREEN);
+        std::string str_text = std::to_string(unit->get_strength());
+        DrawText(str_text.c_str(), x + 18, y + 15, 20, GREEN);
+    }
+
+    std::string name = card->get_name();
+    int fontSize = 11;
+    int relative_y_offset = (int)h - 30;
+
+    draw_text_in_rect(name.c_str(), rect, relative_y_offset, fontSize, GREEN);
 }
 
 void renderer::draw_graveyard(const player &player) {
