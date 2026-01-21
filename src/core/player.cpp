@@ -6,17 +6,6 @@ player::player(std::string c_name, deck c_deck)
     draw_card(10);
 }
 
-void player::display_hand() const {
-    std::cout << name << "'s Hand: ";
-    if (hand.empty()) {
-        std::cout << "(Empty)";
-    } else {
-        for (size_t i = 0; i < hand.size(); ++i) {
-            std::cout << i << ": " << hand[i]->get_name() << " | ";
-        }
-    }
-     std::cout << "\nDeck remains: " << player_deck.get_size() << " | Graveyard: " << std::endl;
-}
 
 void player::draw_card(int times) {
     for (int i = 0; i < times; ++i) {
@@ -27,15 +16,18 @@ void player::draw_card(int times) {
 void player::play_card(int index, board &b) {
     if (index < 0 || index >= hand.size()) return;
 
-    card_unit* unit_ptr = dynamic_cast<card_unit*>(hand[index].get());
+    if (auto* card_ptr = hand[index].get()) {
+        std::string type = card_ptr->get_card_type();
+        row_type target_row = row_type::SPECIAL;
+        if (type == "UNIT") {
+            std::string range = card_ptr->get_range_type();
 
-    if (unit_ptr) {
-        row_type target_row = row_type::MELEE;
-        std::string range = unit_ptr->get_range_type();
+            if (range == "MELEE") target_row = row_type::MELEE;
+            else if (range == "RANGED") target_row = row_type::RANGED;
+            else if (range == "HEAVY") target_row = row_type::HEAVY;
+            else if (range == "NET") target_row = row_type::NET;
+        }
 
-        if (range == "RANGED") target_row = row_type::RANGED;
-        else if (range == "HEAVY") target_row = row_type::HEAVY;
-        else if (range == "NET") target_row = row_type::NET;
 
         std::unique_ptr<card> card_to_play = std::move(hand[index]);
         hand.erase(hand.begin() + index);

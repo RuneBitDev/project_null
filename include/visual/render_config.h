@@ -4,8 +4,8 @@
 
 namespace render_config {
 
-    const int VIRTUAL_WIDTH = 2560;
-    const int VIRTUAL_HEIGHT = 1440;
+    constexpr int VIRTUAL_WIDTH = 2560;
+    constexpr int VIRTUAL_HEIGHT = 1440;
 
     struct Res {
         int width;
@@ -13,12 +13,12 @@ namespace render_config {
         const char *name;
     };
 
-    const Res screen_720p = {1280, 720, "1280x720"};
-    const Res screen_1080p = {1920, 1080, "1920x1080"};
-    const Res screen_1440p = {2560, 1440, "2560x1440"};
+    constexpr Res screen_720p = {1280, 720, "1280x720"};
+    constexpr Res screen_1080p = {1920, 1080, "1920x1080"};
+    constexpr Res screen_1440p = {2560, 1440, "2560x1440"};
 
     namespace ui {
-        const Rectangle START_BUTTON = { 1080, 600, 400, 100};
+        constexpr Rectangle START_BUTTON = { 1080, 600, 400, 100};
     }
 
     namespace card {
@@ -39,7 +39,7 @@ namespace render_config {
     namespace board {
         constexpr float BOARD_WIDTH = 1000.0f;
         constexpr float START_X = 750.0f;
-        constexpr float START_Y_OPPONENT = 100.0f;
+        constexpr float START_Y_OPPONENT = 50.0f;
         constexpr float START_Y_PLAYER = 630.0f;
     }
 
@@ -57,8 +57,8 @@ namespace render_config {
     inline Vector2 get_virtual_mouse() {
         Vector2 mouse = GetMousePosition();
         return {
-            mouse.x * ((float)VIRTUAL_WIDTH / GetScreenWidth()),
-            mouse.y * ((float)VIRTUAL_HEIGHT / GetScreenHeight())
+            mouse.x * (static_cast<float>(VIRTUAL_WIDTH) / GetScreenWidth()),
+            mouse.y * (static_cast<float>(VIRTUAL_HEIGHT) / GetScreenHeight())
         };
     }
 }

@@ -5,16 +5,17 @@
 #include "state.h"
 
 class state_manager {
-    private:
-    std::stack<std::unique_ptr<state>> states;
-
-    public:
+public:
     void push_state(std::unique_ptr<state> state);
     void pop_state();
     void change_state(std::unique_ptr<state> state);
     void update(float dt);
     void render(renderer& renderer);
     void handle_input();
+
+private:
+    std::stack<std::unique_ptr<state>> states;
+
 
 
 };

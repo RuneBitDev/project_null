@@ -9,7 +9,6 @@
 class player {
 public:
     player(std::string c_name, deck c_deck);
-    void display_hand() const;
     void draw_card(int times);
     void play_card(int index, board& b);
 
@@ -22,7 +21,6 @@ private:
     deck player_deck;
     std::vector<std::unique_ptr<card>> hand;
     std::vector<std::unique_ptr<card>> graveyard;
-
 
 };
 

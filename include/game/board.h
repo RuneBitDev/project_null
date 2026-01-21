@@ -6,11 +6,11 @@
 #include "card_unit.h"
 
 enum class row_side { PLAYER, OPPONENT };
-enum class row_type { MELEE = 0, RANGED = 1, HEAVY = 2, NET = 3};
+enum class row_type { MELEE = 0, RANGED = 1, HEAVY = 2, NET = 3, SPECIAL = 4};
 
 class board {
 public:
-    board();
+    board() = default;
 
     void add_card(std::unique_ptr<card> c, row_side side, row_type type);
     const std::vector<std::unique_ptr<card>>& get_row_cards(int side, int type) const;

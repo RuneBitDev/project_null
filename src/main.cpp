@@ -48,8 +48,8 @@ int main() {
 
         BeginDrawing();
             DrawTexturePro(target.texture,
-                { 0, 0, (float)target.texture.width, (float)-target.texture.height },
-                { 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() },
+                { 0, 0, static_cast<float>(target.texture.width), static_cast<float>(-target.texture.height) },
+                { 0, 0, static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight()) },
                 { 0, 0}, 0.0f, WHITE);
 
             DrawFPS(10, 10);

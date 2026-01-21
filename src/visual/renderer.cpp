@@ -40,8 +40,8 @@ void renderer::draw_button_rec(Rectangle rec, const char *text) {
     int fontSize = 40;
     int textWidth = MeasureText(text, fontSize);
     DrawText(text,
-        rec.x + (rec.width / 2 - textWidth / 2),
-        rec.y + (rec.height / 2 - fontSize / 2),
+        static_cast<int>(rec.x + (rec.width / 2 - textWidth / 2)),
+        static_cast<int>(rec.y + (rec.height / 2 - fontSize / 2)),
         fontSize, GREEN);
 }
 
@@ -52,66 +52,49 @@ void renderer::draw_text_centered(const char* text, int y, int size, Color color
 
 void renderer::draw_text_in_rect(const char* text, Rectangle rect, int y_offset, int size, Color color) {
     int textWidth = MeasureText(text, size);
-    float posX = rect.x + (rect.width / 2.0f) - (textWidth / 2.0f);
+    float posX = rect.x + (rect.width / 2.0f) - (static_cast<float>(textWidth) / 2.0f);
 
-    DrawText(text, (int)posX, (int)rect.y + y_offset, size, color);
+    DrawText(text, static_cast<int>(posX), static_cast<int>(rect.y) + y_offset, size, color);
 }
 
 void renderer::draw_card(const std::unique_ptr<card>& card, float x, float y, bool is_reverse) {
-    Rectangle rect = {x, y , render_config::card::CARD_WIDTH, render_config::card::CARD_HEIGHT};
-    DrawRectangleLinesEx(rect, 2 , GREEN);
+    Rectangle rect = {x, y, render_config::card::CARD_WIDTH, render_config::card::CARD_HEIGHT};
+
+    bool hovered = false;
+    if (!is_reverse) {
+        hovered = CheckCollisionPointRec(render_config::get_virtual_mouse(), rect);
+    }
+
+    if (hovered) {
+        float scale = 1.1f;
+        float new_w = rect.width * scale;
+        float new_h = rect.height * scale;
+
+        rect.x -= (new_w - rect.width) / 2;
+        rect.y -= (new_h - rect.height) / 2;
+        rect.width = new_w;
+        rect.height = new_h;
+
+        DrawRectangleRec(rect, BLACK);
+    }
+
+    DrawRectangleLinesEx(rect, hovered ? 3 : 2, GREEN);
 
     if (!is_reverse) {
         if (auto* unit = dynamic_cast<card_unit*>(card.get())) {
+            float circle_radius = hovered ? 18.0f : 15.0f;
+            float circle_x = rect.x + (hovered ? 25 : 20);
+            float circle_y = rect.y + (hovered ? 25 : 20);
 
-            float circle_x = x + 20;
-            float circle_y = y + 20;
-            DrawCircleLines(circle_x, circle_y, 15, GREEN);
+            DrawCircleLines(circle_x, circle_y, circle_radius, GREEN);
 
             std::string str_text = std::to_string(unit->get_strength());
-            DrawText(str_text.c_str(), circle_x - 5, circle_y - 7, 15, GREEN);
+            int font_size = hovered ? 20 : 15;
+            DrawText(str_text.c_str(), circle_x - (font_size/3), circle_y - (font_size/2), font_size, GREEN);
         }
 
-        std::string name = card->get_name();
-        int name_size = 10;
-        int name_width = MeasureText(name.c_str(), name_size);
-
-        float name_x = x + (render_config::card::CARD_WIDTH / 2) - (name_width / 2);
-        float name_y = y + render_config::card::CARD_HEIGHT - 25;
-
-        DrawText(name.c_str(), (int)name_x, (int)name_y, name_size, GREEN);
-    }
-}
-
-void renderer::draw_hand(const player &player) {
-    float x_offset = render_config::hand::X_OFFSET;
-    Vector2 mouse_pos = render_config::get_virtual_mouse();
-
-    const auto& hand = player.get_hand();
-
-    for (size_t i = 0; i < hand.size(); ++i) {
-        float x = x_offset;
-        float y = render_config::hand::Y_OFFSET;
-        float width = render_config::card::CARD_WIDTH;
-        float height = render_config::card::CARD_HEIGHT;
-
-        Rectangle card_rect = { x, y, width, height };
-        bool is_hovered = CheckCollisionPointRec(mouse_pos, card_rect);
-
-        if (is_hovered) {
-            float scale = 1.1f;
-            float new_w = width * scale;
-            float new_h = height * scale;
-
-            float diff_w = new_w - width;
-            float diff_h = new_h - height;
-
-            draw_card_scaled(hand[i], x - diff_w/2, y - diff_h/2, new_w, new_h);
-        } else {
-            draw_card(hand[i], x, y, false);
-        }
-
-        x_offset += width + 10;
+        int name_size = hovered ? 12 : 10;
+        draw_text_in_rect(card->get_name().c_str(), rect, static_cast<int>(rect.height) - (hovered ? 30 : 25), name_size, GREEN);
     }
 }
 
@@ -128,9 +111,19 @@ void renderer::draw_card_scaled(const std::unique_ptr<card>& card, float x, floa
 
     std::string name = card->get_name();
     int fontSize = 11;
-    int relative_y_offset = (int)h - 30;
+    int relative_y_offset = static_cast<int>(h) - 30;
 
     draw_text_in_rect(name.c_str(), rect, relative_y_offset, fontSize, GREEN);
+}
+
+void renderer::draw_hand(const player &player) {
+    float x_offset = render_config::hand::X_OFFSET;
+    const auto& hand = player.get_hand();
+
+    for (const auto& card_ptr : hand) {
+        draw_card(card_ptr, x_offset, render_config::hand::Y_OFFSET, false);
+        x_offset += render_config::card::CARD_WIDTH + 10;
+    }
 }
 
 void renderer::draw_graveyard(const player &player) {
@@ -147,7 +140,7 @@ void renderer::draw_board(const board &board) {
     float start_y_opponent = render_config::board::START_Y_OPPONENT;
     float start_y_player = render_config::board::START_Y_PLAYER;
 
-    float row_spacing = render_config::card::CARD_HEIGHT + 20.0f;
+    float row_spacing = render_config::card::CARD_HEIGHT + 30.0f;
     float card_spacing = 10.0f;
 
     float split_width = (render_config::board::BOARD_WIDTH / 2.0f) - 5.0f;
@@ -176,7 +169,7 @@ void renderer::draw_board(const board &board) {
             DrawRectangleLines(current_row_x - 10, row_y -5, current_row_width, render_config::card::CARD_HEIGHT + 10, DARKGREEN);
 
             std::string type_label = board.get_row_name(static_cast<row_type>(type));
-            DrawText(type_label.c_str(), current_row_x, row_y - 15, 15, DARKGREEN);
+            DrawText(type_label.c_str(), current_row_x, row_y - 20, 15, DARKGREEN);
 
             const auto& row_cards = board.get_row_cards(side, type);
             float current_x = current_row_x;

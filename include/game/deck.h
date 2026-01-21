@@ -3,15 +3,9 @@
 #include <vector>
 #include <memory>
 #include "card.h"
-#include "card_unit.h"
 
 class deck {
-    private:
-    std::unique_ptr<card> leader;
-    std::vector<std::unique_ptr<card>> cards;
-
-
-    public:
+public:
     deck(std::unique_ptr<card> c_leader, std::vector<std::unique_ptr<card>> c_cards);
 
     std::unique_ptr<card> get_leader_card() const;
@@ -20,6 +14,11 @@ class deck {
 
     bool is_valid();
     void shuffle();
+
+private:
+    std::unique_ptr<card> leader;
+    std::vector<std::unique_ptr<card>> cards;
+
 };
 
 #endif //PROJECT_NULL_DECK_H

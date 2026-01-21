@@ -5,17 +5,7 @@
 #include <memory>
 
 class card {
-    private:
-    std::string card_id;
-    std::string name;
-    std::string faction_id;
-    std::string card_type;
-    std::string rarity;
-    int slots;
-    bool is_unlocked;
-
-
-    public:
+public:
     card(std::string card_id, std::string name, std::string faction_id, std::string card_type,
         std::string rarity, int slots, bool is_unlocked);
     virtual ~card() = default;
@@ -29,11 +19,20 @@ class card {
     std::string get_rarity() const;
     int get_slots() const;
     bool get_is_unlocked() const;
+    virtual int get_strength() const { return 0; }
+    virtual std::string get_range_type() const { return ""; }
 
     void set_slots(int new_slots);
     void set_is_unlocked(bool new_value);
 
-
+private:
+    std::string card_id;
+    std::string name;
+    std::string faction_id;
+    std::string card_type;
+    std::string rarity;
+    int slots;
+    bool is_unlocked;
 
 };
 
