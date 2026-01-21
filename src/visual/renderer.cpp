@@ -56,7 +56,7 @@ void renderer::draw_card(const std::unique_ptr<card>& card, float x, float y, bo
 
     if (!is_reverse) {
         if (auto* unit = dynamic_cast<card_unit*>(card.get())) {
-            // This block only runs if the card is actually a unit
+
             float circle_x = x + 20;
             float circle_y = y + 20;
             DrawCircleLines(circle_x, circle_y, 15, GREEN);
@@ -77,45 +77,61 @@ void renderer::draw_card(const std::unique_ptr<card>& card, float x, float y, bo
 }
 
 void renderer::draw_hand(const player &player) {
-    float x_offset = 100.0f;
+    float x_offset = render_config::hand::X_OFFSET;
     for (auto& card_ptr : player.get_hand()) {
-        draw_card(card_ptr, x_offset, 1100, false);
+        draw_card(card_ptr, x_offset, render_config::hand::Y_OFFSET, false);
         x_offset += render_config::card::CARD_WIDTH + 10;
     }
 }
 
 void renderer::draw_graveyard(const player &player) {
-    float gy_x = 1100.0f;
-    float gy_y = 600.0f;
+
     int count = 0;
     for (const auto& card_ptr : player.get_graveyard()) {
-        draw_card(card_ptr, gy_x + (count * 2), gy_y + (count * 2), true);
+        draw_card(card_ptr, render_config::graveyard::GY_X + (count * 2), render_config::graveyard::GY_Y + (count * 2), true);
         count ++;
     }
 }
 
 void renderer::draw_board(const board &board) {
-    float start_x = 200.0f;
-    float start_y_opponent = 100.0f;
-    float start_y_paler = 600.0f;
+    float start_x = render_config::board::START_X;
+    float start_y_opponent = render_config::board::START_Y_OPPONENT;
+    float start_y_player = render_config::board::START_Y_PLAYER;
 
     float row_spacing = render_config::card::CARD_HEIGHT + 20.0f;
     float card_spacing = 10.0f;
 
+    float split_width = (render_config::board::BOARD_WIDTH / 2.0f) - 5.0f;
+
     for (int side = 0; side < 2; side++) {
         for (int type = 0; type < 4; type++) {
             float row_y;
+            float current_row_x = start_x;
+            float current_row_width = render_config::board::BOARD_WIDTH;
+
+            int visual_slot = (type == 3) ? 2 : type;
+
             if (side == 1) {
-                row_y = start_y_opponent + (type * row_spacing);
+                row_y = start_y_opponent + ((2-visual_slot) * row_spacing);
             } else {
-                row_y = start_y_paler + ((3 - type) * row_spacing);
+                row_y = start_y_player + (visual_slot * row_spacing);
             }
 
-            DrawRectangleLines(start_x - 10, row_y -5, 1000, render_config::card::CARD_HEIGHT + 10, DARKGREEN);
+            if (type >= 2) {
+                current_row_width = split_width;
+                if (type == 3) {
+                    current_row_x = start_x + split_width + 10.0f;
+                }
+            }
+
+            DrawRectangleLines(current_row_x - 10, row_y -5, current_row_width, render_config::card::CARD_HEIGHT + 10, DARKGREEN);
+
+            std::string type_label = board.get_row_name(static_cast<row_type>(type));
+            DrawText(type_label.c_str(), current_row_x, row_y - 15, 15, DARKGREEN);
 
             const auto& row_cards = board.get_row_cards(side, type);
+            float current_x = current_row_x;
 
-            float current_x = start_x;
             for (const auto& card_ptr : row_cards) {
                 draw_card(card_ptr, current_x, row_y, false);
                 current_x += render_config::card::CARD_WIDTH + card_spacing;
@@ -123,8 +139,9 @@ void renderer::draw_board(const board &board) {
 
             int score = board.calculate_row_score(static_cast<row_side>(side), static_cast<row_type>(type));
             std::string score_text = std::to_string(score);
-            DrawText(score_text.c_str(), start_x - 60, row_y + (render_config::card::CARD_HEIGHT/2) - 10, 20, DARKGREEN);
 
+            float score_x_offset = (type == 3) ? (current_row_x + current_row_width + 5) : (current_row_x - 60);
+            DrawText(score_text.c_str(), score_x_offset, row_y + (render_config::card::CARD_HEIGHT/2) - 10, 20, DARKGREEN);
         }
     }
 }

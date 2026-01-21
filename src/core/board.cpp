@@ -44,3 +44,13 @@ int board::calculate_total_score(row_side side) const {
 
     return total_score;
 }
+
+std::string board::get_row_name(row_type type) const{
+    switch (type) {
+        case row_type::MELEE:  return "MELEE";
+        case row_type::RANGED: return "RANGED";
+        case row_type::HEAVY:  return "HEAVY";
+        case row_type::NET:    return "NET";
+        default:               return "UNKNOWN";
+    }
+}

@@ -16,6 +16,8 @@ public:
     const std::vector<std::unique_ptr<card>>& get_row_cards(int side, int type) const;
     int calculate_row_score(row_side side, row_type type) const;
     int calculate_total_score(row_side side) const;
+
+    std::string get_row_name(row_type type) const;
     void clear_board();
 
 private:

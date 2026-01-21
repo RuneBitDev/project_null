@@ -9,6 +9,7 @@
 int main() {
 
     render_config::Res current_res = render_config::screen_1440p;
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
     InitWindow(current_res.width, current_res.height, "PROJECT NULL");
     SetTargetFPS(60);
 
@@ -39,6 +40,7 @@ int main() {
         if (IsKeyPressed(KEY_F1)) render_config::apply_resolution(render_config::screen_720p);
         if (IsKeyPressed(KEY_F2)) render_config::apply_resolution(render_config::screen_1080p);
         if (IsKeyPressed(KEY_F3)) render_config::apply_resolution(render_config::screen_1440p);
+        if (IsKeyPressed(KEY_F11)) ToggleFullscreen();
 
         BeginTextureMode(target);
             manager.render(renderer);

@@ -26,11 +26,32 @@ namespace render_config {
         constexpr float CARD_HEIGHT = 150.0f;
     }
 
+    namespace hand {
+        constexpr float X_OFFSET = 700.0f;
+        constexpr float Y_OFFSET = 1200.0f;
+    }
+
+    namespace graveyard {
+        constexpr float GY_X = 2000.0f;
+        constexpr float GY_Y = 600.0f;
+    }
+
+    namespace board {
+        constexpr float BOARD_WIDTH = 1000.0f;
+        constexpr float START_X = 750.0f;
+        constexpr float START_Y_OPPONENT = 100.0f;
+        constexpr float START_Y_PLAYER = 630.0f;
+    }
+
 
     inline void apply_resolution(Res res) {
         SetWindowSize(res.width, res.height);
-
-        SetWindowPosition(GetMonitorWidth(0)/2 - res.width/2, GetMonitorHeight(0)/2 - res.height/2);
+        if (!IsWindowFullscreen()) {
+            SetWindowPosition(
+                (GetMonitorWidth(GetCurrentMonitor()) - res.width) / 2,
+                (GetMonitorHeight(GetCurrentMonitor()) - res.height) / 2
+            );
+        }
     }
 
     inline Vector2 get_virtual_mouse() {
