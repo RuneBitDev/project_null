@@ -1,2 +1,31 @@
-cmake-build-debug
-.idea
+# IDEs and Editors
+.idea/
+.vscode/
+cmake-build-debug/
+
+# Virtual Environments
+.venv/
+**/card_creator/.venv/
+venv/
+ENV/
+
+# Python internals
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / Data
+dist/
+build/
+*.egg-info/
+
+# Secret / Local Environment Variables
+.env
+.flaskenv
+
+# Streamlit specific
+.streamlit/secrets.toml
+
+# OS files
+.DS_Store
+Thumbs.db
