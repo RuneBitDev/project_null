@@ -19,6 +19,7 @@ namespace render_config {
 
     namespace ui {
         constexpr Rectangle START_BUTTON = { 1080, 600, 400, 100};
+        constexpr Rectangle PASS_BUTTON = { 100, 100, 300, 100};
     }
 
     namespace card {

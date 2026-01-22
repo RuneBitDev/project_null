@@ -13,7 +13,7 @@ void player::draw_card(int times) {
     }
 }
 
-void player::play_card(int index, board &b) {
+void player::play_card(int index, board &b, row_side side) {
     if (index < 0 || index >= hand.size()) return;
 
     if (auto* card_ptr = hand[index].get()) {
@@ -29,10 +29,11 @@ void player::play_card(int index, board &b) {
         }
 
 
-        std::unique_ptr<card> card_to_play = std::move(hand[index]);
-        hand.erase(hand.begin() + index);
+        auto it = hand.begin() + index;
+        std::unique_ptr<card> card_to_play = std::move(*it);
+        hand.erase(it);
 
-        b.add_card(std::move(card_to_play), row_side::PLAYER, target_row);
+        b.add_card(std::move(card_to_play), side, target_row);
     }
 
 }

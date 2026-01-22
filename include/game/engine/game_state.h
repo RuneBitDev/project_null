@@ -21,7 +21,13 @@ private:
     player p1;
     player p2;
 
+    int active_player = 1;
+    bool round_ended = false;
     int current_round = 0;
+    float ai_timer = 0.0f;
+
+    player& get_other_player();
+    void execute_ai_turn();
 };
 
 #endif //PROJECT_NULL_GAME_STATE_H
