@@ -2,9 +2,9 @@
 #define PROJECT_NULL_FACTORY_H
 #include <string>
 #include <vector>
-#include "card.h"
-#include "card_unit.h"
-#include "deck.h"
+#include "components/card.h"
+#include "components/card_unit.h"
+#include "components/deck.h"
 
 class factory {
 public:

@@ -1,5 +1,5 @@
-#include "game/card.h"
-#include "game/card_unit.h"
+#include "../../../include/game/components/card.h"
+#include "game/components/card_unit.h"
 #include <iostream>
 #include <utility>
 

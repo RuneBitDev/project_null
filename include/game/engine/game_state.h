@@ -1,8 +1,8 @@
 #ifndef PROJECT_NULL_GAME_STATE_H
 #define PROJECT_NULL_GAME_STATE_H
 #include "state.h"
-#include "game/board.h"
-#include "game/player.h"
+#include "../components/board.h"
+#include "../components/player.h"
 
 
 class game_state : public state {

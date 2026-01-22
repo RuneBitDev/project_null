@@ -1,4 +1,4 @@
-#include "game/card.h"
+#include "../../../include/game/components/card.h"
 
 #include <iostream>
 #include <ostream>

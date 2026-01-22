@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <random>
-#include "game/deck.h"
+#include "../../../include/game/components/deck.h"
 #include "game/game_config.h"
 
 

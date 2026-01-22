@@ -1,8 +1,8 @@
 #ifndef PROJECT_NULL_RENDERER_H
 #define PROJECT_NULL_RENDERER_H
 #include "raylib.h"
-#include "game/board.h"
-#include "game/player.h"
+#include "../game/components/board.h"
+#include "../game/components/player.h"
 
 
 class renderer {

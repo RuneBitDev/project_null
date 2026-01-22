@@ -1,4 +1,4 @@
-#include "game/player.h"
+#include "../../../include/game/components/player.h"
 
 player::player(std::string c_name, deck c_deck)
     : name(std::move(c_name)), player_deck(std::move(c_deck)) {

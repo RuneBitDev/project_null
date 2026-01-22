@@ -1,4 +1,4 @@
-#include "game/board.h"
+#include "../../../include/game/components/board.h"
 #include <iostream>
 
 void board::add_card(std::unique_ptr<card> c, row_side side, row_type type) {
