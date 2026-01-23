@@ -11,7 +11,9 @@ public:
     player(std::string c_name, deck c_deck);
     void draw_card(int times);
     void play_card(int index, board& b, row_side side);
+    std::unique_ptr<card> pull_from_hand_by_id(const std::string& id);
 
+    deck& get_deck() { return player_deck; }
     const std::vector<std::unique_ptr<card>>& get_hand() const { return hand; }
     const std::vector<std::unique_ptr<card>>& get_graveyard() const { return graveyard; }
 

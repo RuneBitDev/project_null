@@ -31,6 +31,18 @@ std::unique_ptr<card> deck::draw_top_card() {
     return top_card;
 }
 
+
+std::unique_ptr<card> deck::pull_card_by_id(const std::string& id) {
+    for (auto it = cards.begin(); it != cards.end(); ++it) {
+        if ((*it)->get_id() == id) {
+            std::unique_ptr<card> found = std::move(*it);
+            cards.erase(it);
+            return found;
+        }
+    }
+    return nullptr;
+}
+
 int deck::get_size() const{
     return cards.size();
 }

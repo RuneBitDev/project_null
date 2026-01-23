@@ -38,6 +38,7 @@ add_executable(project_null
         src/core/engine/state_manager.cpp
         src/visual/renderer.cpp
         src/visual/ui_element.cpp
+        src/core/components/abilities/ability_summon.cpp
 )
 
 # ------------------------------------------------------------------

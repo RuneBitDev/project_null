@@ -38,3 +38,14 @@ void player::play_card(int index, board &b, row_side side) {
 
 }
 
+std::unique_ptr<card> player::pull_from_hand_by_id(const std::string& id) {
+    for (auto it = hand.begin(); it != hand.end(); ++it) {
+        if ((*it)->get_id() == id) {
+            std::unique_ptr<card> found = std::move(*it);
+            hand.erase(it);
+            return found;
+        }
+    }
+    return nullptr;
+}
+

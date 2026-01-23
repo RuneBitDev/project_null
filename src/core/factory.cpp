@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "sqlite3.h"
 #include "game/factory.h"
 #include "../../include/game/components/card.h"
@@ -83,4 +84,21 @@ deck factory::build_deck(const std::string& faction) {
     }
 
     return deck(std::move(leader_ptr), std::move(deck_cards));
+}
+
+
+
+// -----------------------------
+// HELPER FUNCTIONS
+// ---------------------------------
+
+
+std::vector<std::string> parse_params(const std::string& col_data) {
+    std::vector<std::string> params;
+    std::stringstream ss(col_data);
+    std::string item;
+    while (std::getline(ss, item, ',')) { // Split by comma
+        params.push_back(item);
+    }
+    return params;
 }
