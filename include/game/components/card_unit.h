@@ -1,7 +1,6 @@
 #ifndef PROJECT_NULL_CARD_UNIT_H
 #define PROJECT_NULL_CARD_UNIT_H
 #include "card.h"
-#include "card_unit.h"
 #include <string>
 #include <memory>
 
@@ -11,6 +10,7 @@ public:
         std::string rarity, int slots, bool is_unlocked, int strength, std::string range_type);
 
     std::unique_ptr<card> clone() const override;
+    // bool set_ability(std::shared_ptr<ability> ability) override;
 
     int get_strength() const override;
     std::string get_range_type() const override;

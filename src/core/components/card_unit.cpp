@@ -1,6 +1,5 @@
-#include "../../../include/game/components/card.h"
+#include "game/components/card.h"
 #include "game/components/card_unit.h"
-#include <iostream>
 #include <utility>
 
 card_unit::card_unit(std::string card_id, std::string name, std::string faction_id, std::string card_type,

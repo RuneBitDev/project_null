@@ -2,9 +2,11 @@
 #define PROJECT_NULL_FACTORY_H
 #include <string>
 #include <vector>
+#include <memory>
 #include "components/card.h"
 #include "components/card_unit.h"
 #include "components/deck.h"
+#include "components/ability/ability.h"
 
 class factory {
 public:
@@ -16,9 +18,8 @@ public:
 
 private:
     std::vector<card> special_library;          // Leader and Special cards
-    std::vector<card_unit> unit_library;        // Unit cards
-
-
+    std::vector<card_unit> unit_library;
+    std::vector<std::shared_ptr<ability>> ability_library;
 };
 
 #endif //PROJECT_NULL_FACTORY_H

@@ -20,6 +20,8 @@ bool factory::load_master_data(const std::string &filepath) {
                       "c.slots, c.is_unlocked, u.strength, u.range_type "
                       "FROM cards c "
                       "LEFT JOIN unit_stats u ON c.card_id = u.card_id";
+
+
     sqlite3_stmt* stmt;
 
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {

@@ -1,30 +1,27 @@
-#include "../../../include/game/components/card.h"
-
+#include "game/components/card.h"
 #include <iostream>
 #include <ostream>
 #include <string>
+#include <utility>
 
 card::card(std::string c_card_id, std::string c_name, std::string c_faction_id, std::string c_card_type,
     std::string c_rarity, int c_slots, bool c_is_unlocked)
-    : card_id(c_card_id), name(c_name), faction_id(c_faction_id), card_type(c_card_type),
-    rarity(c_rarity), slots(c_slots), is_unlocked(c_is_unlocked) {}
+    : card_id(std::move(c_card_id)), name(std::move(c_name)), faction_id(std::move(c_faction_id)), card_type(std::move(c_card_type)),
+    rarity(std::move(c_rarity)), slots(c_slots), is_unlocked(c_is_unlocked) {}
 
-void card::display() const {
-    std::cout << "---------" << std::endl;
-    std::cout << "- " << get_id() << std::endl;
-    std::cout << "- " << get_name() << std::endl;
-    std::cout << "- " << get_faction_id() << std::endl;
-    std::cout << "- " << get_card_type() << std::endl;
-    std::cout << "- " << get_rarity() << std::endl;
-    std::cout << "- " << get_slots() << std::endl;
-    std::cout << "- " << get_is_unlocked() << std::endl;
-    std::cout << "---------" << std::endl;
 
-}
 
 std::unique_ptr<card> card::clone() const {
     return std::make_unique<card>(*this);
 }
+
+// bool card::set_ability(std::shared_ptr<ability> ability) {
+//     if (slots >= 1) {
+//         card_abilities.push_back(ability);
+//         return true;
+//     }
+//     return false;
+// }
 
 
 // -----------------------------------------

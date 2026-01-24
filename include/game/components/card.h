@@ -1,7 +1,7 @@
 #ifndef PROJECT_NULL_CARD_H
 #define PROJECT_NULL_CARD_H
+
 #include <string>
-#include <iostream>
 #include <memory>
 
 class card {
@@ -9,8 +9,8 @@ public:
     card(std::string card_id, std::string name, std::string faction_id, std::string card_type,
         std::string rarity, int slots, bool is_unlocked);
     virtual ~card() = default;
-    virtual void display() const;
     virtual std::unique_ptr<card> clone() const;
+    // virtual bool set_ability(std::shared_ptr<ability> ability);
 
     std::string get_id() const;
     std::string get_name() const;
@@ -33,6 +33,7 @@ private:
     std::string rarity;
     int slots;
     bool is_unlocked;
+    // std::vector<std::shared_ptr<ability>> card_abilities;
 
 };
 
