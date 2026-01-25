@@ -10,7 +10,9 @@ class player {
 public:
     player(std::string c_name, deck c_deck);
     void draw_card(int times);
-    void play_card(int index, board& b, row_side side);
+    void play_card(int index, board& b, row_side side, player& opponent);
+    void play_card(std::unique_ptr<card> card_to_play, board &b, player& opponent);
+    void execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_side side, player& opponent);
     std::unique_ptr<card> pull_from_hand_by_id(const std::string& id);
 
     deck& get_deck() { return player_deck; }

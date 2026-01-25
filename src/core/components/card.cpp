@@ -1,6 +1,4 @@
 #include "game/components/card.h"
-#include <iostream>
-#include <ostream>
 #include <string>
 #include <utility>
 
@@ -15,13 +13,9 @@ std::unique_ptr<card> card::clone() const {
     return std::make_unique<card>(*this);
 }
 
-// bool card::set_ability(std::shared_ptr<ability> ability) {
-//     if (slots >= 1) {
-//         card_abilities.push_back(ability);
-//         return true;
-//     }
-//     return false;
-// }
+void card::add_ability(std::shared_ptr<ability> ability_ptr) {
+    card_abilities.push_back(std::move(ability_ptr));
+}
 
 
 // -----------------------------------------
@@ -54,6 +48,10 @@ int card::get_slots() const {
 
 bool card::get_is_unlocked() const {
     return is_unlocked;
+}
+
+const std::vector<std::shared_ptr<ability>>& card::get_abilities() const {
+    return card_abilities;
 }
 
 

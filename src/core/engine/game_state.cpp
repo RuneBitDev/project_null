@@ -23,7 +23,7 @@ void game_state::handle_input(state_manager &manager) {
             };
 
             if (ui.card_rec(card_rect)) {
-                active_p.play_card(i, game_board, row_side::PLAYER);
+                active_p.play_card(i, game_board, row_side::PLAYER, p2);
 
                 if (!p2.get_has_passed()) {
                     active_player = 2;
@@ -40,7 +40,6 @@ void game_state::handle_input(state_manager &manager) {
 void game_state::update(float dt) {
     if (p1.get_has_passed() && p2.get_has_passed()) {
         if (!round_ended) {
-            // resolve_round();
             round_ended = true;
         }
         return;
@@ -49,11 +48,10 @@ void game_state::update(float dt) {
     if (active_player == 2 && !p2.get_has_passed()) {
         ai_timer += dt;
 
-        if (ai_timer >= 1.5f) { // Wait 1.5 seconds so the human can see what's happening
+        if (ai_timer >= 1.5f) {
             execute_ai_turn();
             ai_timer = 0.0f;
 
-            // After AI plays, switch back to Player 1 if they haven't passed
             if (!p1.get_has_passed()) {
                 active_player = 1;
             }
@@ -71,6 +69,16 @@ player& game_state::get_other_player() {
     return (active_player == 1) ? p2 : p1;
 }
 
+
+player& game_state::get_player(row_side side) {
+    return (side == row_side::PLAYER) ? p1 : p2;
+}
+
+player& game_state::get_opponent(row_side side) {
+    return (side == row_side::PLAYER) ? p2 : p1;
+}
+
+
 void game_state::execute_ai_turn() {
     auto& hand = p2.get_hand();
 
@@ -78,7 +86,7 @@ void game_state::execute_ai_turn() {
         p2.set_has_passed(true);
     } else {
         // Simple AI: Just play the first card in the vector
-        p2.play_card(0, game_board, row_side::OPPONENT);
+        p2.play_card(0, game_board, row_side::OPPONENT, p1);
         std::cout << "CARD PLAYED: ";
     }
 }

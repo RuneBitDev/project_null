@@ -15,6 +15,8 @@ public:
     void render(renderer& ren) override;
 
     std::string get_name() const override { return "game_state"; };
+    player& get_player(row_side side);
+    player& get_opponent(row_side side);
 
 private:
     board game_board;

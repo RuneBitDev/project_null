@@ -1,13 +1,10 @@
-#include "../../../include/game/components/board.h"
-#include <iostream>
+#include "game/components/board.h"
 
 void board::add_card(std::unique_ptr<card> c, row_side side, row_type type) {
     int i = static_cast<int>(side);
     int j = static_cast<int>(type);
 
-    if (i < 2 && j < 4) {
-        rows[i][j].push_back(std::move(c));
-    }
+    rows[i][j].push_back(std::move(c));
 }
 
 const std::vector<std::unique_ptr<card>>& board::get_row_cards(int side, int type) const {

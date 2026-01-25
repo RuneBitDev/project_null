@@ -3,8 +3,9 @@
 #include <sstream>
 #include "sqlite3.h"
 #include "game/factory.h"
-#include "../../include/game/components/card.h"
+#include "game/components/card.h"
 #include "game/components/card_unit.h"
+#include "game/components/ability/ability_summon.h"
 
 
 bool factory::load_master_data(const std::string &filepath) {
@@ -16,11 +17,35 @@ bool factory::load_master_data(const std::string &filepath) {
         return false;
     }
 
+    // LOAD ABILITIES
+    const char* sql_abilities = "SELECT ability_id, name, ability_type, params FROM abilities";
+    sqlite3_stmt* ab_stmt;
+    if (sqlite3_prepare_v2(db, sql_abilities, -1, &ab_stmt, nullptr) == SQLITE_OK) {
+        while (sqlite3_step(ab_stmt) == SQLITE_ROW) {
+            std::string ability_id = reinterpret_cast<const char*>(sqlite3_column_text(ab_stmt, 0));
+            std::string ability_name = reinterpret_cast<const char*>(sqlite3_column_text(ab_stmt, 1));
+            std::string ability_type  = reinterpret_cast<const char*>(sqlite3_column_text(ab_stmt, 2));
+            std::string ability_params = reinterpret_cast<const char*>(sqlite3_column_text(ab_stmt, 3));
+
+            std::shared_ptr<ability> new_ability = nullptr;
+            std::vector<std::string> parsed_params = parse_params(ability_params);
+            if (ability_type == "SUMMON") {
+                new_ability = std::make_shared<ability_summon>(ability_id, ability_name, ability_type, parsed_params);
+            }
+
+            if (new_ability) {
+                ability_library.push_back(new_ability);
+            }
+        }
+    }
+    sqlite3_finalize(ab_stmt);
+
+
+    // LOAD CARDS
     const char* sql = "SELECT c.card_id, c.name, c.faction_id, c.card_type, c.rarity, "
                       "c.slots, c.is_unlocked, u.strength, u.range_type "
                       "FROM cards c "
                       "LEFT JOIN unit_stats u ON c.card_id = u.card_id";
-
 
     sqlite3_stmt* stmt;
 
@@ -49,9 +74,29 @@ bool factory::load_master_data(const std::string &filepath) {
             special_library.emplace_back(card_id, name, faction_id, card_type, rarity, slots, is_unlocked);
         }
     }
-
-
     sqlite3_finalize(stmt);
+
+
+    // LINK CARD AND ABILITY
+    const char* link_sql = "SELECT card_id, ability_id FROM card_abilities";
+    sqlite3_stmt* link_stmt;
+    if (sqlite3_prepare_v2(db, link_sql, -1, &link_stmt, nullptr) == SQLITE_OK) {
+        while (sqlite3_step(link_stmt) == SQLITE_ROW) {
+            std::string cid = reinterpret_cast<const char*>(sqlite3_column_text(link_stmt, 0));
+            std::string aid = reinterpret_cast<const char*>(sqlite3_column_text(link_stmt, 1));
+
+            for (auto& ab : ability_library) {
+                if (ab->get_id() == aid) {
+                    for (auto& u : unit_library) if (u.get_id() == cid) u.add_ability(ab);
+                    for (auto& s : special_library) if (s.get_id() == cid) s.add_ability(ab);
+                    break;
+                }
+            }
+        }
+    }
+    sqlite3_finalize(link_stmt);
+
+
     sqlite3_close(db);
     return true;
 
@@ -95,12 +140,14 @@ deck factory::build_deck(const std::string& faction) {
 // ---------------------------------
 
 
-std::vector<std::string> parse_params(const std::string& col_data) {
+std::vector<std::string> factory::parse_params(const std::string& col_data) {
     std::vector<std::string> params;
     std::stringstream ss(col_data);
     std::string item;
-    while (std::getline(ss, item, ',')) { // Split by comma
-        params.push_back(item);
+    while (std::getline(ss, item, ',')) {
+        item.erase(0, item.find_first_not_of(" \t\r\n"));
+        item.erase(item.find_last_not_of(" \t\r\n") + 1);
+        if(!item.empty()) params.push_back(item);
     }
     return params;
 }
