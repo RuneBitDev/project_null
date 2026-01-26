@@ -1,4 +1,5 @@
 #include "game/components/player.h"
+#include "game/components/board.h"
 #include "game/components/ability/ability.h"
 #include <iostream>
 
@@ -28,9 +29,7 @@ void player::play_card(int index, board &b, row_side side, player& opponent) {
 void player::play_card(std::unique_ptr<card> card_to_play, board &b, player& opponent) {
     if (!card_to_play) return;
 
-    row_side side = (this->has_played) ? row_side::OPPONENT : row_side::PLAYER;
-
-    execute_play_card(std::move(card_to_play), b, side, opponent);
+    execute_play_card(std::move(card_to_play), b, this->get_side(), opponent);
 }
 
 void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_side side, player& opponent) {

@@ -4,7 +4,9 @@
 #include <vector>
 #include "deck.h"
 #include "card.h"
-#include "board.h"
+
+class board;
+enum class row_side;
 
 class player {
 public:
@@ -23,6 +25,8 @@ public:
     bool get_has_played() const { return has_played; };
     void set_has_passed(bool n_has_passed) {has_passed = n_has_passed;};
     void set_has_played(bool n_has_played){ has_played = n_has_played;};
+    void set_side(row_side s) { assigned_side = s; }
+    row_side get_side() const { return assigned_side; }
 
 private:
     std::string name;
@@ -31,6 +35,7 @@ private:
     deck player_deck;
     std::vector<std::unique_ptr<card>> hand;
     std::vector<std::unique_ptr<card>> graveyard;
+    row_side assigned_side;
 
 };
 

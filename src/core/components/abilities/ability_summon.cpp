@@ -22,7 +22,7 @@ void ability_summon::execute(ability_context &ctx) {
         }
 
         if (summoned_card) {
-            ctx.owner.execute_play_card(std::move(summoned_card), ctx.game_board, row_side::PLAYER, ctx.opponent);
+            ctx.owner.execute_play_card(std::move(summoned_card), ctx.game_board, ctx.owner.get_side(), ctx.opponent);
         } else {
             std::cout << "[DEBUG] FAILED to find target_id: '" << target_id << "' in Deck or Hand." << std::endl;
         }

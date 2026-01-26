@@ -4,6 +4,7 @@
 #include <array>
 #include "card.h"
 #include "card_unit.h"
+#include "player.h"
 
 enum class row_side { PLAYER, OPPONENT };
 enum class row_type { MELEE = 0, RANGED = 1, HEAVY = 2, NET = 3, SPECIAL = 4};
@@ -18,6 +19,7 @@ public:
     int calculate_total_score(row_side side) const;
 
     std::string get_row_name(row_type type) const;
+    row_side get_side(player& player) const;
     void clear_board();
 
 private:

@@ -4,7 +4,10 @@
 #include "visual/ui_element.h"
 
 game_state::game_state(player player1, player player2)
-    : p1(std::move(player1)), p2(std::move(player2)), current_round(1) {}
+    : p1(std::move(player1)), p2(std::move(player2)), current_round(1) {
+    p1.set_side(row_side::PLAYER);
+    p2.set_side(row_side::OPPONENT);
+}
 
 void game_state::handle_input(state_manager &manager) {
     ui_element ui;
