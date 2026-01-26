@@ -1,9 +1,15 @@
 #include "game/components/ability/ability_summon.h"
 #include <iostream>
 
-ability_summon::ability_summon(std::string id, std::string name, std::string type, std::vector<std::string> params)
-    : ability(std::move(id), std::move(name), std::move(type), params),
-      target_ids(params) {}
+ability_summon::ability_summon(std::string id, std::string name, std::string type, std::vector<ParamValue> params)
+    : ability(std::move(id), std::move(name), std::move(type), std::move(params)) {
+
+    for (const auto& p : ability_params) {
+        if (std::holds_alternative<std::string>(p)) {
+            target_ids.push_back(std::get<std::string>(p));
+        }
+    }
+}
 
 void ability_summon::execute(ability_context &ctx) {
     std::cout << "[DEBUG] Executing SUMMON for ability: " << get_id() << std::endl;

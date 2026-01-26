@@ -3,10 +3,13 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <variant>
 #include "components/card.h"
 #include "components/card_unit.h"
 #include "components/deck.h"
 #include "components/ability/ability.h"
+
+using ParamValue = std::variant<int, std::string>;
 
 class factory {
 public:
@@ -20,8 +23,7 @@ private:
     std::vector<card> special_library;
     std::vector<card_unit> unit_library;
     std::vector<std::shared_ptr<ability>> ability_library;
-
-    std::vector<std::string> parse_params(const std::string& col_data);
+    std::vector<ParamValue> parse_params(const std::string& col_data);
 };
 
 #endif //PROJECT_NULL_FACTORY_H

@@ -6,6 +6,7 @@
 #include "game/components/card.h"
 #include "game/components/card_unit.h"
 #include "game/components/ability/ability_summon.h"
+#include "game/components/ability/ability_spy.h"
 
 
 bool factory::load_master_data(const std::string &filepath) {
@@ -28,9 +29,11 @@ bool factory::load_master_data(const std::string &filepath) {
             std::string ability_params = reinterpret_cast<const char*>(sqlite3_column_text(ab_stmt, 3));
 
             std::shared_ptr<ability> new_ability = nullptr;
-            std::vector<std::string> parsed_params = parse_params(ability_params);
+            std::vector<ParamValue> parsed_params = parse_params(ability_params);
             if (ability_type == "SUMMON") {
                 new_ability = std::make_shared<ability_summon>(ability_id, ability_name, ability_type, parsed_params);
+            } else if (ability_type == "SPY") {
+                new_ability = std::make_shared<ability_spy>(ability_id, ability_name, ability_type, parsed_params);
             }
 
             if (new_ability) {
@@ -139,15 +142,26 @@ deck factory::build_deck(const std::string& faction) {
 // HELPER FUNCTIONS
 // ---------------------------------
 
-
-std::vector<std::string> factory::parse_params(const std::string& col_data) {
-    std::vector<std::string> params;
+std::vector<ParamValue> factory::parse_params(const std::string& col_data) {
+    std::vector<ParamValue> params;
     std::stringstream ss(col_data);
     std::string item;
+
     while (std::getline(ss, item, ',')) {
+        // Trim whitespace
         item.erase(0, item.find_first_not_of(" \t\r\n"));
         item.erase(item.find_last_not_of(" \t\r\n") + 1);
-        if(!item.empty()) params.push_back(item);
+
+        if (item.empty()) continue;
+
+        char* end;
+        long val = std::strtol(item.c_str(), &end, 10);
+
+        if (*end == '\0') {
+            params.push_back(static_cast<int>(val));
+        } else {
+            params.push_back(item);
+        }
     }
     return params;
 }

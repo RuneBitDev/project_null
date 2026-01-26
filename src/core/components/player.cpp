@@ -59,10 +59,19 @@ void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_sid
         std::cout << "[DEBUG] Special row_type: " << (int)target_row << std::endl;
     }
 
+    row_side placement_side = side;
     auto abilities = card_ptr->get_abilities();
     std::cout << "[DEBUG] Card has " << abilities.size() << " abilities to trigger." << std::endl;
 
-    b.add_card(std::move(card_ptr), side, target_row);
+    for (auto& ab : abilities) {
+        if (ab && ab->get_type() == "SPY") {
+            // Flip the side: if I play it, it goes to the OPPONENT
+            placement_side = (side == row_side::PLAYER) ? row_side::OPPONENT : row_side::PLAYER;
+            break;
+        }
+    }
+
+    b.add_card(std::move(card_ptr), placement_side, target_row);
 
     ability_context ctx { b, *this, opponent };
     for (auto& ab : abilities) {

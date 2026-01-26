@@ -39,6 +39,7 @@ add_executable(project_null
         src/visual/renderer.cpp
         src/visual/ui_element.cpp
         src/core/components/abilities/ability_summon.cpp
+        src/core/components/abilities/ability_spy.cpp
 )
 
 # ------------------------------------------------------------------

@@ -4,7 +4,7 @@
 
 class ability_summon : public ability {
 public:
-    ability_summon(std::string id, std::string name, std::string type, std::vector<std::string> params);
+    ability_summon(std::string id, std::string name, std::string type, std::vector<ParamValue> params);
     void execute(ability_context& ctx) override;
 
 private:
