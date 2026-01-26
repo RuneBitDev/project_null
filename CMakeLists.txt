@@ -40,6 +40,7 @@ add_executable(project_null
         src/visual/ui_element.cpp
         src/core/components/abilities/ability_summon.cpp
         src/core/components/abilities/ability_spy.cpp
+        src/core/components/abilities/ability_weather.cpp
 )
 
 # ------------------------------------------------------------------

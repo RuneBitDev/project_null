@@ -90,6 +90,5 @@ void game_state::execute_ai_turn() {
     } else {
         // Simple AI: Just play the first card in the vector
         p2.play_card(0, game_board, row_side::OPPONENT, p1);
-        std::cout << "CARD PLAYED: ";
     }
 }

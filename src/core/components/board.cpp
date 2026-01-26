@@ -4,6 +4,12 @@ void board::add_card(std::unique_ptr<card> c, row_side side, row_type type) {
     int i = static_cast<int>(side);
     int j = static_cast<int>(type);
 
+    if (is_row_weathered(type)) {
+        if (auto* unit = dynamic_cast<card_unit*>(c.get())) {
+            unit->set_weathered(true);
+        }
+    }
+
     rows[i][j].push_back(std::move(c));
 }
 
@@ -32,6 +38,15 @@ int board::calculate_total_score(row_side side) const {
     }
 
     return total_score;
+}
+
+void board::set_row_weather(row_type type, bool active) {
+    active_weather[type] = active;
+}
+
+bool board::is_row_weathered(row_type type) const {
+    auto it = active_weather.find(type);
+    return it != active_weather.end() && it->second;
 }
 
 std::string board::get_row_name(row_type type) const {

@@ -2,6 +2,7 @@
 #define PROJECT_NULL_BOARD_H
 #include <vector>
 #include <array>
+#include <map>
 #include "card.h"
 #include "card_unit.h"
 #include "player.h"
@@ -18,6 +19,9 @@ public:
     int calculate_row_score(row_side side, row_type type) const;
     int calculate_total_score(row_side side) const;
 
+    void set_row_weather(row_type type, bool active);
+    bool is_row_weathered(row_type type) const;
+
     std::string get_row_name(row_type type) const;
     row_side get_side(player& player) const;
     void clear_board();
@@ -25,6 +29,7 @@ public:
 private:
     std::array<std::array<std::vector<std::unique_ptr<card>>, 5>, 2> rows;
     std::vector<std::unique_ptr<card>> active_specials;
+    std::map<row_type, bool> active_weather;
 };
 
 #endif //PROJECT_NULL_BOARD_H

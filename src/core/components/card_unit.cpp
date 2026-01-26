@@ -13,14 +13,9 @@ std::unique_ptr<card> card_unit::clone() const {
 }
 
 
-int card_unit::get_strength() const {
-    return strength;
-}
-
 std::string card_unit::get_range_type() const {
     return range_type;
 }
-
 
 void card_unit::set_strength(int new_strength) {
     strength = new_strength;

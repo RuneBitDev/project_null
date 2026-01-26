@@ -22,14 +22,8 @@ void player::play_card(int index, board &b, row_side side, player& opponent) {
     auto it = hand.begin() + index;
     std::unique_ptr<card> card_to_play = std::move(*it);
     hand.erase(it);
-
+    std::cout << "\nDEBUG: Playing card : " << card_to_play->get_name() << std::endl;
     execute_play_card(std::move(card_to_play), b, side, opponent);
-}
-
-void player::play_card(std::unique_ptr<card> card_to_play, board &b, player& opponent) {
-    if (!card_to_play) return;
-
-    execute_play_card(std::move(card_to_play), b, this->get_side(), opponent);
 }
 
 void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_side side, player& opponent) {

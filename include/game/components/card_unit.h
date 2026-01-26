@@ -10,9 +10,9 @@ public:
         std::string rarity, int slots, bool is_unlocked, int strength, std::string range_type);
 
     std::unique_ptr<card> clone() const override;
-    // bool set_ability(std::shared_ptr<ability> ability) override;
 
-    int get_strength() const override;
+    int get_strength() const override {return weathered ? 1 : strength;}
+    void set_weathered(bool state) { weathered = state; }
     std::string get_range_type() const override;
     void set_strength(int new_strength);
     void set_range_type(std::string new_range_type);
@@ -20,6 +20,7 @@ public:
 private:
     int strength;
     std::string range_type;
+    bool weathered = false;
 
 };
 
