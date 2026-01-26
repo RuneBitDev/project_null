@@ -27,7 +27,7 @@ int board::calculate_row_score(row_side side, row_type type) const {
 int board::calculate_total_score(row_side side) const {
     int total_score = 0;
 
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 5; ++i) {
         total_score += calculate_row_score(side, static_cast<row_type>(i));
     }
 
@@ -40,6 +40,7 @@ std::string board::get_row_name(row_type type) const {
         case row_type::RANGED: return "RANGED";
         case row_type::HEAVY:  return "HEAVY";
         case row_type::NET:    return "NET";
+        case row_type::SPECIAL: return "SPECIAL";
         default:               return "UNKNOWN";
     }
 }

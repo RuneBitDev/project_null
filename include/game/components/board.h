@@ -23,7 +23,7 @@ public:
     void clear_board();
 
 private:
-    std::array<std::array<std::vector<std::unique_ptr<card>>, 4>, 2> rows;
+    std::array<std::array<std::vector<std::unique_ptr<card>>, 5>, 2> rows;
     std::vector<std::unique_ptr<card>> active_specials;
 };
 

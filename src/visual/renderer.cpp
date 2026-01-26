@@ -20,7 +20,7 @@ void renderer::draw_game(const board &b, const player &p1, player &p2) {
     draw_hand(p1);
     draw_graveyard(p1);
     draw_board(b);
-    // draw graveyard
+    draw_special_board(b);
 
 }
 
@@ -184,6 +184,36 @@ void renderer::draw_board(const board &board) {
 
             float score_x_offset = (type == 3) ? (current_row_x + current_row_width + 5) : (current_row_x - 60);
             DrawText(score_text.c_str(), score_x_offset, row_y + (render_config::card::CARD_HEIGHT/2) - 10, 20, DARKGREEN);
+        }
+    }
+}
+
+void renderer::draw_special_board(const board &board) {
+
+    float special_x = render_config::board::START_X + render_config::board::BOARD_WIDTH + 20.0f;
+    float center_y = (render_config::board::START_Y_OPPONENT + render_config::board::START_Y_PLAYER + render_config::card::CARD_HEIGHT) / 1.40f;
+
+
+    float vertical_spacing = 40.0f;
+
+    for (int side = 0; side < 2; side++) {
+
+        float row_y = (side == 1) ?
+                      (center_y - render_config::card::CARD_HEIGHT - vertical_spacing / 2) :
+                      (center_y + vertical_spacing / 2);
+
+        DrawRectangleLines(special_x - 5, row_y - 5,
+                           render_config::card::CARD_WIDTH + 10,
+                           render_config::card::CARD_HEIGHT + 10, DARKGREEN);
+
+        DrawText("SPECIAL", special_x, row_y - 20, 15, DARKGREEN);
+
+        const auto& special_cards = board.get_row_cards(side, 4);
+        float current_x = special_x;
+
+        for (const auto& card_ptr : special_cards) {
+            draw_card(card_ptr, current_x, row_y, false);
+            current_x += 15.0f;
         }
     }
 }

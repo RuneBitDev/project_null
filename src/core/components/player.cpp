@@ -54,6 +54,11 @@ void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_sid
         }
     }
 
+    if (type == "SPECIAL") {
+        target_row = row_type::SPECIAL;
+        std::cout << "[DEBUG] Special row_type: " << (int)target_row << std::endl;
+    }
+
     auto abilities = card_ptr->get_abilities();
     std::cout << "[DEBUG] Card has " << abilities.size() << " abilities to trigger." << std::endl;
 

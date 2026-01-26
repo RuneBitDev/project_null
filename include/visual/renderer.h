@@ -20,6 +20,7 @@ private:
     void draw_hand(const player& player);
     void draw_graveyard(const player& player);
     void draw_board(const board& board);
+    void draw_special_board(const board& board);
 };
 
 #endif //PROJECT_NULL_RENDERER_H
