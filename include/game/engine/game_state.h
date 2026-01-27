@@ -15,8 +15,7 @@ public:
     void render(renderer& ren) override;
 
     std::string get_name() const override { return "game_state"; };
-    player& get_player(row_side side);
-    player& get_opponent(row_side side);
+
 
 private:
     board game_board;
@@ -28,7 +27,9 @@ private:
     int current_round = 0;
     float ai_timer = 0.0f;
 
-    player& get_other_player();
+    int p1_cards_played = 0;
+    int p2_cards_played = 0;
+
     void execute_ai_turn();
 };
 

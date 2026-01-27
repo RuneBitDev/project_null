@@ -78,6 +78,10 @@ void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_sid
     }
 }
 
+void player::add_to_graveyard(std::unique_ptr<card> card_ptr) {
+    graveyard.push_back(std::move(card_ptr));
+}
+
 std::unique_ptr<card> player::pull_from_hand_by_id(const std::string& id) {
     for (auto it = hand.begin(); it != hand.end(); ++it) {
         if ((*it)->get_id() == id) {

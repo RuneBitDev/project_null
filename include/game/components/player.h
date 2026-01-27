@@ -11,16 +11,19 @@ enum class row_side;
 class player {
 public:
     player(std::string c_name, deck c_deck);
-    void draw_card(int times);
-    void play_card(int index, board& b, row_side side, player& opponent);
-    void play_card(std::unique_ptr<card> card_to_play, board &b, player& opponent);
-    void execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_side side, player& opponent);
-    std::unique_ptr<card> pull_from_hand_by_id(const std::string& id);
 
+    // Move Card (std::move)
+    void draw_card(int times); // from deck to hand
+    void play_card(int index, board& b, row_side side, player& opponent); // from hand to board
+    void execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_side side, player& opponent); // from deck or hand to board
+    void add_to_graveyard(std::unique_ptr<card> card_ptr); // from board to graveyard
+
+    std::unique_ptr<card> pull_from_hand_by_id(const std::string& id); // mainly for summon ability
+
+    // Getter & Setter
     deck& get_deck() { return player_deck; }
     const std::vector<std::unique_ptr<card>>& get_hand() const { return hand; }
     const std::vector<std::unique_ptr<card>>& get_graveyard() const { return graveyard; }
-
     bool get_has_passed() const { return has_passed; };
     bool get_has_played() const { return has_played; };
     void set_has_passed(bool n_has_passed) {has_passed = n_has_passed;};

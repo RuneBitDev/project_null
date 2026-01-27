@@ -1,6 +1,6 @@
 #include "game/components/board.h"
 
-
+// ---------------------------- MOVE ----------------------------
 void board::add_card(std::unique_ptr<card> c, row_side side, row_type type) {
     int i = static_cast<int>(side);
     int j = static_cast<int>(type);
@@ -19,7 +19,7 @@ const std::vector<std::unique_ptr<card>>& board::get_row_cards(int side, int typ
 }
 
 // sick Visitor Pattern
-void board::for_each_card(const std::function<void(card&)>& action) {
+void board::for_each_card(const std::function<void(card&)>& action) const {
     for (auto& side : rows) {
         for (auto& row : side) {
             for (auto& card_ptr : row) {
@@ -29,6 +29,27 @@ void board::for_each_card(const std::function<void(card&)>& action) {
     }
 }
 
+void board::clear_board(player &p1, player &p2) {
+    for (int side = 0; side < 2; ++side) {
+        player& target_player = (side == 0) ? p1 : p2;
+
+        // Iterate through all 5 row types (Melee, Ranged, Heavy, Net, Special)
+        for (int type = 0; type < 5; ++type) {
+            auto& current_row = rows[side][type];
+
+            for (auto& card_ptr : current_row) {
+                if (card_ptr) {
+                    target_player.add_to_graveyard(std::move(card_ptr));
+                }
+            }
+            current_row.clear();
+        }
+    }
+}
+
+
+
+// ---------------------------- SCORE ----------------------------
 int board::calculate_row_score(row_side side, row_type type) const {
     int score = 0;
     int s = static_cast<int>(side);
@@ -50,7 +71,7 @@ int board::calculate_total_score(row_side side) const {
 
     return total_score;
 }
-
+// ---------------------------- WEATHER ----------------------------
 void board::set_row_weather(row_type type, bool active) {
     active_weather[type] = active;
 }

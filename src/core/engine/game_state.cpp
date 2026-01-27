@@ -68,18 +68,8 @@ void game_state::render(renderer& renderer) {
 
 }
 
-player& game_state::get_other_player() {
-    return (active_player == 1) ? p2 : p1;
-}
 
 
-player& game_state::get_player(row_side side) {
-    return (side == row_side::PLAYER) ? p1 : p2;
-}
-
-player& game_state::get_opponent(row_side side) {
-    return (side == row_side::PLAYER) ? p2 : p1;
-}
 
 
 void game_state::execute_ai_turn() {
