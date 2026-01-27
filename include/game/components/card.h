@@ -14,19 +14,19 @@ public:
     virtual std::unique_ptr<card> clone() const;
     void add_ability(std::shared_ptr<ability> ability_ptr);
 
-    std::string get_id() const;
-    std::string get_name() const;
-    std::string get_faction_id() const;
-    std::string get_card_type() const;
-    std::string get_rarity() const;
-    int get_slots() const;
-    bool get_is_unlocked() const;
+    std::string get_id() const { return card_id; };
+    std::string get_name() const { return name; };
+    std::string get_faction_id() const { return faction_id; };
+    std::string get_card_type() const { return card_type; };
+    std::string get_rarity() const { return rarity; };
+    int get_slots() const { return slots; };
+    bool get_is_unlocked() const { return is_unlocked; };
     virtual int get_strength() const { return 0; }
     virtual std::string get_range_type() const { return ""; }
-    const std::vector<std::shared_ptr<ability>>& get_abilities() const;
+    const std::vector<std::shared_ptr<ability>>& get_abilities() const { return card_abilities; };
 
-    void set_slots(int new_slots);
-    void set_is_unlocked(bool new_value);
+    void set_slots(int new_slots) { slots = new_slots; };
+    void set_is_unlocked(bool new_value) { is_unlocked = new_value; };
 
 private:
     std::string card_id;
