@@ -1,4 +1,6 @@
-sqlite3.c linguist-vendored
-sqlite3.h linguist-vendored
+# Specific paths to exclude sqlite3 from linguist
+src/sqlite3.c linguist-vendored
+include/sqlite3.h linguist-vendored
 
+# Ensure all headers are treated as C++
 *.h linguist-language=cpp
