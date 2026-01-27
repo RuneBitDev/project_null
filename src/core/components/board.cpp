@@ -1,5 +1,6 @@
 #include "game/components/board.h"
 
+
 void board::add_card(std::unique_ptr<card> c, row_side side, row_type type) {
     int i = static_cast<int>(side);
     int j = static_cast<int>(type);
@@ -17,6 +18,16 @@ const std::vector<std::unique_ptr<card>>& board::get_row_cards(int side, int typ
     return rows[side][type];
 }
 
+// sick Visitor Pattern
+void board::for_each_card(const std::function<void(card&)>& action) {
+    for (auto& side : rows) {
+        for (auto& row : side) {
+            for (auto& card_ptr : row) {
+                if (card_ptr) action(*card_ptr);
+            }
+        }
+    }
+}
 
 int board::calculate_row_score(row_side side, row_type type) const {
     int score = 0;

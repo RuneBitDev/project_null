@@ -3,10 +3,12 @@
 #include "game/components/ability/ability.h"
 #include <iostream>
 
+#include "game/game_config.h"
+
 player::player(std::string c_name, deck c_deck)
     : name(std::move(c_name)), player_deck(std::move(c_deck)) {
     player_deck.shuffle();
-    draw_card(10);
+    draw_card(game_config::player_config::HAND_SIZE);
 }
 
 

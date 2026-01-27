@@ -9,6 +9,7 @@ namespace game_config {
 
     namespace player_config {
         constexpr int LIVES = 2;
+        constexpr int HAND_SIZE = 12;
     }
 
 

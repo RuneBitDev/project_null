@@ -9,7 +9,7 @@ public:
 
 private:
     row_type target_row_type;
-    void apply_weather_to_side(ability_context &ctx, row_side side);
+    bool clear_weather = false;
 };
 
 #endif //PROJECT_NULL_ABILITY_WEATHER_H

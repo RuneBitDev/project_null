@@ -3,9 +3,11 @@
 #include <vector>
 #include <array>
 #include <map>
+#include <functional>
 #include "card.h"
 #include "card_unit.h"
 #include "player.h"
+
 
 enum class row_side { PLAYER, OPPONENT };
 enum class row_type { MELEE = 0, RANGED = 1, HEAVY = 2, NET = 3, SPECIAL = 4};
@@ -16,6 +18,7 @@ public:
 
     void add_card(std::unique_ptr<card> c, row_side side, row_type type);
     const std::vector<std::unique_ptr<card>>& get_row_cards(int side, int type) const;
+    void for_each_card(const std::function<void(card&)>& action);
     int calculate_row_score(row_side side, row_type type) const;
     int calculate_total_score(row_side side) const;
 

@@ -14,19 +14,30 @@ ability_weather::ability_weather(std::string id, std::string name, std::string t
                 target_row_type = row_type::HEAVY;
             } else if (std::get<std::string>(p) == "NET") {
                 target_row_type = row_type::NET;
+            } else if (std::get<std::string>(p) == "CLEAR") {
+                clear_weather = true;
             }
         }
     }
 }
 
 void ability_weather::execute(ability_context &ctx) {
-    ctx.game_board.set_row_weather(target_row_type, true);
-
-    for (int side = 0; side < 2; ++side) {
-        const auto& row_cards = ctx.game_board.get_row_cards(side, static_cast<int>(target_row_type));
-        for (const auto& card_ptr : row_cards) {
-            if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
-                unit->set_weathered(true);
+    if (clear_weather) {
+        // Unapply weather for the whole board
+        ctx.game_board.for_each_card([](card& c) {
+            if (auto* unit = dynamic_cast<card_unit*>(&c)) {
+                unit->set_weathered(false);
+            }
+        });
+    } else {
+        // Apply weather to a specific row
+        ctx.game_board.set_row_weather(target_row_type, true);
+        for (int side = 0; side < 2; ++side) {
+            const auto& row_cards = ctx.game_board.get_row_cards(side, static_cast<int>(target_row_type));
+            for (const auto& card_ptr : row_cards) {
+                if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
+                    unit->set_weathered(true);
+                }
             }
         }
     }
