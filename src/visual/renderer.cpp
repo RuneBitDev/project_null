@@ -11,12 +11,12 @@ void renderer::draw_start_screen() {
 
 void renderer::draw_menu() {
     ClearBackground(BLACK);
-    draw_button_rec(render_config::ui::START_BUTTON, "START GAME");
+    draw_button(render_config::ui::START_BUTTON);
 }
 
 void renderer::draw_game(const board &b, const player &p1, player &p2) {
     ClearBackground(BLACK);
-
+    draw_button(render_config::ui::PASS_BUTTON);
     draw_hand(p1);
     draw_graveyard(p1);
     draw_board(b);
@@ -30,19 +30,25 @@ void renderer::draw_game(const board &b, const player &p1, player &p2) {
 // ---------------------------------------------------------------------
 
 
-void renderer::draw_button_rec(Rectangle rec, const char *text) {
-    bool hovered = CheckCollisionPointRec(render_config::get_virtual_mouse(), rec);
-    Color tint = hovered ? LIME : BLACK;
+void renderer::draw_button(const button& btn) {
+    Color tint = btn.is_hovered ? LIME : BLACK;
 
-    DrawRectangleRec(rec, tint);
-    DrawRectangleLinesEx(rec, 2 , GREEN);
+    DrawRectangleRec(btn.bounds, tint);
+    DrawRectangleLinesEx(btn.bounds, 2 , GREEN);
 
-    int fontSize = 40;
-    int textWidth = MeasureText(text, fontSize);
-    DrawText(text,
-        static_cast<int>(rec.x + (rec.width / 2 - textWidth / 2)),
-        static_cast<int>(rec.y + (rec.height / 2 - fontSize / 2)),
-        fontSize, GREEN);
+    if (btn.text) {
+        int fontSize = 40;
+        int textWidth = MeasureText(btn.text, fontSize);
+        DrawText(btn.text,
+            static_cast<int>(btn.bounds.x + (btn.bounds.width / 2 - textWidth / 2)),
+            static_cast<int>(btn.bounds.y + (btn.bounds.height / 2 - fontSize / 2)),
+            fontSize, GREEN);
+    }
+
+    if (btn.type == HOLDABLE) {
+        // Progression bar logic
+    }
+
 }
 
 void renderer::draw_text_centered(const char* text, int y, int size, Color color) {

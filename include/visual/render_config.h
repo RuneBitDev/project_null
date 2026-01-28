@@ -1,6 +1,7 @@
 #ifndef PROJECT_NULL_RENDER_CONFIG_H
 #define PROJECT_NULL_RENDER_CONFIG_H
 #include "raylib.h"
+#include "visual/ui_types.h"
 
 namespace render_config {
 
@@ -18,8 +19,8 @@ namespace render_config {
     constexpr Res screen_1440p = {2560, 1440, "2560x1440"};
 
     namespace ui {
-        constexpr Rectangle START_BUTTON = { 1080, 600, 400, 100};
-        constexpr Rectangle PASS_BUTTON = { 100, 100, 300, 100};
+        inline button START_BUTTON = { 1080, 600, 400, 100, CLICKABLE, 0, "Start Game"};
+        inline button PASS_BUTTON = { 100, 100, 300, 100, HOLDABLE, KEY_SPACE, "PASS"};
     }
 
     namespace card {

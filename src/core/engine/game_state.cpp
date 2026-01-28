@@ -11,7 +11,13 @@ game_state::game_state(player player1, player player2)
 
 void game_state::handle_input(state_manager &manager) {
     ui_element ui;
+    ui.update_button(render_config::ui::PASS_BUTTON);
     player& active_p = (active_player == 1) ? p1 : p2;
+
+    if (render_config::ui::PASS_BUTTON.triggered) {
+        p1.set_has_passed(true);
+        p2.set_has_passed(true);
+    }
 
     if (active_player == 1 && !p1.get_has_passed()) {
         const auto& hand = active_p.get_hand();

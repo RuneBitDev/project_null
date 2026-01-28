@@ -1,6 +1,7 @@
 #ifndef PROJECT_NULL_RENDERER_H
 #define PROJECT_NULL_RENDERER_H
 #include "raylib.h"
+#include "ui_types.h"
 #include "../game/components/board.h"
 #include "../game/components/player.h"
 
@@ -12,7 +13,7 @@ public:
     void draw_game( const board& b, const player& p1, player& p2);
 
 private:
-    void draw_button_rec(Rectangle rec, const char* text);
+    void draw_button(const button& btn);
     void draw_text_centered(const char* text, int y, int size, Color color);
     void draw_text_in_rect(const char* text, Rectangle rect, int y_offset, int size, Color color);
     void draw_card(const std::unique_ptr<card>& card, float x, float y, bool is_reverse);
