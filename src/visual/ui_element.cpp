@@ -61,3 +61,8 @@ void ui_element::update_button(button &btn) {
         btn.hold_progress = 0.0f;
     }
 }
+
+void ui_element::update_card(ui_card &card) {
+    Vector2 mouse_pos = render_config::get_virtual_mouse();
+    card.is_hovered = CheckCollisionPointRec(mouse_pos, card.bounds);
+}

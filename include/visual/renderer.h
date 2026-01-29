@@ -16,8 +16,7 @@ private:
     void draw_button(const button& btn);
     void draw_text_centered(const char* text, int y, int size, Color color);
     void draw_text_in_rect(const char* text, Rectangle rect, int y_offset, int size, Color color);
-    void draw_card(const std::unique_ptr<card>& card, float x, float y, bool is_reverse);
-    void draw_card_scaled(const std::unique_ptr<card>& card, float x, float y, float w, float h);
+    void draw_card(const std::unique_ptr<card>& card_ptr, ui_card& c);
     void draw_hand(const player& player);
     void draw_graveyard(const player& player);
     void draw_board(const board& board);

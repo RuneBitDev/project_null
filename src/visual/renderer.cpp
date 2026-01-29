@@ -63,15 +63,11 @@ void renderer::draw_text_in_rect(const char* text, Rectangle rect, int y_offset,
     DrawText(text, static_cast<int>(posX), static_cast<int>(rect.y) + y_offset, size, color);
 }
 
-void renderer::draw_card(const std::unique_ptr<card>& card, float x, float y, bool is_reverse) {
-    Rectangle rect = {x, y, render_config::card::CARD_WIDTH, render_config::card::CARD_HEIGHT};
+void renderer::draw_card(const std::unique_ptr<card>& card_ptr, ui_card& card) {
+    Rectangle rect = {card.bounds.x, card.bounds.y, card.bounds.width, card.bounds.height};
 
-    bool hovered = false;
-    if (!is_reverse) {
-        hovered = CheckCollisionPointRec(render_config::get_virtual_mouse(), rect);
-    }
 
-    if (hovered) {
+    if (card.is_hovered) {
         float scale = 1.1f;
         float new_w = rect.width * scale;
         float new_h = rect.height * scale;
@@ -84,50 +80,34 @@ void renderer::draw_card(const std::unique_ptr<card>& card, float x, float y, bo
         DrawRectangleRec(rect, BLACK);
     }
 
-    DrawRectangleLinesEx(rect, hovered ? 3 : 2, GREEN);
+    DrawRectangleLinesEx(rect, card.is_hovered ? 3 : 2, GREEN);
 
-    if (!is_reverse) {
-        if (auto* unit = dynamic_cast<card_unit*>(card.get())) {
-            float circle_radius = hovered ? 18.0f : 15.0f;
-            float circle_x = rect.x + (hovered ? 25 : 20);
-            float circle_y = rect.y + (hovered ? 25 : 20);
+    if (card.is_face_up) {
+        if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
+            float circle_radius = card.is_hovered ? 18.0f : 15.0f;
+            float circle_x = rect.x + (card.is_hovered ? 25 : 20);
+            float circle_y = rect.y + (card.is_hovered ? 25 : 20);
 
             DrawCircleLines(circle_x, circle_y, circle_radius, GREEN);
 
             std::string str_text = std::to_string(unit->get_strength());
-            int font_size = hovered ? 20 : 15;
+            int font_size = card.is_hovered ? 20 : 15;
             DrawText(str_text.c_str(), circle_x - (font_size/3), circle_y - (font_size/2), font_size, GREEN);
         }
 
-        int name_size = hovered ? 12 : 10;
-        draw_text_in_rect(card->get_name().c_str(), rect, static_cast<int>(rect.height) - (hovered ? 30 : 25), name_size, GREEN);
+        int name_size = card.is_hovered ? 12 : 10;
+        draw_text_in_rect(card_ptr->get_name().c_str(), rect, static_cast<int>(rect.height) - (card.is_hovered ? 30 : 25), name_size, GREEN);
     }
 }
 
-void renderer::draw_card_scaled(const std::unique_ptr<card>& card, float x, float y, float w, float h) {
-    Rectangle rect = { x, y, w, h };
-    DrawRectangle(x, y, w, h, BLACK);
-    DrawRectangleLinesEx(rect, 3, GREEN);
-
-    if (auto* unit = dynamic_cast<card_unit*>(card.get())) {
-        DrawCircleLines(x + 25, y + 25, 18, GREEN);
-        std::string str_text = std::to_string(unit->get_strength());
-        DrawText(str_text.c_str(), x + 18, y + 15, 20, GREEN);
-    }
-
-    std::string name = card->get_name();
-    int fontSize = 11;
-    int relative_y_offset = static_cast<int>(h) - 30;
-
-    draw_text_in_rect(name.c_str(), rect, relative_y_offset, fontSize, GREEN);
-}
 
 void renderer::draw_hand(const player &player) {
     float x_offset = render_config::hand::X_OFFSET;
-    const auto& hand = player.get_hand();
 
-    for (const auto& card_ptr : hand) {
-        draw_card(card_ptr, x_offset, render_config::hand::Y_OFFSET, false);
+    for (const auto& card_ptr : player.get_hand()) {
+        ui_card card = {x_offset, render_config::hand::Y_OFFSET, render_config::card::CARD_WIDTH, render_config::card::CARD_HEIGHT,
+            false, false, true};
+        draw_card(card_ptr, card);
         x_offset += render_config::card::CARD_WIDTH + 10;
     }
 }
@@ -136,7 +116,12 @@ void renderer::draw_graveyard(const player &player) {
 
     int count = 0;
     for (const auto& card_ptr : player.get_graveyard()) {
-        draw_card(card_ptr, render_config::graveyard::GY_X + (count * 2), render_config::graveyard::GY_Y + (count * 2), true);
+        ui_card card = {
+            render_config::graveyard::GY_X + (count * 2), render_config::graveyard::GY_Y + (count * 2),
+            render_config::card::CARD_WIDTH, render_config::card::CARD_HEIGHT,
+            false, false, false
+        };
+        draw_card(card_ptr, card);
         count ++;
     }
 }
