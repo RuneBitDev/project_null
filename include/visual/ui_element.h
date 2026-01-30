@@ -10,8 +10,8 @@ public:
     bool card_rec(Rectangle rec);
     bool button_pass(Rectangle rec);
 
-    void update_button(button& btn);
-    void update_card(ui_card& card);
+    static void update_button(button& btn);
+    static void update_card(ui_card& card);
 private:
     float hold_timer = 0.0f;
 };

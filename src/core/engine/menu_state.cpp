@@ -9,8 +9,7 @@ menu_state::menu_state(player p1, player p2)
 
 
 void menu_state::handle_input(state_manager &manager) {
-    ui_element ui;
-    ui.update_button(render_config::ui::START_BUTTON);
+    ui_element::update_button(render_config::ui::START_BUTTON);
     if (show_start_screen) {
         if (IsKeyPressed(KEY_ENTER)) show_start_screen = false;
     } else {

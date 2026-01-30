@@ -10,8 +10,7 @@ game_state::game_state(player player1, player player2)
 }
 
 void game_state::handle_input(state_manager &manager) {
-    ui_element ui;
-    ui.update_button(render_config::ui::PASS_BUTTON);
+    ui_element::update_button(render_config::ui::PASS_BUTTON);
     player& active_p = (active_player == 1) ? p1 : p2;
 
     if (render_config::ui::PASS_BUTTON.triggered) {
@@ -24,14 +23,9 @@ void game_state::handle_input(state_manager &manager) {
         float x_offset = render_config::hand::X_OFFSET;
 
         for (int i = 0; i < hand.size(); i++) {
-            Rectangle card_rect = {
-                x_offset,
-                render_config::hand::Y_OFFSET,
-                render_config::card::CARD_WIDTH,
-                render_config::card::CARD_HEIGHT
-            };
-
-            if (ui.card_rec(card_rect)) {
+            ui_card card(x_offset, render_config::hand::Y_OFFSET, true);
+            ui_element::update_card(card);
+            if (card.triggered) {
                 active_p.play_card(i, game_board, row_side::PLAYER, p2);
 
                 if (!p2.get_has_passed()) {

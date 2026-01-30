@@ -1,5 +1,6 @@
 #include "visual/renderer.h"
 #include "visual/render_config.h"
+#include "visual/ui_element.h"
 
 
 void renderer::draw_start_screen() {
@@ -63,30 +64,30 @@ void renderer::draw_text_in_rect(const char* text, Rectangle rect, int y_offset,
     DrawText(text, static_cast<int>(posX), static_cast<int>(rect.y) + y_offset, size, color);
 }
 
-void renderer::draw_card(const std::unique_ptr<card>& card_ptr, ui_card& card) {
-    Rectangle rect = {card.bounds.x, card.bounds.y, card.bounds.width, card.bounds.height};
-
+void renderer::draw_card(const std::unique_ptr<card>& card_ptr, float x, float y, bool is_face_up) {
+    ui_card card(x, y, is_face_up);
+    ui_element::update_card(card);
 
     if (card.is_hovered) {
         float scale = 1.1f;
-        float new_w = rect.width * scale;
-        float new_h = rect.height * scale;
+        float new_w = card.bounds.width * scale;
+        float new_h = card.bounds.height * scale;
 
-        rect.x -= (new_w - rect.width) / 2;
-        rect.y -= (new_h - rect.height) / 2;
-        rect.width = new_w;
-        rect.height = new_h;
+        card.bounds.x -= (new_w - card.bounds.width) / 2;
+        card.bounds.y -= (new_h - card.bounds.height) / 2;
+        card.bounds.width = new_w;
+        card.bounds.height = new_h;
 
-        DrawRectangleRec(rect, BLACK);
+        DrawRectangleRec(card.bounds, BLACK);
     }
 
-    DrawRectangleLinesEx(rect, card.is_hovered ? 3 : 2, GREEN);
+    DrawRectangleLinesEx(card.bounds, card.is_hovered ? 3 : 2, GREEN);
 
     if (card.is_face_up) {
         if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
             float circle_radius = card.is_hovered ? 18.0f : 15.0f;
-            float circle_x = rect.x + (card.is_hovered ? 25 : 20);
-            float circle_y = rect.y + (card.is_hovered ? 25 : 20);
+            float circle_x = card.bounds.x + (card.is_hovered ? 25.0f : 20.0f);
+            float circle_y = card.bounds.y + (card.is_hovered ? 25.0f : 20.0f);
 
             DrawCircleLines(circle_x, circle_y, circle_radius, GREEN);
 
@@ -96,7 +97,7 @@ void renderer::draw_card(const std::unique_ptr<card>& card_ptr, ui_card& card) {
         }
 
         int name_size = card.is_hovered ? 12 : 10;
-        draw_text_in_rect(card_ptr->get_name().c_str(), rect, static_cast<int>(rect.height) - (card.is_hovered ? 30 : 25), name_size, GREEN);
+        draw_text_in_rect(card_ptr->get_name().c_str(), card.bounds, static_cast<int>(card.bounds.height) - (card.is_hovered ? 30 : 25), name_size, GREEN);
     }
 }
 
@@ -105,9 +106,7 @@ void renderer::draw_hand(const player &player) {
     float x_offset = render_config::hand::X_OFFSET;
 
     for (const auto& card_ptr : player.get_hand()) {
-        ui_card card = {x_offset, render_config::hand::Y_OFFSET, render_config::card::CARD_WIDTH, render_config::card::CARD_HEIGHT,
-            false, false, true};
-        draw_card(card_ptr, card);
+        draw_card(card_ptr, x_offset, render_config::hand::Y_OFFSET, true);
         x_offset += render_config::card::CARD_WIDTH + 10;
     }
 }
@@ -116,12 +115,7 @@ void renderer::draw_graveyard(const player &player) {
 
     int count = 0;
     for (const auto& card_ptr : player.get_graveyard()) {
-        ui_card card = {
-            render_config::graveyard::GY_X + (count * 2), render_config::graveyard::GY_Y + (count * 2),
-            render_config::card::CARD_WIDTH, render_config::card::CARD_HEIGHT,
-            false, false, false
-        };
-        draw_card(card_ptr, card);
+        draw_card(card_ptr, render_config::graveyard::GY_X + (count * 2), render_config::graveyard::GY_Y + (count * 2), false);
         count ++;
     }
 }
@@ -132,7 +126,6 @@ void renderer::draw_board(const board &board) {
     float start_y_player = render_config::board::START_Y_PLAYER;
 
     float row_spacing = render_config::card::CARD_HEIGHT + 30.0f;
-    float card_spacing = 10.0f;
 
     float split_width = (render_config::board::BOARD_WIDTH / 2.0f) - 5.0f;
 
@@ -166,7 +159,8 @@ void renderer::draw_board(const board &board) {
             float current_x = current_row_x;
 
             for (const auto& card_ptr : row_cards) {
-                draw_card(card_ptr, current_x, row_y, false);
+                float card_spacing = 10.0f;
+                draw_card(card_ptr, current_x, row_y, true);
                 current_x += render_config::card::CARD_WIDTH + card_spacing;
             }
 
@@ -184,14 +178,12 @@ void renderer::draw_special_board(const board &board) {
     float special_x = render_config::board::START_X + render_config::board::BOARD_WIDTH + 20.0f;
     float center_y = (render_config::board::START_Y_OPPONENT + render_config::board::START_Y_PLAYER + render_config::card::CARD_HEIGHT) / 1.40f;
 
-
-    float vertical_spacing = 40.0f;
-
     for (int side = 0; side < 2; side++) {
+        float vertical_spacing = 40.0f;
 
         float row_y = (side == 1) ?
-                      (center_y - render_config::card::CARD_HEIGHT - vertical_spacing / 2) :
-                      (center_y + vertical_spacing / 2);
+                          (center_y - render_config::card::CARD_HEIGHT - vertical_spacing / 2) :
+                          (center_y + vertical_spacing / 2);
 
         DrawRectangleLines(special_x - 5, row_y - 5,
                            render_config::card::CARD_WIDTH + 10,
@@ -203,7 +195,7 @@ void renderer::draw_special_board(const board &board) {
         float current_x = special_x;
 
         for (const auto& card_ptr : special_cards) {
-            draw_card(card_ptr, current_x, row_y, false);
+            draw_card(card_ptr, current_x, row_y, true);
             current_x += 15.0f;
         }
     }
