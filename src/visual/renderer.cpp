@@ -1,4 +1,7 @@
 #include "visual/renderer.h"
+
+#include <iostream>
+
 #include "visual/render_config.h"
 #include "visual/ui_element.h"
 
@@ -31,7 +34,8 @@ void renderer::draw_game(const board &b, const player &p1, player &p2) {
 // ---------------------------------------------------------------------
 
 
-void renderer::draw_button(const button& btn) {
+void renderer::draw_button(button& btn) {
+    ui_element::update_button(btn);
     Color tint = btn.is_hovered ? LIME : BLACK;
 
     DrawRectangleRec(btn.bounds, tint);
@@ -47,7 +51,10 @@ void renderer::draw_button(const button& btn) {
     }
 
     if (btn.type == HOLDABLE) {
-        // Progression bar logic
+        float progress_width = btn.bounds.width * btn.hold_progress;
+        std::cout << progress_width << std::endl;
+        Rectangle fill_rect = {btn.bounds.x, btn.bounds.y, progress_width, btn.bounds.height};
+        DrawRectangleRec(fill_rect, GREEN);
     }
 
 }
