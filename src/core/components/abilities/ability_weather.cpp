@@ -29,6 +29,10 @@ void ability_weather::execute(ability_context &ctx) {
                 unit->set_weathered(false);
             }
         });
+        ctx.game_board.set_row_weather(row_type::MELEE, false);
+        ctx.game_board.set_row_weather(row_type::RANGED, false);
+        ctx.game_board.set_row_weather(row_type::HEAVY, false);
+        ctx.game_board.set_row_weather(row_type::NET, false);
     } else {
         // Apply weather to a specific row
         ctx.game_board.set_row_weather(target_row_type, true);
