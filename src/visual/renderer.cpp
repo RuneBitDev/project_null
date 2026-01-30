@@ -171,11 +171,22 @@ void renderer::draw_board(const board &board) {
                 current_x += render_config::card::CARD_WIDTH + card_spacing;
             }
 
-            int score = board.calculate_row_score(static_cast<row_side>(side), static_cast<row_type>(type));
-            std::string score_text = std::to_string(score);
+            // row scores
+            int row_score = board.calculate_row_score(static_cast<row_side>(side), static_cast<row_type>(type));
+            std::string row_score_text = std::to_string(row_score);
+            float row_score_x_offset = (type == 3) ? (current_row_x + current_row_width + 5) : (current_row_x - 60);
+            DrawText(row_score_text.c_str(), row_score_x_offset, row_y + (render_config::card::CARD_HEIGHT/2) - 10, 20, DARKGREEN);
 
-            float score_x_offset = (type == 3) ? (current_row_x + current_row_width + 5) : (current_row_x - 60);
-            DrawText(score_text.c_str(), score_x_offset, row_y + (render_config::card::CARD_HEIGHT/2) - 10, 20, DARKGREEN);
+            // side scores
+            int side_score = board.calculate_total_score(static_cast<row_side>(side));
+            std::string side_score_text = std::to_string(side_score);
+            float side_score_y_offset = (side == 1) ? 400 : 800;
+            DrawCircleLines(600, side_score_y_offset, 40, DARKGREEN);
+            DrawText(side_score_text.c_str(), 580, side_score_y_offset - 20, 40, DARKGREEN);
+
+
+
+
         }
     }
 }
