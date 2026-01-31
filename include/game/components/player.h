@@ -4,6 +4,7 @@
 #include <vector>
 #include "deck.h"
 #include "card.h"
+#include "game/game_config.h"
 
 class board;
 enum class row_side;
@@ -28,11 +29,15 @@ public:
     bool get_has_played() const { return has_played; };
     void set_has_passed(bool n_has_passed) {has_passed = n_has_passed;};
     void set_has_played(bool n_has_played){ has_played = n_has_played;};
-    void set_side(row_side s) { assigned_side = s; }
     row_side get_side() const { return assigned_side; }
+    void set_side(row_side s) { assigned_side = s; }
+    int get_lives() const { return lives; }
+    void lose_live() { lives --; }
+
 
 private:
     std::string name;
+    int lives = game_config::player_config::LIVES;
     bool has_passed = false;
     bool has_played = false;
     deck player_deck;

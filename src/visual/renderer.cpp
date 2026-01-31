@@ -52,7 +52,6 @@ void renderer::draw_button(button& btn) {
 
     if (btn.type == HOLDABLE) {
         float progress_width = btn.bounds.width * btn.hold_progress;
-        std::cout << progress_width << std::endl;
         Rectangle fill_rect = {btn.bounds.x, btn.bounds.y, progress_width, btn.bounds.height};
         DrawRectangleRec(fill_rect, GREEN);
     }
@@ -183,8 +182,6 @@ void renderer::draw_board(const board &board) {
             float side_score_y_offset = (side == 1) ? 400 : 800;
             DrawCircleLines(600, side_score_y_offset, 40, DARKGREEN);
             DrawText(side_score_text.c_str(), 580, side_score_y_offset - 20, 40, DARKGREEN);
-
-
 
 
         }

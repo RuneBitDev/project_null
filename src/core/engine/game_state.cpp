@@ -42,9 +42,20 @@ void game_state::handle_input(state_manager &manager) {
 
 void game_state::update(float dt) {
     if (p1.get_has_passed() && p2.get_has_passed()) {
-        if (!round_ended) {
-            round_ended = true;
+        switch (end_round()) {
+            case game_end::CONTINUE:
+                break;
+            case game_end::WIN:
+                // WIN
+            case game_end::LOSE:
+                // LOSE
+            case game_end::DRAW:
+                // DRAW
+            default:
+                std::cout << "\nTHIS SHOULD NEVER HAPPEN!!!";
         }
+
+
         return;
     }
 
@@ -68,7 +79,50 @@ void game_state::render(renderer& renderer) {
 
 }
 
+// ---------------------------------------
+// HELPER FUNCTIONS
+// ---------------------------------------
 
+game_end game_state::end_round() {
+    current_round++;
+
+    // Calculate Winner and store values
+    int round_score_player = game_board.calculate_total_score(row_side::PLAYER);
+    int round_score_opp = game_board.calculate_total_score(row_side::OPPONENT);
+    int end_of_round_score = round_score_player - round_score_opp;
+    std::cout << "\nSCORE: " << end_of_round_score << std::endl;
+
+    if (end_of_round_score > 0) {
+        end_of_round_state = round_state::WIN;
+        p2.lose_live();
+    } else if (end_of_round_score < 0) {
+        end_of_round_state = round_state::LOSE;
+        p1.lose_live();
+    } else {
+        end_of_round_state = round_state::DRAW;
+        p1.lose_live();
+        p2.lose_live();
+    }
+
+    round_scores[row_side::PLAYER].push_back(round_score_player);
+    round_scores[row_side::OPPONENT].push_back(round_score_opp);
+
+    if (p1.get_lives() == 0 && p2.get_lives() == 0) {
+        return  game_end::LOSE;
+    } else if (p2.get_lives() == 0) {
+        return game_end::WIN;
+    } else if (p2.get_lives() == 0 ) {
+        return game_end::DRAW;
+    }
+
+    // Reset for next round
+    game_board.clear_board(p1, p2);
+    p1.set_has_passed(false);
+    p2.set_has_passed(false);
+    return game_end::CONTINUE;
+
+
+}
 
 
 
