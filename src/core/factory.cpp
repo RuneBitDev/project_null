@@ -7,7 +7,7 @@
 #include "game/components/card_unit.h"
 #include "game/components/ability/ability_summon.h"
 #include "game/components/ability/ability_spy.h"
-#include "game/components/ability/ability_weather.h"
+#include "game/components/ability/ability_modifier.h"
 
 
 bool factory::load_master_data(const std::string &filepath) {
@@ -35,8 +35,8 @@ bool factory::load_master_data(const std::string &filepath) {
                 new_ability = std::make_shared<ability_summon>(ability_id, ability_name, ability_type, parsed_params);
             } else if (ability_type == "SPY") {
                 new_ability = std::make_shared<ability_spy>(ability_id, ability_name, ability_type, parsed_params);
-            } else if (ability_type == "WEATHER") {
-                new_ability = std::make_shared<ability_weather>(ability_id, ability_name, ability_type, parsed_params);
+            } else if (ability_type == "WEATHER" || ability_type == "BUFF") {
+                new_ability = std::make_shared<ability_modifier>(ability_id, ability_name, ability_type, parsed_params);
             }
 
             if (new_ability) {
@@ -166,5 +166,6 @@ std::vector<ParamValue> factory::parse_params(const std::string& col_data) {
             params.push_back(item);
         }
     }
+
     return params;
 }

@@ -12,6 +12,19 @@ std::unique_ptr<card> card_unit::clone() const {
     return std::make_unique<card_unit>(*this);
 }
 
+int card_unit::get_strength() const {
+    if (modifier == 1) {
+        return 1;
+    } else {
+        return strength + modifier;
+    }
+}
+
+void card_unit::set_weathered(bool state, int value) {
+    weathered = state;
+    modifier = value;
+}
+
 
 std::string card_unit::get_range_type() const {
     return range_type;

@@ -3,6 +3,7 @@
 #include "card.h"
 #include <string>
 #include <memory>
+#include <iostream>
 
 class card_unit : public card {
 public:
@@ -11,8 +12,8 @@ public:
 
     std::unique_ptr<card> clone() const override;
 
-    int get_strength() const override {return weathered ? 1 : strength;}
-    void set_weathered(bool state) { weathered = state; }
+    int get_strength() const override;
+    void set_weathered(bool state, int value);
     std::string get_range_type() const override;
     void set_strength(int new_strength);
     void set_range_type(std::string new_range_type);
@@ -21,6 +22,7 @@ private:
     int strength;
     std::string range_type;
     bool weathered = false;
+    int modifier = 0;
 
 };
 
