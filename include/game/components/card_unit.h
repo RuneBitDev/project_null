@@ -1,8 +1,10 @@
 #ifndef PROJECT_NULL_CARD_UNIT_H
 #define PROJECT_NULL_CARD_UNIT_H
-#include "card.h"
 #include <string>
 #include <memory>
+#include <tuple>
+#include "card.h"
+#include "game/game_config.h"
 
 
 class card_unit : public card {
@@ -12,6 +14,7 @@ public:
 
     std::unique_ptr<card> clone() const override;
     void set_modifier(bool state, int value); // should save modifiers into a vector probably
+    void safe_modifier(modifier_type m_type, int m_value);
 
     // GETTER & SETTER
     int get_strength() const override;
@@ -23,6 +26,7 @@ private:
     int strength;
     std::string range_type;
     bool modified = false;
+    std::vector<std::tuple<modifier_type, int>> modifiers;
     int modifier_value = 0;
 
 };

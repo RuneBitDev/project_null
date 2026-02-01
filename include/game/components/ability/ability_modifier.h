@@ -2,7 +2,7 @@
 #define PROJECT_NULL_ABILITY_WEATHER_H
 #include "game/components/ability/ability.h"
 
-enum class modifier_type {ADD, SUBTRACT, MULTIPLY, SET};
+
 
 class ability_modifier : public ability {
 public:
@@ -11,7 +11,7 @@ public:
 
 private:
     row_type target_row;
-    modifier_type modifier_type;
+    modifier_type m_type;
     int status_amount = 0;
     bool clear_weather = false;
 

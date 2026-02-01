@@ -24,18 +24,18 @@ ability_modifier::ability_modifier(std::string id, std::string name, std::string
         }
 
         if (type == "WEATHER") {
-            modifier_type = modifier_type::SET;
+            m_type = modifier_type::SET;
         } else if (type == "BUFF") {
-            modifier_type = modifier_type::ADD;
+            m_type = modifier_type::ADD;
         }
 
     }
 }
 
 void ability_modifier::execute(ability_context &ctx) {
-    if (modifier_type == modifier_type::SET) {
+    if (m_type == modifier_type::SET) {
         execute_weather(ctx);
-    } else if (modifier_type == modifier_type::ADD) {
+    } else if (m_type == modifier_type::ADD) {
         execute_buff(ctx);
     }
 }
@@ -46,7 +46,7 @@ void ability_modifier::execute_buff(ability_context &ctx) {
     const auto& row_cards = ctx.game_board.get_row_cards(0, static_cast<int>(target_row)); // side hardcoded for now
     for (const auto& card_ptr : row_cards) {
         if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
-            unit->set_modifier(true, status_amount);
+            unit->safe_modifier(m_type, status_amount);
         }
     }
 
@@ -72,7 +72,7 @@ void ability_modifier::execute_weather(ability_context& ctx) {
             const auto& row_cards = ctx.game_board.get_row_cards(side, static_cast<int>(target_row));
             for (const auto& card_ptr : row_cards) {
                 if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
-                    unit->set_modifier(true, 1);
+                    unit->safe_modifier(m_type, status_amount);
                 }
             }
         }
