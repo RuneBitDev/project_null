@@ -42,11 +42,12 @@ void ability_modifier::execute(ability_context &ctx) {
 
 void ability_modifier::execute_buff(ability_context &ctx) {
     std::cout << "INSIDE EXECUTE BUFF" << std::endl;
-    ctx.game_board.set_row_modifier(target_row, true); // this is a problem, it targets both sides
+    ctx.game_board.save_modifiers(row_side::PLAYER, target_row, m_type, status_amount); // this is a problem, it targets both sides
     const auto& row_cards = ctx.game_board.get_row_cards(0, static_cast<int>(target_row)); // side hardcoded for now
     for (const auto& card_ptr : row_cards) {
         if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
-            unit->safe_modifier(m_type, status_amount);
+            unit->save_modifier(m_type, status_amount);
+
         }
     }
 
@@ -61,18 +62,15 @@ void ability_modifier::execute_weather(ability_context& ctx) {
                 unit->set_modifier(false, 0);
             }
         });
-        ctx.game_board.set_row_modifier(row_type::MELEE, false);
-        ctx.game_board.set_row_modifier(row_type::RANGED, false);
-        ctx.game_board.set_row_modifier(row_type::HEAVY, false);
-        ctx.game_board.set_row_modifier(row_type::NET, false);
+        // still need to delete saved modifiers of board
     } else {
         // Apply weather to a specific row
-        ctx.game_board.set_row_modifier(target_row, true);
+        ctx.game_board.save_modifiers(row_side::PLAYER, target_row, m_type, status_amount);
         for (int side = 0; side < 2; ++side) {
             const auto& row_cards = ctx.game_board.get_row_cards(side, static_cast<int>(target_row));
             for (const auto& card_ptr : row_cards) {
                 if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
-                    unit->safe_modifier(m_type, status_amount);
+                    unit->save_modifier(m_type, status_amount);
                 }
             }
         }

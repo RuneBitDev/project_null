@@ -14,7 +14,7 @@ public:
 
     std::unique_ptr<card> clone() const override;
     void set_modifier(bool state, int value); // should save modifiers into a vector probably
-    void safe_modifier(modifier_type m_type, int m_value);
+    void save_modifier(modifier_type m_type, int m_value);
 
     // GETTER & SETTER
     int get_strength() const override;

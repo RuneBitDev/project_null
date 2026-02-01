@@ -2,12 +2,17 @@
 
 // ---------------------------- MOVE ----------------------------
 void board::add_card(std::unique_ptr<card> c, row_side side, row_type type) {
+    auto key = std::make_tuple(side, type);
     int i = static_cast<int>(side);
     int j = static_cast<int>(type);
 
-    if (is_row_modified(type)) {
+    if (is_side_row_modified(key)) {
         if (auto* unit = dynamic_cast<card_unit*>(c.get())) {
-            unit->set_modifier(true, 1);
+            for (auto& modifier : active_modifiers[key]) {
+                modifier_type m_type = std::get<0>(modifier);
+                int m_value = std::get<1>(modifier);
+                unit->save_modifier(m_type, m_value);
+            }
         }
     }
 
@@ -18,16 +23,6 @@ const std::vector<std::unique_ptr<card>>& board::get_row_cards(int side, int typ
     return rows[side][type];
 }
 
-// sick Visitor Pattern
-void board::for_each_card(const std::function<void(card&)>& action) const {
-    for (auto& side : rows) {
-        for (auto& row : side) {
-            for (auto& card_ptr : row) {
-                if (card_ptr) action(*card_ptr);
-            }
-        }
-    }
-}
 
 void board::clear_board(player &p1, player &p2) {
     for (int side = 0; side < 2; ++side) {
@@ -43,7 +38,7 @@ void board::clear_board(player &p1, player &p2) {
                 }
             }
             current_row.clear();
-            set_row_modifier(static_cast<row_type>(type), false);
+            // still need to delete saved modifiers
         }
     }
 }
@@ -72,14 +67,30 @@ int board::calculate_total_score(row_side side) const {
 
     return total_score;
 }
-// ---------------------------- WEATHER ----------------------------
-void board::set_row_modifier(row_type type, bool active) {
-    active_weather[type] = active;
+// ---------------------------- MODIFIER ----------------------------
+
+void board::save_modifiers(row_side side, row_type r_type, modifier_type m_type, int m_value) {
+    auto key = std::make_tuple(side, r_type);
+    active_modifiers[key].emplace_back(m_type, m_value);
 }
 
-bool board::is_row_modified(row_type type) const {
-    auto it = active_weather.find(type);
-    return it != active_weather.end() && it->second;
+bool board::is_side_row_modified(std::tuple<row_side, row_type> key) const {
+    auto it = active_modifiers.find(key);
+    return it != active_modifiers.end();
+}
+
+
+// ------------------------ GETTER & SETTER -------------------------
+
+// sick Visitor Pattern
+void board::for_each_card(const std::function<void(card&)>& action) const {
+    for (auto& side : rows) {
+        for (auto& row : side) {
+            for (auto& card_ptr : row) {
+                if (card_ptr) action(*card_ptr);
+            }
+        }
+    }
 }
 
 std::string board::get_row_name(row_type type) const {

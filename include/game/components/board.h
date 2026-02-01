@@ -24,8 +24,8 @@ public:
     int calculate_row_score(row_side side, row_type type) const;
     int calculate_total_score(row_side side) const;
     // modifier stuff
-    bool is_row_modified(row_type type) const;
-    void set_row_modifier(row_type type, bool active);
+    void save_modifiers(row_side side, row_type r_type, modifier_type m_type, int m_value);
+    bool is_side_row_modified(std::tuple<row_side, row_type> key) const;
 
     // Getter & Setter
     const std::vector<std::unique_ptr<card>>& get_row_cards(int side, int type) const;
@@ -37,6 +37,7 @@ private:
     std::array<std::array<std::vector<std::unique_ptr<card>>, 5>, 2> rows;
     std::vector<std::unique_ptr<card>> active_specials;
     std::map<row_type, bool> active_weather;
+    std::map<std::tuple<row_side, row_type>, std::vector<std::tuple<modifier_type, int>>> active_modifiers;
 };
 
 #endif //PROJECT_NULL_BOARD_H

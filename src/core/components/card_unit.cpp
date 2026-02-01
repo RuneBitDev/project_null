@@ -39,7 +39,7 @@ void card_unit::set_modifier(bool state, int value) {
     modifier_value = value;
 }
 
-void card_unit::safe_modifier(modifier_type m_type, int m_value) {
+void card_unit::save_modifier(modifier_type m_type, int m_value) {
     modifiers.emplace_back(m_type, m_value);
     // Sort that shit
     auto get_priority = [](modifier_type t) {
