@@ -26,8 +26,8 @@ int main() {
         return 1;
     }
 
-    player p1("Arasaka", game_factory.build_deck("maelstrom"));
-    player p2("Barghest", game_factory.build_deck("arasaka"));
+    player p1("Arasaka", game_factory.build_deck("arasaka"));
+    player p2("Barghest", game_factory.build_deck("maelstrom"));
 
     manager.push_state(std::make_unique<menu_state>(std::move(p1), std::move(p2)));
 

@@ -46,13 +46,13 @@ void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_sid
             else if (range == "RANGED") target_row = row_type::RANGED;
             else if (range == "HEAVY") target_row = row_type::HEAVY;
             else if (range == "NET") target_row = row_type::NET;
-            std::cout << "[DEBUG] Unit range: " << range << " -> Row: " << (int)target_row << std::endl;
+            std::cout << "[DEBUG] Unit range: " << range << " -> Row: " << static_cast<int>(target_row) << std::endl;
         }
     }
 
     if (type == "SPECIAL") {
         target_row = row_type::SPECIAL;
-        std::cout << "[DEBUG] Special row_type: " << (int)target_row << std::endl;
+        std::cout << "[DEBUG] Special row_type: " << static_cast<int>(target_row) << std::endl;
     }
 
     row_side placement_side = side;
