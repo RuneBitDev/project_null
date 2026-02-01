@@ -7,7 +7,7 @@ void board::add_card(std::unique_ptr<card> c, row_side side, row_type type) {
 
     if (is_row_weathered(type)) {
         if (auto* unit = dynamic_cast<card_unit*>(c.get())) {
-            unit->set_weathered(true);
+            unit->set_weathered(true, 1);
         }
     }
 
@@ -43,6 +43,7 @@ void board::clear_board(player &p1, player &p2) {
                 }
             }
             current_row.clear();
+            set_row_weather(static_cast<row_type>(type), false);
         }
     }
 }
