@@ -23,10 +23,9 @@ public:
     // calculate score
     int calculate_row_score(row_side side, row_type type) const;
     int calculate_total_score(row_side side) const;
-    // weather stuff
+    // modifier stuff
     bool is_row_modified(row_type type) const;
     void set_row_modifier(row_type type, bool active);
-    // buff stuff
 
     // Getter & Setter
     const std::vector<std::unique_ptr<card>>& get_row_cards(int side, int type) const;

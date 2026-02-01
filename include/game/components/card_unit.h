@@ -3,7 +3,7 @@
 #include "card.h"
 #include <string>
 #include <memory>
-#include <iostream>
+
 
 class card_unit : public card {
 public:
@@ -11,18 +11,19 @@ public:
         std::string rarity, int slots, bool is_unlocked, int strength, std::string range_type);
 
     std::unique_ptr<card> clone() const override;
+    void set_modifier(bool state, int value); // should save modifiers into a vector probably
 
+    // GETTER & SETTER
     int get_strength() const override;
-    void set_weathered(bool state, int value);
-    std::string get_range_type() const override;
     void set_strength(int new_strength);
+    std::string get_range_type() const override;
     void set_range_type(std::string new_range_type);
 
 private:
     int strength;
     std::string range_type;
-    bool weathered = false;
-    int modifier = 0;
+    bool modified = false;
+    int modifier_value = 0;
 
 };
 

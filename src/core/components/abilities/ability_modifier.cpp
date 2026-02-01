@@ -22,33 +22,31 @@ ability_modifier::ability_modifier(std::string id, std::string name, std::string
         if (std::holds_alternative<int>(p)) {
             status_amount = std::get<int>(p);
         }
-        std::cout << "\nINSIDE CONSTRUCTOR: " << type << std::endl;
 
         if (type == "WEATHER") {
-            is_weather = true;
+            modifier_type = modifier_type::SET;
         } else if (type == "BUFF") {
-            is_status = true;
+            modifier_type = modifier_type::ADD;
         }
 
     }
 }
 
 void ability_modifier::execute(ability_context &ctx) {
-    std::cout << "INSIDE EXECUTE: STATUS: " << is_status << ", WEATHER: " << is_weather << std::endl;
-    if (is_weather) {
+    if (modifier_type == modifier_type::SET) {
         execute_weather(ctx);
-    } else if (is_status) {
+    } else if (modifier_type == modifier_type::ADD) {
         execute_buff(ctx);
     }
 }
 
 void ability_modifier::execute_buff(ability_context &ctx) {
     std::cout << "INSIDE EXECUTE BUFF" << std::endl;
-    ctx.game_board.set_row_modifier(target_row, true);
-    const auto& row_cards = ctx.game_board.get_row_cards(0, static_cast<int>(target_row));
+    ctx.game_board.set_row_modifier(target_row, true); // this is a problem, it targets both sides
+    const auto& row_cards = ctx.game_board.get_row_cards(0, static_cast<int>(target_row)); // side hardcoded for now
     for (const auto& card_ptr : row_cards) {
         if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
-            unit->set_weathered(true, status_amount);
+            unit->set_modifier(true, status_amount);
         }
     }
 
@@ -60,7 +58,7 @@ void ability_modifier::execute_weather(ability_context& ctx) {
         // Unapply weather for the whole board
         ctx.game_board.for_each_card([](card& c) {
             if (auto* unit = dynamic_cast<card_unit*>(&c)) {
-                unit->set_weathered(false, 0);
+                unit->set_modifier(false, 0);
             }
         });
         ctx.game_board.set_row_modifier(row_type::MELEE, false);
@@ -74,7 +72,7 @@ void ability_modifier::execute_weather(ability_context& ctx) {
             const auto& row_cards = ctx.game_board.get_row_cards(side, static_cast<int>(target_row));
             for (const auto& card_ptr : row_cards) {
                 if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
-                    unit->set_weathered(true, 1);
+                    unit->set_modifier(true, 1);
                 }
             }
         }

@@ -2,6 +2,8 @@
 #define PROJECT_NULL_ABILITY_WEATHER_H
 #include "game/components/ability/ability.h"
 
+enum class modifier_type {ADD, SUBTRACT, MULTIPLY, SET};
+
 class ability_modifier : public ability {
 public:
     ability_modifier(std::string id, std::string name, std::string type, std::vector<ParamValue> params);
@@ -9,9 +11,8 @@ public:
 
 private:
     row_type target_row;
-    bool is_status = false;
+    modifier_type modifier_type;
     int status_amount = 0;
-    bool is_weather = false;
     bool clear_weather = false;
 
     void execute_buff(ability_context &ctx);

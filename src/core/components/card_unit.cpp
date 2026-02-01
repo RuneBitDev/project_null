@@ -13,16 +13,16 @@ std::unique_ptr<card> card_unit::clone() const {
 }
 
 int card_unit::get_strength() const {
-    if (modifier == 1) {
+    if (modifier_value == 1) {
         return 1;
     } else {
-        return strength + modifier;
+        return strength + modifier_value;
     }
 }
 
-void card_unit::set_weathered(bool state, int value) {
-    weathered = state;
-    modifier = value;
+void card_unit::set_modifier(bool state, int value) {
+    modified = state;
+    modifier_value = value;
 }
 
 

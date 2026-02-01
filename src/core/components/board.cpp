@@ -7,7 +7,7 @@ void board::add_card(std::unique_ptr<card> c, row_side side, row_type type) {
 
     if (is_row_modified(type)) {
         if (auto* unit = dynamic_cast<card_unit*>(c.get())) {
-            unit->set_weathered(true, 1);
+            unit->set_modifier(true, 1);
         }
     }
 
