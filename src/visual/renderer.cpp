@@ -22,7 +22,7 @@ void renderer::draw_game(const board &b, const player &p1, player &p2) {
     ClearBackground(BLACK);
     draw_button(render_config::ui::PASS_BUTTON);
     draw_hand(p1);
-    draw_graveyard(p1);
+    draw_graveyard(p1, p2);
     draw_board(b);
     draw_special_board(b);
 
@@ -117,13 +117,25 @@ void renderer::draw_hand(const player &player) {
     }
 }
 
-void renderer::draw_graveyard(const player &player) {
-
+void renderer::draw_graveyard(const player& p1, const player& p2) {
+    float y_offset_p1 = render_config::graveyard::GY_Y + 550;
+    float y_offset_p2 = render_config::graveyard::GY_Y - 550;
+    float gy_x = render_config::graveyard::GY_X;
+    Rectangle gy_bounds_p1 = {gy_x, y_offset_p1, 150, 200};
+    Rectangle gy_bounds_p2 = {gy_x, y_offset_p2, 150, 200};
     int count = 0;
-    for (const auto& card_ptr : player.get_graveyard()) {
-        draw_card(card_ptr, render_config::graveyard::GY_X + (count * 2), render_config::graveyard::GY_Y + (count * 2), false);
+
+    DrawRectangleLinesEx(gy_bounds_p1, 10, DARKGREEN);
+    for (const auto& card_ptr : p1.get_graveyard()) {
+        draw_card(card_ptr, gy_x + 20 + (count * 2), y_offset_p1 + 25 - (count * 2), false);
         count ++;
     }
+    DrawRectangleLinesEx(gy_bounds_p2, 10, DARKGREEN);
+    for (const auto& card_ptr : p2.get_graveyard()) {
+        draw_card(card_ptr, gy_x + 20 + (count * 2), y_offset_p2 + 25 - (count * 2), false);
+        count ++;
+    }
+
 }
 
 void renderer::draw_board(const board &board) {
