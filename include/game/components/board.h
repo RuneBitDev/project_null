@@ -25,7 +25,7 @@ public:
     int calculate_total_score(row_side side) const;
     // modifier stuff
     void save_modifiers(row_side side, row_type r_type, modifier_type m_type, int m_value);
-    bool is_side_row_modified(std::tuple<row_side, row_type> key) const;
+    bool is_side_row_modified(const std::tuple<row_side, row_type> &key) const;
     std::vector<std::tuple<modifier_type, int>> get_modifiers(row_side side, row_type type) const;
 
     // Getter & Setter

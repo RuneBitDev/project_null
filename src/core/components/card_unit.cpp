@@ -27,7 +27,7 @@ int card_unit::get_virtual_strength(const board &b, row_side side, row_type type
 
     const auto& board_mods = b.get_modifiers(side, type);
     for (const auto& b_modifier : board_mods) {
-        val += apply_mod_math(val, b_modifier);
+        val = apply_mod_math(val, b_modifier);
     }
 
     return val;

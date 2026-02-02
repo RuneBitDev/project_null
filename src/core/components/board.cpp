@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "game/components/board.h"
 
 // ---------------------------- MOVE ----------------------------
@@ -72,9 +73,22 @@ int board::calculate_total_score(row_side side) const {
 void board::save_modifiers(row_side side, row_type r_type, modifier_type m_type, int m_value) {
     auto key = std::make_tuple(side, r_type);
     active_modifiers[key].emplace_back(m_type, m_value);
+
+    auto get_priority = [](modifier_type t) {
+        switch (t) {
+            case modifier_type::SET:        return 0;
+            case modifier_type::ADD:        return 1;
+            case modifier_type::SUBTRACT:   return 2;
+            case modifier_type::MULTIPLY:   return 3;
+        }
+    };
+
+    std::ranges::sort(active_modifiers[key], [&](const auto& a, const auto& b) {
+        return get_priority(std::get<0>(a)) < get_priority(std::get<0>(b));
+    });
 }
 
-bool board::is_side_row_modified(std::tuple<row_side, row_type> key) const {
+bool board::is_side_row_modified(const std::tuple<row_side, row_type> &key) const {
     auto it = active_modifiers.find(key);
     return it != active_modifiers.end();
 }
@@ -87,7 +101,7 @@ std::vector<std::tuple<modifier_type, int>> board::get_modifiers(row_side side, 
         return it->second;
     }
 
-    static const std::vector<std::tuple<modifier_type, int>> empty_vector;
+    static constexpr std::vector<std::tuple<modifier_type, int>> empty_vector;
     return empty_vector;
 }
 

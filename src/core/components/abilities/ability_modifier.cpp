@@ -40,40 +40,21 @@ void ability_modifier::execute(ability_context &ctx) {
     }
 }
 
-void ability_modifier::execute_buff(ability_context &ctx) {
+void ability_modifier::execute_buff(const ability_context &ctx) const {
     std::cout << "INSIDE EXECUTE BUFF" << std::endl;
-    ctx.game_board.save_modifiers(ctx.owner.get_side(), target_row, m_type, status_amount); // this is a problem, it targets both sides
-    const auto& row_cards = ctx.game_board.get_row_cards(static_cast<int>(ctx.owner.get_side()), static_cast<int>(target_row));
-    for (const auto& card_ptr : row_cards) {
-        if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
-            unit->save_modifier(m_type, status_amount);
-
-        }
-    }
-
+    ctx.game_board.save_modifiers(ctx.owner.get_side(), target_row, m_type, status_amount);
 }
 
-void ability_modifier::execute_weather(ability_context& ctx) {
+
+void ability_modifier::execute_weather(const ability_context& ctx) const {
     std::cout << "INSIDE EXECUTE WEATHER" << std::endl;
     if (clear_weather) {
-        // Unapply weather for the whole board
-        ctx.game_board.for_each_card([](card& c) {
-            if (auto* unit = dynamic_cast<card_unit*>(&c)) {
-                // unit->delete_modifier(m_type); not work
-            }
-        });
-        // still need to delete saved modifiers of board
+        // To clear weather, we only need to clear the board's modifier map.
+        // You should add a clear_all_modifiers() or similar method to board.cpp
+        //ctx.game_board.clear_all_modifiers(); // This is much cleaner than iterating cards
     } else {
-        // Apply weather to a specific row
-        ctx.game_board.save_modifiers(ctx.owner.get_side(), target_row, m_type, status_amount);
-        ctx.game_board.save_modifiers(ctx.opponent.get_side(), target_row, m_type, status_amount);
-        for (int side = 0; side < 2; ++side) {
-            const auto& row_cards = ctx.game_board.get_row_cards(side, static_cast<int>(target_row));
-            for (const auto& card_ptr : row_cards) {
-                if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
-                    unit->save_modifier(m_type, status_amount);
-                }
-            }
-        }
+        // Apply weather to the same row for both players on the board
+        ctx.game_board.save_modifiers(row_side::PLAYER, target_row, m_type, status_amount);
+        ctx.game_board.save_modifiers(row_side::OPPONENT, target_row, m_type, status_amount);
     }
 }

@@ -18,13 +18,14 @@ void renderer::draw_menu() {
     draw_button(render_config::ui::START_BUTTON);
 }
 
-void renderer::draw_game(const board &b, const player &p1, player &p2) {
+void renderer::draw_game(const render_context& ctx) {
     ClearBackground(BLACK);
+    draw_board(ctx);
+    draw_special_board(ctx);
+    draw_hand(ctx.p1);
+    draw_graveyard(ctx.p1, ctx.p2);
+
     draw_button(render_config::ui::PASS_BUTTON);
-    draw_hand(p1);
-    draw_graveyard(p1, p2);
-    draw_board(b);
-    draw_special_board(b);
 
 }
 
@@ -70,7 +71,9 @@ void renderer::draw_text_in_rect(const char* text, Rectangle rect, int y_offset,
     DrawText(text, static_cast<int>(posX), static_cast<int>(rect.y) + y_offset, size, color);
 }
 
-void renderer::draw_card(const std::unique_ptr<card>& card_ptr, float x, float y, bool is_face_up) {
+void renderer::draw_card(const std::unique_ptr<card>& card_ptr, float x, float y, bool is_face_up,
+    const render_context* ctx, row_side side, row_type type) {
+
     ui_card card(x, y, is_face_up);
     ui_element::update_card(card);
 
@@ -89,15 +92,20 @@ void renderer::draw_card(const std::unique_ptr<card>& card_ptr, float x, float y
 
     DrawRectangleLinesEx(card.bounds, card.is_hovered ? 3 : 2, GREEN);
 
-    if (card.is_face_up) {
+    if (is_face_up) {
         if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
             float circle_radius = card.is_hovered ? 18.0f : 15.0f;
             float circle_x = card.bounds.x + (card.is_hovered ? 25.0f : 20.0f);
             float circle_y = card.bounds.y + (card.is_hovered ? 25.0f : 20.0f);
 
             DrawCircleLines(circle_x, circle_y, circle_radius, GREEN);
-
-            std::string str_text = std::to_string(unit->get_strength());
+            int val;
+            if (ctx) {
+                val = unit->get_virtual_strength(ctx->b, side, type);
+            } else {
+                val = unit->get_strength();
+            }
+            std::string str_text = std::to_string(val);
             int font_size = card.is_hovered ? 20 : 15;
             DrawText(str_text.c_str(), circle_x - (font_size/3), circle_y - (font_size/2), font_size, GREEN);
         }
@@ -112,7 +120,7 @@ void renderer::draw_hand(const player &player) {
     float x_offset = render_config::hand::X_OFFSET;
 
     for (const auto& card_ptr : player.get_hand()) {
-        draw_card(card_ptr, x_offset, render_config::hand::Y_OFFSET, true);
+        draw_card(card_ptr, x_offset, render_config::hand::Y_OFFSET, true, nullptr);
         x_offset += render_config::card::CARD_WIDTH + 10;
     }
 }
@@ -127,28 +135,30 @@ void renderer::draw_graveyard(const player& p1, const player& p2) {
 
     DrawRectangleLinesEx(gy_bounds_p1, 10, DARKGREEN);
     for (const auto& card_ptr : p1.get_graveyard()) {
-        draw_card(card_ptr, gy_x + 20 + (count * 2), y_offset_p1 + 25 - (count * 2), false);
+        draw_card(card_ptr, gy_x + 20 + (count * 2), y_offset_p1 + 25 - (count * 2), false, nullptr);
         count ++;
     }
     DrawRectangleLinesEx(gy_bounds_p2, 10, DARKGREEN);
     for (const auto& card_ptr : p2.get_graveyard()) {
-        draw_card(card_ptr, gy_x + 20 + (count * 2), y_offset_p2 + 25 - (count * 2), false);
+        draw_card(card_ptr, gy_x + 20 + (count * 2), y_offset_p2 + 25 - (count * 2), false, nullptr);
         count ++;
     }
 
 }
 
-void renderer::draw_board(const board &board) {
+void renderer::draw_board(const render_context& ctx) {
     float start_x = render_config::board::START_X;
     float start_y_opponent = render_config::board::START_Y_OPPONENT;
     float start_y_player = render_config::board::START_Y_PLAYER;
-
     float row_spacing = render_config::card::CARD_HEIGHT + 30.0f;
-
     float split_width = (render_config::board::BOARD_WIDTH / 2.0f) - 5.0f;
 
     for (int side = 0; side < 2; side++) {
+        row_side current_side = static_cast<row_side>(side);
+
         for (int type = 0; type < 4; type++) {
+            row_type current_type = static_cast<row_type>(type);
+
             float row_y;
             float current_row_x = start_x;
             float current_row_width = render_config::board::BOARD_WIDTH;
@@ -170,42 +180,42 @@ void renderer::draw_board(const board &board) {
 
             DrawRectangleLines(current_row_x - 10, row_y -5, current_row_width, render_config::card::CARD_HEIGHT + 10, DARKGREEN);
 
-            std::string type_label = board.get_row_name(static_cast<row_type>(type));
+            std::string type_label = ctx.b.get_row_name(current_type);
             DrawText(type_label.c_str(), current_row_x, row_y - 20, 15, DARKGREEN);
 
-            const auto& row_cards = board.get_row_cards(side, type);
+            const auto& row_cards = ctx.b.get_row_cards(side, type);
             float current_x = current_row_x;
 
             for (const auto& card_ptr : row_cards) {
                 float card_spacing = 10.0f;
-                draw_card(card_ptr, current_x, row_y, true);
+                draw_card(card_ptr, current_x, row_y, true, &ctx, current_side, current_type);
                 current_x += render_config::card::CARD_WIDTH + card_spacing;
             }
 
             // row scores
-            int row_score = board.calculate_row_score(static_cast<row_side>(side), static_cast<row_type>(type));
+            int row_score = ctx.b.calculate_row_score(static_cast<row_side>(side), static_cast<row_type>(type));
             std::string row_score_text = std::to_string(row_score);
             float row_score_x_offset = (type == 3) ? (current_row_x + current_row_width + 5) : (current_row_x - 60);
             DrawText(row_score_text.c_str(), row_score_x_offset, row_y + (render_config::card::CARD_HEIGHT/2) - 10, 20, DARKGREEN);
 
-            // side scores
-            int side_score = board.calculate_total_score(static_cast<row_side>(side));
-            std::string side_score_text = std::to_string(side_score);
-            float side_score_y_offset = (side == 1) ? 400 : 800;
-            DrawCircleLines(600, side_score_y_offset, 40, DARKGREEN);
-            DrawText(side_score_text.c_str(), 580, side_score_y_offset - 20, 40, DARKGREEN);
-
-
         }
+        // side scores
+        int side_score = ctx.b.calculate_total_score(static_cast<row_side>(side));
+        std::string side_score_text = std::to_string(side_score);
+        float side_score_y_offset = (side == 1) ? 400 : 800;
+        DrawCircleLines(600, side_score_y_offset, 40, DARKGREEN);
+        DrawText(side_score_text.c_str(), 580, side_score_y_offset - 20, 40, DARKGREEN);
+
     }
 }
 
-void renderer::draw_special_board(const board &board) {
+void renderer::draw_special_board(const render_context& ctx) {
 
     float special_x = render_config::board::START_X + render_config::board::BOARD_WIDTH + 20.0f;
     float center_y = (render_config::board::START_Y_OPPONENT + render_config::board::START_Y_PLAYER + render_config::card::CARD_HEIGHT) / 1.40f;
 
     for (int side = 0; side < 2; side++) {
+        row_side current_side = static_cast<row_side>(side);
         float vertical_spacing = 40.0f;
 
         float row_y = (side == 1) ?
@@ -218,12 +228,12 @@ void renderer::draw_special_board(const board &board) {
 
         DrawText("SPECIAL", special_x, row_y - 20, 15, DARKGREEN);
 
-        const auto& special_cards = board.get_row_cards(side, 4);
+        const auto& special_cards = ctx.b.get_row_cards(side, 4);
         float current_x = special_x;
 
         for (const auto& card_ptr : special_cards) {
-            draw_card(card_ptr, current_x, row_y, true);
-            current_x += 15.0f;
+            draw_card(card_ptr, current_x, row_y, true, &ctx, current_side, row_type::SPECIAL);
+            current_x += 15.0f;;
         }
     }
 }

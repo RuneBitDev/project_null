@@ -15,8 +15,8 @@ private:
     int status_amount = 0;
     bool clear_weather = false;
 
-    void execute_buff(ability_context &ctx);
-    void execute_weather(ability_context &ctx);
+    void execute_buff(const ability_context &ctx) const;
+    void execute_weather(const ability_context &ctx) const;
 };
 
 #endif //PROJECT_NULL_ABILITY_WEATHER_H
