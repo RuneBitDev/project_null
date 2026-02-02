@@ -1,5 +1,7 @@
 #include "game/components/ability/ability_spy.h"
 
+#include <iostream>
+
 ability_spy::ability_spy(std::string id, std::string name, std::string type, std::vector<ParamValue> params)
     : ability(std::move(id), std::move(name), std::move(type), std::move(params)) {
 

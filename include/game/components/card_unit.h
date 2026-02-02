@@ -5,7 +5,9 @@
 #include <tuple>
 #include "card.h"
 #include "game/game_config.h"
-
+class board;
+enum class row_side;
+enum class row_type;
 
 class card_unit : public card {
 public:
@@ -15,12 +17,14 @@ public:
     std::unique_ptr<card> clone() const override;
     void set_modifier(bool state, int value); // should save modifiers into a vector probably
     void save_modifier(modifier_type m_type, int m_value);
+    void delete_modifier(modifier_type m_type);
 
     // GETTER & SETTER
     int get_strength() const override;
-    void set_strength(int new_strength);
-    std::string get_range_type() const override;
-    void set_range_type(std::string new_range_type);
+    int get_virtual_strength(const board& b, row_side side, row_type type) const;
+    void set_strength(int new_strength) {strength = new_strength;};
+    std::string get_range_type() const override {return range_type;};
+    void set_range_type(const std::string &new_range_type) {range_type = new_range_type;};
 
 private:
     int strength;
@@ -28,6 +32,8 @@ private:
     bool modified = false;
     std::vector<std::tuple<modifier_type, int>> modifiers;
     int modifier_value = 0;
+
+    int apply_mod_math(int base_value, const std::tuple<modifier_type, int> &modifier) const;
 
 };
 

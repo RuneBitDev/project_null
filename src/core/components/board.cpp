@@ -79,6 +79,18 @@ bool board::is_side_row_modified(std::tuple<row_side, row_type> key) const {
     return it != active_modifiers.end();
 }
 
+std::vector<std::tuple<modifier_type, int>> board::get_modifiers(row_side side, row_type type) const {
+    auto key = std::make_tuple(side, type);
+    auto it = active_modifiers.find(key);
+
+    if (it != active_modifiers.end()) {
+        return it->second;
+    }
+
+    static const std::vector<std::tuple<modifier_type, int>> empty_vector;
+    return empty_vector;
+}
+
 
 // ------------------------ GETTER & SETTER -------------------------
 

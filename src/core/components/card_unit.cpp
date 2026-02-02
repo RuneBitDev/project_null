@@ -1,5 +1,6 @@
 #include "game/components/card.h"
 #include "game/components/card_unit.h"
+#include "game/components/board.h"
 #include <utility>
 #include <algorithm>
 
@@ -14,24 +15,23 @@ std::unique_ptr<card> card_unit::clone() const {
 }
 
 int card_unit::get_strength() const {
-    int virtual_strength = strength;
-
+    int val = strength;
     for (auto& modifier : modifiers) {
-        modifier_type m_type = std::get<0>(modifier);
-        int m_value = std::get<1>(modifier);
+        val = apply_mod_math(val, modifier);
+    }
+    return val;
+}
 
-        if (m_type == modifier_type::ADD) {
-            virtual_strength += m_value;
-        } else if (m_type == modifier_type::SUBTRACT) {
-            virtual_strength -= m_value;
-        } else if (m_type == modifier_type::MULTIPLY) {
-            virtual_strength *= m_value;
-        } else if (m_type == modifier_type::SET) {
-            virtual_strength = m_value;
-        }
+int card_unit::get_virtual_strength(const board &b, row_side side, row_type type) const {
+    int val = get_strength();
+
+    const auto& board_mods = b.get_modifiers(side, type);
+    for (const auto& b_modifier : board_mods) {
+        val += apply_mod_math(val, b_modifier);
     }
 
-    return virtual_strength;
+    return val;
+
 }
 
 void card_unit::set_modifier(bool state, int value) {
@@ -51,20 +51,33 @@ void card_unit::save_modifier(modifier_type m_type, int m_value) {
         }
     };
 
-    std::sort(modifiers.begin(), modifiers.end(), [&](const auto& a, const auto& b) {
+    std::ranges::sort(modifiers, [&](const auto& a, const auto& b) {
         return get_priority(std::get<0>(a)) < get_priority(std::get<0>(b));
     });
 }
 
-
-std::string card_unit::get_range_type() const {
-    return range_type;
+void card_unit::delete_modifier(modifier_type m_type) {
+    auto it = modifiers.begin();
+    while (it != modifiers.end()) {
+        if (std::get<0>(*it) == m_type) {
+            it = modifiers.erase(it); // Returns the next valid iterator
+        } else {
+            ++it;
+        }
+    }
 }
 
-void card_unit::set_strength(int new_strength) {
-    strength = new_strength;
-}
+// HELPER FUNCTIONS
 
-void card_unit::set_range_type(std::string new_range_type) {
-    range_type = std::move(new_range_type);
+int card_unit::apply_mod_math(int base_value, const std::tuple<modifier_type, int> &modifier) const{
+    modifier_type m_type = std::get<0>(modifier);
+    int m_value = std::get<1>(modifier);
+
+    switch (m_type) {
+        case modifier_type::SET:        return m_value;
+        case modifier_type::ADD:        return base_value + m_value;
+        case modifier_type::SUBTRACT:   return base_value - m_value;
+        case modifier_type::MULTIPLY:   return base_value * m_value;
+        default:                        return base_value;
+    }
 }

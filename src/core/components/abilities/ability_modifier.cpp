@@ -59,7 +59,7 @@ void ability_modifier::execute_weather(ability_context& ctx) {
         // Unapply weather for the whole board
         ctx.game_board.for_each_card([](card& c) {
             if (auto* unit = dynamic_cast<card_unit*>(&c)) {
-                // delete modifier from player
+                // unit->delete_modifier(m_type); not work
             }
         });
         // still need to delete saved modifiers of board
