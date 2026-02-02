@@ -2,33 +2,29 @@
 #include <iostream>
 
 
-ability_modifier::ability_modifier(std::string id, std::string name, std::string type, std::vector<ParamValue> params)
+ability_modifier::ability_modifier(std::string id, std::string name, const std::string &type, std::vector<ParamValue> params)
     : ability(std::move(id), std::move(name), type, std::move(params)) {
 
+    // 1. Assign modifier type based on ability type first
+    if (type == "WEATHER") {
+        m_type = modifier_type::SET;
+    } else if (type == "BUFF") {
+        m_type = modifier_type::ADD;
+    }
+
+    // 2. Parse parameters
     for (const auto& p : ability_params) {
         if (std::holds_alternative<std::string>(p)) {
-            if (std::get<std::string>(p) == "MELEE") {
-                target_row = row_type::MELEE;
-            }  else if (std::get<std::string>(p) == "RANGED") {
-                target_row = row_type::RANGED;
-            } else if (std::get<std::string>(p) == "HEAVY") {
-                target_row = row_type::HEAVY;
-            } else if (std::get<std::string>(p) == "NET") {
-                target_row = row_type::NET;
-            } else if (std::get<std::string>(p) == "CLEAR") {
-                clear_weather = true;
-            }
+            std::string val = std::get<std::string>(p);
+            if (val == "MELEE") target_row = row_type::MELEE;
+            else if (val == "RANGED") target_row = row_type::RANGED;
+            else if (val == "HEAVY") target_row = row_type::HEAVY;
+            else if (val == "NET") target_row = row_type::NET;
+            else if (val == "CLEAR") clear_weather = true;
         }
         if (std::holds_alternative<int>(p)) {
             status_amount = std::get<int>(p);
         }
-
-        if (type == "WEATHER") {
-            m_type = modifier_type::SET;
-        } else if (type == "BUFF") {
-            m_type = modifier_type::ADD;
-        }
-
     }
 }
 

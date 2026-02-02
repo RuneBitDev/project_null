@@ -53,7 +53,9 @@ int board::calculate_row_score(row_side side, row_type type) const {
     int t = static_cast<int>(type);
 
     for (const auto& card_ptr : rows[s][t]) {
-        score += card_ptr->get_strength();
+        if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
+            score += unit->get_virtual_strength(*this, side, type);
+        }
     }
 
     return score;
@@ -80,6 +82,7 @@ void board::save_modifiers(row_side side, row_type r_type, modifier_type m_type,
             case modifier_type::ADD:        return 1;
             case modifier_type::SUBTRACT:   return 2;
             case modifier_type::MULTIPLY:   return 3;
+            default:                        return 4;
         }
     };
 

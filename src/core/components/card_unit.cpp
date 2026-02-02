@@ -48,6 +48,7 @@ void card_unit::save_modifier(modifier_type m_type, int m_value) {
             case modifier_type::ADD:        return 1;
             case modifier_type::SUBTRACT:   return 2;
             case modifier_type::MULTIPLY:   return 3;
+            default:                        return 4;
         }
     };
 
