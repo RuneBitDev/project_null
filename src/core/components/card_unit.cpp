@@ -5,9 +5,9 @@
 #include <algorithm>
 
 card_unit::card_unit(std::string card_id, std::string name, std::string faction_id, std::string card_type,
-        std::string rarity, int slots, bool is_unlocked, int strength, std::string range_type)
-    : card(std::move(card_id), std::move(name), std::move(faction_id), std::move(card_type), std::move(rarity), slots, is_unlocked),
-        strength(strength), range_type(std::move(range_type)) {}
+        std::string rarity, bool is_unlocked, int strength, std::string range_type, int armor, int attack)
+    : card(std::move(card_id), std::move(name), std::move(faction_id), std::move(card_type), std::move(rarity), is_unlocked),
+        strength(strength), range_type(std::move(range_type)), armor(armor), attack(attack) {}
 
 
 std::unique_ptr<card> card_unit::clone() const {

@@ -12,7 +12,7 @@ enum class row_type;
 class card_unit : public card {
 public:
     card_unit(std::string card_id, std::string name, std::string faction_id, std::string card_type,
-        std::string rarity, int slots, bool is_unlocked, int strength, std::string range_type);
+        std::string rarity, bool is_unlocked, int strength, std::string range_type, int armor, int attack);
 
     std::unique_ptr<card> clone() const override;
     void set_modifier(bool state, int value); // should save modifiers into a vector probably
@@ -28,6 +28,8 @@ public:
 
 private:
     int strength;
+    int armor;
+    int attack;
     std::string range_type;
     bool modified = false;
     std::vector<std::tuple<modifier_type, int>> modifiers;

@@ -49,7 +49,7 @@ bool factory::load_master_data(const std::string &filepath) {
 
     // LOAD CARDS
     const char* sql = "SELECT c.card_id, c.name, c.faction_id, c.card_type, c.rarity, "
-                      "c.slots, c.is_unlocked, u.strength, u.range_type "
+                      "c.is_unlocked, u.strength, u.range_type, u.armor, u.attack "
                       "FROM cards c "
                       "LEFT JOIN unit_stats u ON c.card_id = u.card_id";
 
@@ -67,17 +67,18 @@ bool factory::load_master_data(const std::string &filepath) {
         std::string faction_id  = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
         std::string card_type   = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
         std::string rarity      = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
-        int slots               = sqlite3_column_int(stmt, 5);
-        bool is_unlocked        = sqlite3_column_int(stmt, 6) != 0;
+        bool is_unlocked        = sqlite3_column_int(stmt, 5) != 0;
 
         if (card_type == "UNIT") {
-            int strength            = sqlite3_column_int(stmt, 7);
-            const char* rg_ptr      = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 8));
+            int strength            = sqlite3_column_int(stmt, 6);
+            const char* rg_ptr      = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7));
             std::string range_type  = rg_ptr ? rg_ptr : "SPECIAL";
+            int armor            = sqlite3_column_int(stmt, 8);
+            int attack            = sqlite3_column_int(stmt, 9);
 
-            unit_library.emplace_back(card_id, name, faction_id, card_type, rarity, slots, is_unlocked, strength, range_type);
+            unit_library.emplace_back(card_id, name, faction_id, card_type, rarity, is_unlocked, strength, range_type, armor, attack);
         } else {
-            special_library.emplace_back(card_id, name, faction_id, card_type, rarity, slots, is_unlocked);
+            special_library.emplace_back(card_id, name, faction_id, card_type, rarity, is_unlocked);
         }
     }
     sqlite3_finalize(stmt);
