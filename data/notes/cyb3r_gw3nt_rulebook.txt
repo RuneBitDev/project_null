@@ -1,0 +1,75 @@
+------------------------------
+CYB3R GW3NT: Official Rulebook
+------------------------------
+Cyberpunk 2077 version of Gwent Card Game
+- Goal: Have the highest Total Strength on the board after both players Pass
+- The Catch: Your Strength only matters if your units survive the Firefight
+---------------------------------------------------------------------	
+
+Game Progression
+	- Currency: eddies
+	- Gamemodes: 
+		Campaign to unlock new factions
+		Free Play (different difficulties) to earn eddies
+		Sandbox to play around
+	- Card shop:
+		packs contain cards, weapons, cyberware or armor
+		packs cost eddies		
+
+
+The Deck Builder:
+You don't just find cards; you "chrome" them
+	- add and remove cards (must be in the same faction or neutral)
+	- Ripperdoc: modify cyberware and gear of card
+	- Workshop: dismantle (gain materials) and upgrade gear & cyberware
+	
+	
+The Unit Anatomy
+three primary stats, predefined gear and cyberware slots:
+	- Strength (S): Their contribution to the win total
+	- Armor (A): The "gate" that prevents destruction
+	- Attack (Atk): How much Armor they strip from an enemy per turn
+	- Mod Slot: A slot for a "Weapon" or "Cyberware" card
+other stats: 
+	- rarity, slots (amount of slotable cyberware)
+	
+	
+The 4-Row Dynamic
+	- Melee: can only attack melee row
+	- Ranged: can attack melee row (and further with mods)
+	- Heavy: can attack any row, but attacks every other turn
+	- Net: no attack, quickhacks (status effects, buffs, debuffs)
+		
+		
+		
+---------------------------------------------------------------------		
+The Cyber-Gwent Combat Loop:
+1. Round Start
+	- Draw: draw cards
+	- Maintenance: any "Start of Round" status effects trigger
+2. The Play Phase (P1 then P2)
+	Players take turns performing one action, must choose one:
+	- Deploy: unit card -> 4 rows (Melee, Ranged, Heavy, Net) + choose stance (aggressive, supressive, defensive)
+	- Execute: special card
+	- Pass: no more cards can be played
+	+ additionally stances can be changed
+3. The Resolution Phase (The "Firefight")
+	- Calculate Damage: Units compare their Attack value (plus Weapon Mods) against the target's Armor
+	- Break Thresholds: if Damage > Armor -> graveyard
+	- Armor Reduction: if Damage ≤ Armor -> reduce armor by attack amount
+	- Net Actions: Quickhacks resolve here
+4. End of Turn
+	- Check State: if both passed -> 5. else -> 2.
+5. End of Round / Game
+	- The "Chrome Graveyard": all units on the board are cleared
+	- Self-Destruct/Persistence: certain cards might stay on board or return to hand
+	- Winner: 2 rounds won
+
+
+
+
+
+
+	
+
+	

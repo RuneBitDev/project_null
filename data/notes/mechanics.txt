@@ -1,0 +1,28 @@
+Cyberware:
+- Kiroshi Optics: 		"On Deploy: 	Reveal one random card in the opponent’s hand"
+- Subdermal Armor: 		"On Deploy: 	Gain +4 Armor"
+- Biomonitor: 			"Start of Turn: If Armor is below 3, restore +2 Armor"
+- Netrunner OS: 		"Start of Turn:	Generate 2 RAM"
+- Pain Editor: 			"Start of Turn:	Increase Strength by +1 for every 5 Armor currently missing"
+- Sandevistan: 			"Passive: 		This unit always resolves its Attack before the opponent's units"
+- Smart Link: 			"Passive: 		This unit’s Attack ignores the 'Cover' rule of the Melee row"
+- Kerenzikov: 			"Passive: 		When this unit changes stances, gain +2 Armor for 1 turn."
+
+Quickhacks:
+- Overheat: 			"Cost 3 RAM; 	Reduce a target's Armor by 2 at the Start of every Turn for the rest of the round"
+- Short Circuit			"Cost 2 RAM; 	Deal 4 Damage directly to a target's Armor"
+- Weapon Glitch			"Cost 4 RAM;	et an enemy unit’s Attack to 0 until the end of the next Resolution Phase"
+
+Natural:
+- Jackie Welles: 		"Ofrenda: When this unit is destroyed, give +4 Strength to an adjacent unit"
+- Johnny Silverhand:	"Never Fade Away: Whenever an allied unit is destroyed, Johnny gains +2 Attack"
+- Adam Smasher:			"Relentless Metal: Only Aggressive stance -> overspill damage: destroy unit -> remaining attack hits new target"
+- Alt Cunninghame:		"The Ghost in the Ghost: 'Daemon' - everytime opponent plays quickhack lose 2 strength from strongest unit"
+- Panam Palmer: 		"Overwatch: Counter Attack every time melee card gets attacked"
+- Goro Takemura:		"Arasaka Protocol: Def.-> grants all adjacent units +3 Armor at the start of turn, if armor = 0 -> aggr. and gains +4 Attack"
+- Rebecca: 				"Trigger Happy: per attack -> lose 1 armor, gain 1 attack and double strength"
+
+Gear:
+- Overture Revolver: 	"Attack +4"
+- Crusher Shotgun: 		"Attack +3, 	spreads the damage adjacent to target"
+- Ashura Sniper: 		"Attack +2, 	can target any row"
