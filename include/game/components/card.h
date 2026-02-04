@@ -21,6 +21,8 @@ public:
     std::string get_rarity() const { return rarity; };
     bool get_is_unlocked() const { return is_unlocked; };
     virtual int get_strength() const { return 0; }
+    virtual int get_armor() const { return 0; }
+    virtual int get_attack() const { return 0; }
     virtual std::string get_range_type() const { return ""; }
     const std::vector<std::shared_ptr<ability>>& get_abilities() const { return card_abilities; };
     void set_is_unlocked(bool new_value) { is_unlocked = new_value; };

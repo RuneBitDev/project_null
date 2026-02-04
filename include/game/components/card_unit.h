@@ -22,8 +22,12 @@ public:
     // GETTER & SETTER
     int get_strength() const override;
     int get_virtual_strength(const board& b, row_side side, row_type type) const;
-    void set_strength(int new_strength) {strength = new_strength;};
-    std::string get_range_type() const override {return range_type;};
+    void set_strength(int new_strength) {strength = new_strength;}
+    int get_armor() const override {return armor;}
+    void change_armor(int by_amount) {armor += by_amount;}
+    int get_attack() const override {return attack;}
+    void change_attack(int by_amount) {attack += by_amount;}
+    std::string get_range_type() const override {return range_type;}
     void set_range_type(const std::string &new_range_type) {range_type = new_range_type;};
 
 private:

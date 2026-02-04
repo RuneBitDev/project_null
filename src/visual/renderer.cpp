@@ -92,6 +92,7 @@ void renderer::draw_card(const std::unique_ptr<card>& card_ptr, float x, float y
 
     DrawRectangleLinesEx(card.bounds, card.is_hovered ? 3 : 2, GREEN);
 
+    // draw values
     if (is_face_up) {
         if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
             float circle_radius = card.is_hovered ? 18.0f : 15.0f;
@@ -99,15 +100,24 @@ void renderer::draw_card(const std::unique_ptr<card>& card_ptr, float x, float y
             float circle_y = card.bounds.y + (card.is_hovered ? 25.0f : 20.0f);
 
             DrawCircleLines(circle_x, circle_y, circle_radius, GREEN);
-            int val;
+            DrawCircleLines(circle_x, circle_y + 30, circle_radius, BLUE);
+            DrawCircleLines(circle_x, circle_y + 60, circle_radius, RED);
+            int strength;
+            int armor = unit->get_armor();
+            int attack = unit->get_attack();
             if (ctx) {
-                val = unit->get_virtual_strength(ctx->b, side, type);
+                strength = unit->get_virtual_strength(ctx->b, side, type);
             } else {
-                val = unit->get_strength();
+                strength = unit->get_strength();
             }
-            std::string str_text = std::to_string(val);
+            // draw number values
+            std::string str_text = std::to_string(strength);
+            std::string arm_text = std::to_string(armor);
+            std::string att_text = std::to_string(attack);
             int font_size = card.is_hovered ? 20 : 15;
             DrawText(str_text.c_str(), circle_x - (font_size/3), circle_y - (font_size/2), font_size, GREEN);
+            DrawText(arm_text.c_str(), circle_x - (font_size/3), circle_y - (font_size/2) +30, font_size, BLUE);
+            DrawText(att_text.c_str(), circle_x - (font_size/3), circle_y - (font_size/2) +60, font_size, RED);
         }
 
         int name_size = card.is_hovered ? 12 : 10;
