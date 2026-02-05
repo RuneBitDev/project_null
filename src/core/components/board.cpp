@@ -1,6 +1,5 @@
-#include <algorithm>
 #include "game/components/board.h"
-
+#include <algorithm>
 #include <ranges>
 
 // ---------------------------- MOVE ----------------------------
@@ -101,12 +100,16 @@ std::vector<std::tuple<modifier_type, int>> board::get_modifiers(row_side side, 
 }
 
 void board::clear_modifier(modifier_type m_type) {
-    for (auto &mod_list: active_modifiers | std::views::values) {
-
+    // clean vectors
+    for (auto &mod_list : active_modifiers | std::views::values) {
         std::erase_if(mod_list, [m_type](const auto& mod_tuple) {
             return std::get<0>(mod_tuple) == m_type;
         });
     }
+    // clean keys that point to empty vector (better safe than sorry ey)
+    std::erase_if(active_modifiers, [](const auto& pair) {
+        return pair.second.empty();
+    });
 }
 
 void board::clear_all_modifiers() {

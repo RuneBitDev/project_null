@@ -29,12 +29,12 @@ ability_modifier::ability_modifier(std::string id, std::string name, const std::
 void ability_modifier::execute(ability_context &ctx) {
     if (m_type == modifier_type::SET || m_type == modifier_type::CLEAR) {
         execute_weather(ctx);
-    } else if (m_type == modifier_type::ADD) {
-        execute_buff(ctx);
+    } else if (m_type == modifier_type::ADD || m_type == modifier_type::SUBTRACT || m_type == modifier_type::MULTIPLY) {
+        execute_mod(ctx);
     }
 }
 
-void ability_modifier::execute_buff(const ability_context &ctx) const {
+void ability_modifier::execute_mod(const ability_context &ctx) const {
     std::cout << "INSIDE EXECUTE BUFF" << std::endl;
     ctx.game_board.save_modifiers(ctx.owner.get_side(), target_row, m_type, m_value);
 }

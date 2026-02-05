@@ -15,7 +15,7 @@ private:
     int m_value = 0;
     bool clear_weather = false;
 
-    void execute_buff(const ability_context &ctx) const;
+    void execute_mod(const ability_context &ctx) const;
     void execute_weather(const ability_context &ctx) const;
 };
 
