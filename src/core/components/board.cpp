@@ -5,19 +5,8 @@
 
 // ---------------------------- MOVE ----------------------------
 void board::add_card(std::unique_ptr<card> c, row_side side, row_type type) {
-    auto key = std::make_tuple(side, type);
     int i = static_cast<int>(side);
     int j = static_cast<int>(type);
-
-    if (is_side_row_modified(key)) {
-        if (auto* unit = dynamic_cast<card_unit*>(c.get())) {
-            for (auto& modifier : active_modifiers[key]) {
-                modifier_type m_type = std::get<0>(modifier);
-                int m_value = std::get<1>(modifier);
-                unit->save_modifier(m_type, m_value);
-            }
-        }
-    }
 
     rows[i][j].push_back(std::move(c));
 }
@@ -41,9 +30,10 @@ void board::clear_board(player &p1, player &p2) {
                 }
             }
             current_row.clear();
-            // still need to delete saved modifiers
         }
     }
+
+    clear_all_modifiers();
 }
 
 
@@ -117,6 +107,10 @@ void board::clear_modifier(modifier_type m_type) {
             return std::get<0>(mod_tuple) == m_type;
         });
     }
+}
+
+void board::clear_all_modifiers() {
+    active_modifiers.clear();
 }
 
 

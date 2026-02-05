@@ -28,6 +28,7 @@ public:
     bool is_side_row_modified(const std::tuple<row_side, row_type> &key) const;
     std::vector<std::tuple<modifier_type, int>> get_modifiers(row_side side, row_type type) const;
     void clear_modifier(modifier_type);
+    void clear_all_modifiers();
 
     // Getter & Setter
     const std::vector<std::unique_ptr<card>>& get_row_cards(int side, int type) const;
