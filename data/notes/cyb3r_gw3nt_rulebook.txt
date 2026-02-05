@@ -31,7 +31,7 @@ three primary stats, predefined gear and cyberware slots:
 	- Attack (Atk): How much Armor they strip from an enemy per turn
 	- Mod Slot: A slot for a "Weapon" or "Cyberware" card
 other stats: 
-	- rarity, slots (amount of slotable cyberware)
+	- rarity, slots (amount of slot-able cyberware)
 	
 	
 The 4-Row Dynamic
@@ -49,7 +49,7 @@ The Cyber-Gwent Combat Loop:
 	- Maintenance: any "Start of Round" status effects trigger
 2. The Play Phase (P1 then P2)
 	Players take turns performing one action, must choose one:
-	- Deploy: unit card -> 4 rows (Melee, Ranged, Heavy, Net) + choose stance (aggressive, supressive, defensive)
+	- Deploy: unit card -> 4 rows (Melee, Ranged, Heavy, Net) + choose stance (aggressive, suppressive, defensive)
 	- Execute: special card
 	- Pass: no more cards can be played
 	+ additionally stances can be changed

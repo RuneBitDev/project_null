@@ -35,7 +35,7 @@ bool factory::load_master_data(const std::string &filepath) {
                 new_ability = std::make_shared<ability_summon>(ability_id, ability_name, ability_type, parsed_params);
             } else if (ability_type == "SPY") {
                 new_ability = std::make_shared<ability_spy>(ability_id, ability_name, ability_type, parsed_params);
-            } else if (ability_type == "WEATHER" || ability_type == "BUFF") {
+            } else if (ability_type == "MODIFIER") {
                 new_ability = std::make_shared<ability_modifier>(ability_id, ability_name, ability_type, parsed_params);
             }
 

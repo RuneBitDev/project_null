@@ -15,7 +15,7 @@ public:
         std::string rarity, bool is_unlocked, int strength, std::string range_type, int armor, int attack);
 
     std::unique_ptr<card> clone() const override;
-    void set_modifier(bool state, int value); // should save modifiers into a vector probably
+    void set_modifier(bool state, int value);
     void save_modifier(modifier_type m_type, int m_value);
     void delete_modifier(modifier_type m_type);
 

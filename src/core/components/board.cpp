@@ -1,6 +1,8 @@
 #include <algorithm>
 #include "game/components/board.h"
 
+#include <ranges>
+
 // ---------------------------- MOVE ----------------------------
 void board::add_card(std::unique_ptr<card> c, row_side side, row_type type) {
     auto key = std::make_tuple(side, type);
@@ -106,6 +108,15 @@ std::vector<std::tuple<modifier_type, int>> board::get_modifiers(row_side side, 
 
     static constexpr std::vector<std::tuple<modifier_type, int>> empty_vector;
     return empty_vector;
+}
+
+void board::clear_modifier(modifier_type m_type) {
+    for (auto &mod_list: active_modifiers | std::views::values) {
+
+        std::erase_if(mod_list, [m_type](const auto& mod_tuple) {
+            return std::get<0>(mod_tuple) == m_type;
+        });
+    }
 }
 
 
