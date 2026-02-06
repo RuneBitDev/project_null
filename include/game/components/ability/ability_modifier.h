@@ -12,6 +12,7 @@ public:
 private:
     row_type target_row;
     modifier_type m_type;
+    modifier_target m_target;
     int m_value = 0;
     bool clear_weather = false;
 

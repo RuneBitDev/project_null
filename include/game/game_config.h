@@ -1,8 +1,6 @@
 #ifndef PROJECT_NULL_GAME_CONFIG_H
 #define PROJECT_NULL_GAME_CONFIG_H
 
-enum class modifier_type {ADD, SUBTRACT, MULTIPLY, SET, CLEAR};
-
 namespace game_config {
     namespace deck_rules {
         constexpr int MIN_UNIT_CARDS = 22;

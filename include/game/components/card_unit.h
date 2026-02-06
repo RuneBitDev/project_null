@@ -4,7 +4,8 @@
 #include <memory>
 #include <tuple>
 #include "card.h"
-#include "game/game_config.h"
+#include "game/components/ability/types.h"
+
 class board;
 enum class row_side;
 enum class row_type;

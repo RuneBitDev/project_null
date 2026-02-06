@@ -10,15 +10,19 @@ ability_modifier::ability_modifier(std::string id, std::string name, const std::
         if (const auto* str_ptr = std::get_if<std::string>(&p)) {
             const std::string& val = *str_ptr;
 
-            if      (val == "SET")    m_type = modifier_type::SET;
-            else if (val == "ADD")    m_type = modifier_type::ADD;
-            else if (val == "SUB")    m_type = modifier_type::SUBTRACT;
-            else if (val == "CLEAR")  m_type = modifier_type::CLEAR;
+            if      (val == "SET")      m_type = modifier_type::SET;
+            else if (val == "ADD")      m_type = modifier_type::ADD;
+            else if (val == "SUB")      m_type = modifier_type::SUBTRACT;
+            else if (val == "CLEAR")    m_type = modifier_type::CLEAR;
 
-            else if (val == "MELEE")  target_row = row_type::MELEE;
-            else if (val == "RANGED") target_row = row_type::RANGED;
-            else if (val == "HEAVY")  target_row = row_type::HEAVY;
-            else if (val == "NET")    target_row = row_type::NET;
+            else if (val == "MELEE")    target_row = row_type::MELEE;
+            else if (val == "RANGED")   target_row = row_type::RANGED;
+            else if (val == "HEAVY")    target_row = row_type::HEAVY;
+            else if (val == "NET")      target_row = row_type::NET;
+
+            else if (val == "ST")       m_target = modifier_target::STRENGTH;
+            else if (val == "AR")       m_target = modifier_target::ARMOR;
+            else if (val == "AT")       m_target = modifier_target::ATTACK;
         }
         if (std::holds_alternative<int>(p)) {
             m_value = std::get<int>(p);
