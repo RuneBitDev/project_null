@@ -9,8 +9,7 @@
 #include "player.h"
 
 
-enum class row_side { PLAYER, OPPONENT }; // hate you
-enum class row_type { MELEE = 0, RANGED = 1, HEAVY = 2, NET = 3, SPECIAL = 4};
+
 
 class board {
 public:

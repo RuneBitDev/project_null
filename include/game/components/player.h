@@ -4,10 +4,11 @@
 #include <vector>
 #include "deck.h"
 #include "card.h"
+#include "types.h"
 #include "game/game_config.h"
 
 class board;
-enum class row_side;
+
 
 class player {
 public:

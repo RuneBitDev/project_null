@@ -41,6 +41,7 @@ add_executable(project_null
         src/core/components/abilities/ability_summon.cpp
         src/core/components/abilities/ability_spy.cpp
         src/core/components/abilities/ability_modifier.cpp
+        src/visual/layout_manager.cpp
 )
 
 # ------------------------------------------------------------------
