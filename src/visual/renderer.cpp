@@ -89,40 +89,53 @@ void renderer::draw_card(const std::unique_ptr<card>& card_ptr, float x, float y
 
         DrawRectangleRec(card.bounds, BLACK);
     }
+    // get the unit
+    auto* unit = dynamic_cast<card_unit*>(card_ptr.get());
 
-    DrawRectangleLinesEx(card.bounds, card.is_hovered ? 3 : 2, GREEN);
+    // different color for stances, later probably a glow of sorts
+    auto border_color = WHITE;
+    if (unit) {
+        switch (unit->get_stance()) {
+            case stances::AGGRESSIVE:  border_color = RED;   break;
+            case stances::SUPPRESSIVE: border_color = BLUE;  break;
+            case stances::DEFENSIVE:   border_color = GREEN; break;
+        }
+    }
+    DrawRectangleLinesEx(card.bounds, card.is_hovered ? 3 : 2, border_color);
 
     // draw values
-    if (is_face_up) {
-        if (auto* unit = dynamic_cast<card_unit*>(card_ptr.get())) {
-            float circle_radius = card.is_hovered ? 18.0f : 15.0f;
-            float circle_x = card.bounds.x + (card.is_hovered ? 25.0f : 20.0f);
-            float circle_y = card.bounds.y + (card.is_hovered ? 25.0f : 20.0f);
+    if (is_face_up && unit) {
+        // draw circles
+        float circle_radius = card.is_hovered ? 18.0f : 15.0f;
+        float circle_x = card.bounds.x + (card.is_hovered ? 25.0f : 20.0f);
+        float circle_y = card.bounds.y + (card.is_hovered ? 25.0f : 20.0f);
 
-            DrawCircleLines(circle_x, circle_y, circle_radius, GREEN);
-            DrawCircleLines(circle_x, circle_y + 30, circle_radius, BLUE);
-            DrawCircleLines(circle_x, circle_y + 60, circle_radius, RED);
-            int strength;
-            int armor = unit->get_armor();
-            int attack = unit->get_attack();
-            if (ctx) {
-                strength = unit->get_virtual_strength(ctx->b, side, type);
-            } else {
-                strength = unit->get_strength();
-            }
-            // draw number values
-            std::string str_text = std::to_string(strength);
-            std::string arm_text = std::to_string(armor);
-            std::string att_text = std::to_string(attack);
-            int font_size = card.is_hovered ? 20 : 15;
-            DrawText(str_text.c_str(), circle_x - (font_size/3), circle_y - (font_size/2), font_size, GREEN);
-            DrawText(arm_text.c_str(), circle_x - (font_size/3), circle_y - (font_size/2) +30, font_size, BLUE);
-            DrawText(att_text.c_str(), circle_x - (font_size/3), circle_y - (font_size/2) +60, font_size, RED);
+        DrawCircleLines(circle_x, circle_y, circle_radius, GREEN);
+        DrawCircleLines(circle_x, circle_y + 30, circle_radius, BLUE);
+        DrawCircleLines(circle_x, circle_y + 60, circle_radius, RED);
+        int strength;
+        int armor = unit->get_armor();
+        int attack = unit->get_attack();
+        if (ctx) {
+            strength = unit->get_virtual_strength(ctx->b, side, type);
+        } else {
+            strength = unit->get_strength();
         }
+        // draw numbers
+        std::string str_text = std::to_string(strength);
+        std::string arm_text = std::to_string(armor);
+        std::string att_text = std::to_string(attack);
+        int font_size = card.is_hovered ? 20 : 15;
+        DrawText(str_text.c_str(), circle_x - (font_size/3), circle_y - (font_size/2), font_size, GREEN);
+        DrawText(arm_text.c_str(), circle_x - (font_size/3), circle_y - (font_size/2) +30, font_size, BLUE);
+        DrawText(att_text.c_str(), circle_x - (font_size/3), circle_y - (font_size/2) +60, font_size, RED);
 
-        int name_size = card.is_hovered ? 12 : 10;
-        draw_text_in_rect(card_ptr->get_name().c_str(), card.bounds, static_cast<int>(card.bounds.height) - (card.is_hovered ? 30 : 25), name_size, GREEN);
+
     }
+
+    // draw name
+    int name_size = card.is_hovered ? 12 : 10;
+    draw_text_in_rect(card_ptr->get_name().c_str(), card.bounds, static_cast<int>(card.bounds.height) - (card.is_hovered ? 30 : 25), name_size, GREEN);
 }
 
 

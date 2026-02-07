@@ -68,6 +68,12 @@ void card_unit::delete_modifier(modifier_type m_type) {
     }
 }
 
+void card_unit::change_stance() {
+    int current_int = static_cast<int>(current_stance);
+    int next_int = (current_int + 1) % static_cast<int>(stances::MAX_STANCES);
+    current_stance = static_cast<stances>(next_int);
+}
+
 // HELPER FUNCTIONS
 
 int card_unit::apply_mod_math(int base_value, const std::tuple<modifier_type, int> &modifier) const{

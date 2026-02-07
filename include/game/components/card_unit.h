@@ -9,6 +9,7 @@
 class board;
 enum class row_side;
 enum class row_type;
+enum class stances {PASSIVE, AGGRESSIVE, SUPPRESSIVE, DEFENSIVE, MAX_STANCES};
 
 class card_unit : public card {
 public:
@@ -19,6 +20,7 @@ public:
     void set_modifier(bool state, int value);
     void save_modifier(modifier_type m_type, int m_value);
     void delete_modifier(modifier_type m_type);
+    void change_stance();
 
     // GETTER & SETTER
     int get_strength() const override;
@@ -29,7 +31,8 @@ public:
     int get_attack() const override {return attack;}
     void change_attack(int by_amount) {attack += by_amount;}
     std::string get_range_type() const override {return range_type;}
-    void set_range_type(const std::string &new_range_type) {range_type = new_range_type;};
+    void set_range_type(const std::string &new_range_type) {range_type = new_range_type;}
+    stances get_stance() {return current_stance;}
 
 private:
     int strength;
@@ -39,6 +42,7 @@ private:
     bool modified = false;
     std::vector<std::tuple<modifier_type, int>> modifiers;
     int modifier_value = 0;
+    stances current_stance;
 
     int apply_mod_math(int base_value, const std::tuple<modifier_type, int> &modifier) const;
 
