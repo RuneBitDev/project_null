@@ -26,6 +26,7 @@ namespace render_config {
     namespace card {
         constexpr float CARD_WIDTH = 100.0f;
         constexpr float CARD_HEIGHT = 150.0f;
+        constexpr float CARD_SPACING = 10.0f;
     }
 
     namespace hand {
@@ -40,9 +41,10 @@ namespace render_config {
 
     namespace board {
         constexpr float BOARD_WIDTH = 1000.0f;
+        constexpr float ROW_SPACING = 30.0f;
         constexpr float START_X = 750.0f;
-        constexpr float START_Y_OPPONENT = 50.0f;
-        constexpr float START_Y_PLAYER = 630.0f;
+        constexpr float START_Y = 600.0f;
+        constexpr float CENTER_Y_SPACING = 50.0f;
     }
 
 

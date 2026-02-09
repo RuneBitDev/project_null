@@ -170,72 +170,52 @@ void renderer::draw_graveyard(const player& p1, const player& p2) {
 }
 
 void renderer::draw_board(const render_context& ctx) {
-    float start_x = render_config::board::START_X;
-    float start_y_opponent = render_config::board::START_Y_OPPONENT;
-    float start_y_player = render_config::board::START_Y_PLAYER;
-    float row_spacing = render_config::card::CARD_HEIGHT + 30.0f;
-    float split_width = (render_config::board::BOARD_WIDTH / 2.0f) - 5.0f;
+    for (int side_idx = 0; side_idx < 2; side_idx++) {
+        row_side current_side = static_cast<row_side>(side_idx);
 
-    for (int side = 0; side < 2; side++) {
-        row_side current_side = static_cast<row_side>(side);
+        for (int type_idx = 0; type_idx < 4; type_idx++) {
+            row_type current_type = static_cast<row_type>(type_idx);
+            const auto& row_cards = ctx.b.get_row_cards(side_idx, type_idx);
+            int total_cards = static_cast<int>(row_cards.size());
 
-        for (int type = 0; type < 4; type++) {
-            row_type current_type = static_cast<row_type>(type);
-
-            float row_y;
-            float current_row_x = start_x;
-            float current_row_width = render_config::board::BOARD_WIDTH;
-
-            int visual_slot = (type == 3) ? 2 : type;
-
-            if (side == 1) {
-                row_y = start_y_opponent + ((2-visual_slot) * row_spacing);
-            } else {
-                row_y = start_y_player + (visual_slot * row_spacing);
+            // --- ROW VISUALS ---
+            Rectangle row_ref = layout_manager::get_card_bounds(current_side, current_type, 0, 1);
+            float row_width = render_config::board::BOARD_WIDTH;
+            float row_x = render_config::board::START_X;
+            if (type_idx >= 2) {
+                row_width = (render_config::board::BOARD_WIDTH / 2.0f) - 5.0f;
+                if (type_idx == 3) row_x += row_width + 10.0f;
             }
+            DrawRectangleLines(row_x - 10, row_ref.y - 5, row_width, render_config::card::CARD_HEIGHT + 10, DARKGREEN);
 
-            if (type >= 2) {
-                current_row_width = split_width;
-                if (type == 3) {
-                    current_row_x = start_x + split_width + 10.0f;
-                }
-            }
-
-            DrawRectangleLines(current_row_x - 10, row_y -5, current_row_width, render_config::card::CARD_HEIGHT + 10, DARKGREEN);
-
+            // --- DRAW LABELS ---
             std::string type_label = ctx.b.get_row_name(current_type);
-            DrawText(type_label.c_str(), current_row_x, row_y - 20, 15, DARKGREEN);
+            DrawText(type_label.c_str(), row_x, row_ref.y - 20, 15, DARKGREEN);
 
-            const auto& row_cards = ctx.b.get_row_cards(side, type);
-            float current_x = current_row_x;
-
-            for (const auto& card_ptr : row_cards) {
-                float card_spacing = 10.0f;
-                draw_card(card_ptr, current_x, row_y, true, &ctx, current_side, current_type);
-                current_x += render_config::card::CARD_WIDTH + card_spacing;
+            // --- DRAW CARDS ---
+            for (int i = 0; i < total_cards; i++) {
+                Rectangle card_rect = layout_manager::get_card_bounds(current_side, current_type, i, total_cards);
+                draw_card(row_cards[i], card_rect.x, card_rect.y, true, &ctx, current_side, current_type);
             }
 
-            // row scores
-            int row_score = ctx.b.calculate_row_score(static_cast<row_side>(side), static_cast<row_type>(type));
-            std::string row_score_text = std::to_string(row_score);
-            float row_score_x_offset = (type == 3) ? (current_row_x + current_row_width + 5) : (current_row_x - 60);
-            DrawText(row_score_text.c_str(), row_score_x_offset, row_y + (render_config::card::CARD_HEIGHT/2) - 10, 20, DARKGREEN);
-
+            // --- ROW SCORE ---
+            int row_score = ctx.b.calculate_row_score(current_side, current_type);
+            float score_x = (type_idx == 3) ? (row_x + row_width + 10) : (row_x - 60);
+            DrawText(std::to_string(row_score).c_str(), score_x, row_ref.y + (row_ref.height/2) - 10, 20, DARKGREEN);
         }
-        // side scores
-        int side_score = ctx.b.calculate_total_score(static_cast<row_side>(side));
-        std::string side_score_text = std::to_string(side_score);
-        float side_score_y_offset = (side == 1) ? 400 : 800;
-        DrawCircleLines(600, side_score_y_offset, 40, DARKGREEN);
-        DrawText(side_score_text.c_str(), 580, side_score_y_offset - 20, 40, DARKGREEN);
 
+        // --- TOTAL SIDE SCORE ---
+        int side_score = ctx.b.calculate_total_score(current_side);
+        float side_score_y = (current_side == row_side::OPPONENT) ? 150 : 850;
+        DrawCircleLines(600, side_score_y, 40, DARKGREEN);
+        DrawText(std::to_string(side_score).c_str(), 580, side_score_y - 20, 40, DARKGREEN);
     }
 }
 
 void renderer::draw_special_board(const render_context& ctx) {
 
     float special_x = render_config::board::START_X + render_config::board::BOARD_WIDTH + 20.0f;
-    float center_y = (render_config::board::START_Y_OPPONENT + render_config::board::START_Y_PLAYER + render_config::card::CARD_HEIGHT) / 1.40f;
+    float center_y = (render_config::board::START_Y + render_config::board::START_Y + render_config::card::CARD_HEIGHT) / 1.40f;
 
     for (int side = 0; side < 2; side++) {
         row_side current_side = static_cast<row_side>(side);

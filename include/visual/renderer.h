@@ -2,6 +2,7 @@
 #define PROJECT_NULL_RENDERER_H
 #include "raylib.h"
 #include "ui_types.h"
+#include "layout_manager.h"
 #include "../game/components/board.h"
 #include "../game/components/player.h"
 

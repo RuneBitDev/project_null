@@ -8,6 +8,7 @@ public:
     layout_manager() = delete;
 
     static Rectangle get_card_bounds(row_side side, row_type type, int index, int total_cards);
+
 };
 
 #endif //PROJECT_NULL_LAYOUT_MANAGER_H

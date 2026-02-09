@@ -38,6 +38,8 @@ void game_state::handle_input(state_manager &manager) {
         }
     }
 
+
+
 }
 
 void game_state::update(float dt) {
