@@ -140,11 +140,12 @@ void renderer::draw_card(const std::unique_ptr<card>& card_ptr, float x, float y
 
 
 void renderer::draw_hand(const player &player) {
-    float x_offset = render_config::hand::X_OFFSET;
+    const auto& hand = player.get_hand();
+    int total_cards = static_cast<int>(hand.size());
 
-    for (const auto& card_ptr : player.get_hand()) {
-        draw_card(card_ptr, x_offset, render_config::hand::Y_OFFSET, true, nullptr);
-        x_offset += render_config::card::CARD_WIDTH + 10;
+    for (int i = 0; i < total_cards; i++) {
+        Rectangle bounds = layout_manager::get_hand_card_bounds(i, total_cards);
+        draw_card(hand[i], bounds.x, bounds.y, true, nullptr);
     }
 }
 

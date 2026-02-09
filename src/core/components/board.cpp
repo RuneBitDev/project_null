@@ -10,10 +10,6 @@ void board::add_card(std::unique_ptr<card> c, row_side side, row_type type) {
     rows[i][j].push_back(std::move(c));
 }
 
-const std::vector<std::unique_ptr<card>>& board::get_row_cards(int side, int type) const {
-    return rows[side][type];
-}
-
 
 void board::clear_board(player &p1, player &p2) {
     for (int side = 0; side < 2; ++side) {
@@ -129,6 +125,11 @@ void board::for_each_card(const std::function<void(card&)>& action) const {
         }
     }
 }
+
+const std::vector<std::unique_ptr<card>>& board::get_row_cards(int side, int type) const {
+    return rows[side][type];
+}
+
 
 std::string board::get_row_name(row_type type) const {
     switch (type) {

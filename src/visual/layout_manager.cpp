@@ -7,7 +7,7 @@ Rectangle layout_manager::get_card_bounds(row_side side, row_type type, int inde
     float h = card::CARD_HEIGHT;
     float spacing = card::CARD_SPACING;
 
-    // determine horizontal container
+    // horizontal container
     float container_width = board::BOARD_WIDTH;
     float container_start_x = board::START_X;
 
@@ -39,6 +39,24 @@ Rectangle layout_manager::get_card_bounds(row_side side, row_type type, int inde
     if (side == row_side::OPPONENT) {
         y -= h;
     }
+
+    return { x, y, w, h };
+}
+
+Rectangle layout_manager::get_hand_card_bounds(int index, int total_cards) {
+    using namespace render_config;
+
+    float w = card::CARD_WIDTH;
+    float h = card::CARD_HEIGHT;
+    float spacing = 10.0f;
+
+    float total_hand_width = (total_cards * w) + ((total_cards - 1) * spacing);
+
+    // centering
+    float start_x = board::START_X + (board::BOARD_WIDTH / 2.0f) - (total_hand_width / 2.0f);
+
+    float x = start_x + (index * (w + spacing));
+    float y = hand::Y_OFFSET;
 
     return { x, y, w, h };
 }
