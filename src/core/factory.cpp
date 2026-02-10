@@ -2,12 +2,12 @@
 #include <fstream>
 #include <sstream>
 #include "sqlite3.h"
-#include "game/factory.h"
-#include "game/components/card.h"
-#include "game/components/card_unit.h"
-#include "game/components/ability/ability_summon.h"
-#include "game/components/ability/ability_spy.h"
-#include "game/components/ability/ability_modifier.h"
+#include "core/factory.h"
+#include "core/components/card.h"
+#include "core/components/card_unit.h"
+#include "core/components/ability/ability_summon.h"
+#include "core/components/ability/ability_spy.h"
+#include "core/components/ability/ability_modifier.h"
 
 
 bool factory::load_master_data(const std::string &filepath) {

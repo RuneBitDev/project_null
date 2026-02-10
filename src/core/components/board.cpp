@@ -1,4 +1,4 @@
-#include "game/components/board.h"
+#include "core/components/board.h"
 #include <algorithm>
 #include <ranges>
 

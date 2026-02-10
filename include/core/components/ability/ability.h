@@ -2,8 +2,8 @@
 #define PROJECT_NULL_ABILITY_H
 #include <utility>
 #include <variant>
-#include "game/components/board.h"
-#include "game/components/player.h"
+#include "core/components/board.h"
+#include "core/components/player.h"
 
 using ParamValue = std::variant<int, std::string>;
 

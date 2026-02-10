@@ -1,6 +1,6 @@
-#include "game/components/card.h"
-#include "game/components/card_unit.h"
-#include "game/components/board.h"
+#include "core/components/card.h"
+#include "core/components/card_unit.h"
+#include "core/components/board.h"
 #include <utility>
 #include <algorithm>
 

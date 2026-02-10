@@ -1,8 +1,8 @@
-#include "game/components/card.h"
+#include "core/components/card.h"
 
 
 card::card(std::string c_card_id, std::string c_name, std::string c_faction_id, std::string c_card_type,
-    std::string c_rarity, bool c_is_unlocked)
+           std::string c_rarity, bool c_is_unlocked)
     : card_id(std::move(c_card_id)), name(std::move(c_name)), faction_id(std::move(c_faction_id)), card_type(std::move(c_card_type)),
     rarity(std::move(c_rarity)), is_unlocked(c_is_unlocked) {}
 

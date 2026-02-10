@@ -1,4 +1,4 @@
-#include "game/components/ability/ability_summon.h"
+#include "core/components/ability/ability_summon.h"
 #include <iostream>
 
 ability_summon::ability_summon(std::string id, std::string name, std::string type, std::vector<ParamValue> params)

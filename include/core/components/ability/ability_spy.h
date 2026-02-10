@@ -1,6 +1,6 @@
 #ifndef PROJECT_NULL_ABILITY_SPY_H
 #define PROJECT_NULL_ABILITY_SPY_H
-#include "game/components/ability/ability.h"
+#include "core/components/ability/ability.h"
 
 class ability_spy : public ability {
 public:

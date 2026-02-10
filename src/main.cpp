@@ -1,9 +1,9 @@
 #include "raylib.h"
 #include <iostream>
-#include "game/factory.h"
-#include "game/engine/game_state.h"
-#include "game/engine/menu_state.h"
-#include "game/engine/state_manager.h"
+#include "core/factory.h"
+#include "engine/game_state.h"
+#include "engine/menu_state.h"
+#include "engine/state_manager.h"
 #include "visual/render_config.h"
 
 int main() {

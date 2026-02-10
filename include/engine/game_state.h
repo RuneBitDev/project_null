@@ -1,8 +1,8 @@
 #ifndef PROJECT_NULL_GAME_STATE_H
 #define PROJECT_NULL_GAME_STATE_H
 #include "state.h"
-#include "../components/board.h"
-#include "../components/player.h"
+#include "core/components/board.h"
+#include "core/components/player.h"
 
 enum class round_state {WIN, LOSE, DRAW};
 enum class game_end {WIN, LOSE, DRAW, CONTINUE};

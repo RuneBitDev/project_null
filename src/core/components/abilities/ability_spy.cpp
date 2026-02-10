@@ -1,4 +1,4 @@
-#include "game/components/ability/ability_spy.h"
+#include "core/components/ability/ability_spy.h"
 
 #include <iostream>
 

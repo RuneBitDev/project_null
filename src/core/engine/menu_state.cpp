@@ -1,6 +1,6 @@
-#include "game/engine/menu_state.h"
-#include "game/engine/game_state.h"
-#include "game/engine/state_manager.h"
+#include "engine/menu_state.h"
+#include "engine/game_state.h"
+#include "engine/state_manager.h"
 #include "visual/render_config.h"
 #include "visual/ui_element.h"
 

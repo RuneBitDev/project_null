@@ -1,7 +1,7 @@
 #ifndef PROJECT_NULL_LAYOUT_MANAGER_H
 #define PROJECT_NULL_LAYOUT_MANAGER_H
 #include "raylib.h"
-#include "game/components/types.h"
+#include "../core/types.h"
 
 class layout_manager {
 public:

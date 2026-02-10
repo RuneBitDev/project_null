@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <random>
-#include "../../../include/game/components/deck.h"
-#include "game/game_config.h"
+#include "../../../include/core/components/deck.h"
+#include "core/game_config.h"
 
 
 deck::deck(std::unique_ptr<card> c_leader, std::vector<std::unique_ptr<card>> c_cards)

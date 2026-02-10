@@ -4,8 +4,8 @@
 #include <vector>
 #include "deck.h"
 #include "card.h"
-#include "types.h"
-#include "game/game_config.h"
+#include "../types.h"
+#include "core/game_config.h"
 
 class board;
 

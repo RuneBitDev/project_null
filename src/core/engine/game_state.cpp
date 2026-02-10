@@ -1,5 +1,5 @@
 #include <iostream>
-#include "game/engine/game_state.h"
+#include "engine/game_state.h"
 #include "visual/render_config.h"
 #include "visual/ui_element.h"
 #include "visual/layout_manager.h"

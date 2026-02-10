@@ -3,8 +3,8 @@
 #include "raylib.h"
 #include "ui_types.h"
 #include "layout_manager.h"
-#include "../game/components/board.h"
-#include "../game/components/player.h"
+#include "../core/components/board.h"
+#include "../core/components/player.h"
 
 struct render_context {
     const board& b;
