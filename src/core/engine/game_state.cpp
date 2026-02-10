@@ -12,10 +12,10 @@ game_state::game_state(player player1, player player2)
 
 void game_state::handle_input(state_manager &manager) {
     ui_element::update_button(render_config::ui::PASS_BUTTON);
-    player& active_p = (active_player == 1) ? p1 : p2;
 
     if (render_config::ui::PASS_BUTTON.triggered) {
         p1.set_has_passed(true);
+        p2.set_has_passed(true);
         if (!p2.get_has_passed()) active_player = 2;
         return;
     }
@@ -132,7 +132,7 @@ void game_state::execute_ai_turn() {
     }
 }
 
-int game_state::get_clicked_hand_card_index() {
+int game_state::get_clicked_hand_card_index() const {
     const auto& hand = p1.get_hand();
     Vector2 mouse = render_config::get_virtual_mouse();
 
@@ -148,7 +148,7 @@ int game_state::get_clicked_hand_card_index() {
     return -1;
 }
 
-void game_state::handle_board_interactions() {
+void game_state::handle_board_interactions() const {
     for (int side = 0; side < 2; side++) {
         row_side current_side = static_cast<row_side>(side);
 
@@ -169,10 +169,7 @@ void game_state::handle_board_interactions() {
 
                     // RIGHT CLICK: Stance Change
                     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
-
-                        card_unit* unit = dynamic_cast<card_unit*>(row_cards[i].get());
-
-                        if (unit) unit->change_stance();
+                        if (card_unit* unit = dynamic_cast<card_unit*>(row_cards[i].get())) unit->change_stance();
                     }
                     return;
                 }

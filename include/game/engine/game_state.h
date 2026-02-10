@@ -35,8 +35,8 @@ private:
 
     void execute_ai_turn();
     game_end end_round();
-    int get_clicked_hand_card_index();
-    void handle_board_interactions();
+    int get_clicked_hand_card_index() const;
+    void handle_board_interactions() const;
 };
 
 #endif //PROJECT_NULL_GAME_STATE_H
