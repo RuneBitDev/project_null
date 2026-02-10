@@ -32,16 +32,17 @@ add_executable(project_null
         src/core/factory.cpp
         src/core/components/board.cpp
         src/core/components/player.cpp
-        src/core/engine/game_state.cpp
-        src/core/engine/deck_state.cpp
-        src/core/engine/menu_state.cpp
-        src/core/engine/state_manager.cpp
+        src/engine/game_state.cpp
+        src/engine/deck_state.cpp
+        src/engine/menu_state.cpp
+        src/engine/state_manager.cpp
         src/visual/renderer.cpp
         src/visual/ui_element.cpp
         src/core/components/abilities/ability_summon.cpp
         src/core/components/abilities/ability_spy.cpp
         src/core/components/abilities/ability_modifier.cpp
         src/visual/layout_manager.cpp
+        src/core/match_manager.cpp
 )
 
 # ------------------------------------------------------------------
