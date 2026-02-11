@@ -97,8 +97,8 @@ void renderer::draw_card(const std::unique_ptr<card>& card_ptr, float x, float y
     if (unit) {
         switch (unit->get_stance()) {
             case stances::AGGRESSIVE:  border_color = RED;   break;
-            case stances::SUPPRESSIVE: border_color = BLUE;  break;
-            case stances::DEFENSIVE:   border_color = GREEN; break;
+            case stances::SUPPRESSIVE: border_color = GREEN;  break;
+            case stances::DEFENSIVE:   border_color = BLUE; break;
         }
     }
     DrawRectangleLinesEx(card.bounds, card.is_hovered ? 3 : 2, border_color);

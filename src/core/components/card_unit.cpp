@@ -14,6 +14,7 @@ std::unique_ptr<card> card_unit::clone() const {
     return std::make_unique<card_unit>(*this);
 }
 
+// ------------------- score calculation -----------------------
 int card_unit::get_strength() const {
     int val = strength;
     for (auto& modifier : modifiers) {
@@ -34,10 +35,20 @@ int card_unit::get_virtual_strength(const board &b, row_side side, row_type type
 
 }
 
-void card_unit::set_modifier(bool state, int value) {
-    modified = state;
-    modifier_value = value;
+int card_unit::apply_mod_math(int base_value, const std::tuple<modifier_type, int> &modifier) const{
+    modifier_type m_type = std::get<0>(modifier);
+    int m_value = std::get<1>(modifier);
+
+    switch (m_type) {
+        case modifier_type::SET:        return m_value;
+        case modifier_type::ADD:        return base_value + m_value;
+        case modifier_type::SUBTRACT:   return base_value - m_value;
+        case modifier_type::MULTIPLY:   return base_value * m_value;
+        default:                        return base_value;
+    }
 }
+
+// --------------------- card modifiers --------------------------
 
 void card_unit::save_modifier(modifier_type m_type, int m_value) {
     modifiers.emplace_back(m_type, m_value);
@@ -68,23 +79,32 @@ void card_unit::delete_modifier(modifier_type m_type) {
     }
 }
 
+// ---------------- stance & attack system -------------------
+
 void card_unit::change_stance() {
     int current_int = static_cast<int>(current_stance);
     int next_int = (current_int + 1) % static_cast<int>(stances::MAX_STANCES);
     current_stance = static_cast<stances>(next_int);
 }
 
-// HELPER FUNCTIONS
-
-int card_unit::apply_mod_math(int base_value, const std::tuple<modifier_type, int> &modifier) const{
-    modifier_type m_type = std::get<0>(modifier);
-    int m_value = std::get<1>(modifier);
-
-    switch (m_type) {
-        case modifier_type::SET:        return m_value;
-        case modifier_type::ADD:        return base_value + m_value;
-        case modifier_type::SUBTRACT:   return base_value - m_value;
-        case modifier_type::MULTIPLY:   return base_value * m_value;
-        default:                        return base_value;
+int card_unit::get_attack() const {
+    int effective_attack = attack;
+    if (current_stance == stances::AGGRESSIVE) {
+        effective_attack *= 2;
     }
+    if (current_stance == stances::DEFENSIVE) {
+        effective_attack = 0;
+    }
+    return effective_attack;
 }
+
+int card_unit::get_armor() const {
+    int effective_armor = armor;
+    if (current_stance == stances::DEFENSIVE) {
+        effective_armor *= 2;
+
+    }
+    return effective_armor;
+}
+
+

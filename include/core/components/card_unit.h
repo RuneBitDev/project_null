@@ -4,11 +4,10 @@
 #include <memory>
 #include <tuple>
 #include "card.h"
-#include "../types.h"
+#include "core/types.h"
 
 class board;
-enum class row_side;
-enum class row_type;
+
 enum class stances {PASSIVE, AGGRESSIVE, SUPPRESSIVE, DEFENSIVE, MAX_STANCES};
 
 class card_unit : public card {
@@ -17,34 +16,48 @@ public:
         std::string rarity, bool is_unlocked, int strength, std::string range_type, int armor, int attack);
 
     std::unique_ptr<card> clone() const override;
-    void set_modifier(bool state, int value);
-    void save_modifier(modifier_type m_type, int m_value);
-    void delete_modifier(modifier_type m_type);
-    void change_stance();
 
-    // GETTER & SETTER
+    // score calculation
     int get_strength() const override;
     int get_virtual_strength(const board& b, row_side side, row_type type) const;
     void set_strength(int new_strength) {strength = new_strength;}
-    int get_armor() const override {return armor;}
+
+    // card modifiers
+    void save_modifier(modifier_type m_type, int m_value);
+    void delete_modifier(modifier_type m_type);
+
+    // stance & attack system
+    void change_stance();
+    stances get_stance() {return current_stance;}
+    int get_armor() const override;
     void change_armor(int by_amount) {armor += by_amount;}
-    int get_attack() const override {return attack;}
+    int get_attack() const override;
     void change_attack(int by_amount) {attack += by_amount;}
+
+    // for placement
     std::string get_range_type() const override {return range_type;}
     void set_range_type(const std::string &new_range_type) {range_type = new_range_type;}
-    stances get_stance() {return current_stance;}
+
 
 private:
+    // main values
     int strength;
     int armor;
     int attack;
-    std::string range_type;
-    bool modified = false;
+
+    // modifier stuff
     std::vector<std::tuple<modifier_type, int>> modifiers;
     int modifier_value = 0;
+    int apply_mod_math(int base_value, const std::tuple<modifier_type, int> &modifier) const;
+
+    // stance & attack stuff
     stances current_stance;
 
-    int apply_mod_math(int base_value, const std::tuple<modifier_type, int> &modifier) const;
+    // for placement
+    std::string range_type;
+
+
+
 
 };
 
