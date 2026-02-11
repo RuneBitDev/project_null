@@ -28,7 +28,7 @@ void ability_strike::execute_lethal(ability_context &ctx) {
         
         if (loc.index < row.size()) {
             if (auto* unit = dynamic_cast<card_unit*>(row[loc.index].get())) {
-                unit->set_strength(0); // mark of death
+                unit->set_dead(); // mark of death
             }
         }
     }

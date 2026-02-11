@@ -24,8 +24,10 @@ public:
     virtual int get_armor() const { return 0; }
     virtual int get_attack() const { return 0; }
     virtual std::string get_range_type() const { return ""; }
-    const std::vector<std::shared_ptr<ability>>& get_abilities() const { return card_abilities; };
-    void set_is_unlocked(bool new_value) { is_unlocked = new_value; };
+    const std::vector<std::shared_ptr<ability>>& get_abilities() const { return card_abilities; }
+    void set_is_unlocked(bool new_value) { is_unlocked = new_value; }
+    bool is_dead() const { return dead_status; }
+    void set_dead() { dead_status = true; }
 
 private:
     std::string card_id;
@@ -35,6 +37,7 @@ private:
     std::string rarity;
     bool is_unlocked;
     std::vector<std::shared_ptr<ability>> card_abilities;
+    bool dead_status = false;
 
 };
 

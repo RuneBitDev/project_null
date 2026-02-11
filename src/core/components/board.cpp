@@ -163,7 +163,7 @@ int get_val(const std::unique_ptr<card>& c, value_type v_type, const board& b, r
             case value_type::ATTACK:   return unit->get_attack();
         }
     }
-    return -1; // Ignore non-units
+    return -1; // ignore non-units
 }
 
 std::vector<card_location> board::get_max_value_locations_on_board(value_type v_type) const {
@@ -204,7 +204,7 @@ std::vector<int> board::get_dead_unit_indices(row_side side, row_type type) cons
 
     for (int i = static_cast<int>(row.size()) - 1; i >= 0; --i) {
         if (auto* unit = dynamic_cast<card_unit*>(row[i].get())) {
-            if (unit->get_strength() <= 0) {
+            if (unit->is_dead()) {
                 dead_indices.push_back(i);
             }
         }
