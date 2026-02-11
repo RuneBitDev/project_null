@@ -1,7 +1,7 @@
 #include "visual/layout_manager.h"
 #include "visual/render_config.h"
 
-Rectangle layout_manager::get_card_bounds(row_side side, row_type type, int index, int total_cards) {
+Rectangle layout_manager::get_card_bounds(card_location l, int total_cards) {
     using namespace render_config;
     float w = card::CARD_WIDTH;
     float h = card::CARD_HEIGHT;
@@ -11,7 +11,7 @@ Rectangle layout_manager::get_card_bounds(row_side side, row_type type, int inde
     float container_width = board::BOARD_WIDTH;
     float container_start_x = board::START_X;
 
-    int type_idx = static_cast<int>(type);
+    int type_idx = static_cast<int>(l.type);
 
     // the split of row 2 and 3
     if (type_idx >= 2) {
@@ -26,17 +26,17 @@ Rectangle layout_manager::get_card_bounds(row_side side, row_type type, int inde
     float container_center_x = container_start_x + (container_width / 2.0f);
     float total_row_width = (total_cards * w) + ((total_cards - 1) * spacing);
     float row_start_x = container_center_x - (total_row_width / 2.0f);
-    float x = row_start_x + (index * (w + spacing));
+    float x = row_start_x + (l.index * (w + spacing));
 
     // vertical positioning
-    float vertical_direction = (side == row_side::PLAYER) ? 1.0f : -1.0f;
+    float vertical_direction = (l.side == row_side::PLAYER) ? 1.0f : -1.0f;
     float horizon_offset = board::CENTER_Y_SPACING / 2.0f;
     int visual_slot = (type_idx >= 2) ? 2 : type_idx;
     float row_stack_offset = visual_slot * (h + board::ROW_SPACING);
 
     float y = board::START_Y + (horizon_offset + row_stack_offset) * vertical_direction;
 
-    if (side == row_side::OPPONENT) {
+    if (l.side == row_side::OPPONENT) {
         y -= h;
     }
 

@@ -15,7 +15,6 @@ void board::clear_board(player &p1, player &p2) {
     for (int side = 0; side < 2; ++side) {
         player& target_player = (side == 0) ? p1 : p2;
 
-        // Iterate through all 5 row types (Melee, Ranged, Heavy, Net, Special)
         for (int type = 0; type < 5; ++type) {
             auto& current_row = rows[side][type];
 
@@ -31,24 +30,18 @@ void board::clear_board(player &p1, player &p2) {
     clear_all_modifiers();
 }
 
-void board::destroy_card(const std::vector<card*>& targets, player& p1, player& p2) {
-    for (int s = 0; s < 2; ++s) {
-        player& target_player = (s == 0) ? p1 : p2;
-        for (int t = 0; t < 5; ++t) {
-            auto& row = rows[s][t];
+void board::remove_card_at(card_location loc, player& p) {
+    if (!loc.is_valid()) return;
 
-            // pretty dope erase-if
-            std::erase_if(row, [&](std::unique_ptr<card>& c_ptr) {
-                auto it = std::find(targets.begin(), targets.end(), c_ptr.get());
-                if (it != targets.end()) {
-                    if (c_ptr->get_card_type() == "UNIT") {
-                        target_player.add_to_graveyard(std::move(c_ptr));
-                    }
-                    return true; // erase
-                }
-                return false;
-            });
+    auto& row = rows[static_cast<int>(loc.side)][static_cast<int>(loc.type)];
+
+    if (loc.index >= 0 && loc.index < (int)row.size()) {
+        // move to graveyard
+        if (row[loc.index]->get_card_type() == "UNIT") {
+            p.add_to_graveyard(std::move(row[loc.index]));
         }
+        // erase from vector (unique_ptr should clear)
+        row.erase(row.begin() + loc.index);
     }
 }
 
@@ -162,44 +155,42 @@ std::string board::get_row_name(row_type type) const {
     }
 }
 
-// Helper to get strength from a card pointer safely
-int get_unit_strength(const std::unique_ptr<card>& c, value_type v_type, const board& b, int side, int type) {
-    auto* unit = dynamic_cast<card_unit*>(c.get());
-    if (!unit) return -1;
-    switch (v_type) {
-        case value_type::STRENGTH:
-            return unit->get_virtual_strength(b, static_cast<row_side>(side), static_cast<row_type>(type));
-        case value_type::ARMOR:
-            return unit->get_armor();
-        case value_type::ATTACK:
-            return unit->get_attack();
-        default:
-            return -1;
+int get_val(const std::unique_ptr<card>& c, value_type v_type, const board& b, row_side s, row_type t) {
+    if (auto* unit = dynamic_cast<card_unit*>(c.get())) {
+        switch (v_type) {
+            case value_type::STRENGTH: return unit->get_virtual_strength(b, s, t);
+            case value_type::ARMOR:    return unit->get_armor();
+            case value_type::ATTACK:   return unit->get_attack();
+        }
     }
+    return -1; // Ignore non-units
 }
 
-std::vector<card*> board::get_max_value_cards_on_board(value_type v_type) const {
+std::vector<card_location> board::get_max_value_locations_on_board(value_type v_type) const {
     int max_val = -1;
-    std::vector<card*> targets;
+    std::vector<card_location> targets;
 
-    // find global max
+    // get global max
     for (int s = 0; s < 2; ++s) {
         for (int t = 0; t < 5; ++t) {
+            auto side = static_cast<row_side>(s);
+            auto type = static_cast<row_type>(t);
             for (const auto& c : rows[s][t]) {
-                int val = get_unit_strength(c, v_type, *this, s, t);
-                if (val > max_val) max_val = val;
+                max_val = std::max(max_val, get_val(c, v_type, *this, side, type));
             }
         }
     }
 
-    // get all of them cards
-    if (max_val <= 0) return targets; // or none
+    if (max_val <= 0) return targets;
 
+    // collect global max
     for (int s = 0; s < 2; ++s) {
         for (int t = 0; t < 5; ++t) {
-            for (const auto& c : rows[s][t]) {
-                if (get_unit_strength(c, v_type, *this, s, t) == max_val) {
-                    targets.push_back(c.get());
+            auto side = static_cast<row_side>(s);
+            auto type = static_cast<row_type>(t);
+            for (int i = 0; i < (int)rows[s][t].size(); ++i) {
+                if (get_val(rows[s][t][i], v_type, *this, side, type) == max_val) {
+                    targets.push_back({side, type, i});
                 }
             }
         }
@@ -207,24 +198,18 @@ std::vector<card*> board::get_max_value_cards_on_board(value_type v_type) const 
     return targets;
 }
 
-std::vector<card*> board::get_max_value_cards_on_row(value_type v_type, row_side side, row_type r_type) const {
-    int max_val = -1;
-    std::vector<card*> targets;
-    const auto& row = rows[static_cast<int>(side)][static_cast<int>(r_type)];
+std::vector<int> board::get_dead_unit_indices(row_side side, row_type type) const {
+    std::vector<int> dead_indices;
+    const auto& row = rows[static_cast<int>(side)][static_cast<int>(type)];
 
-    for (const auto& c : row) {
-        int val = get_unit_strength(c, v_type, *this, static_cast<int>(side), static_cast<int>(r_type));
-        if (val > max_val) max_val = val;
-    }
-
-    if (max_val <= 0) return targets;
-
-    for (const auto& c : row) {
-        if (get_unit_strength(c, v_type, *this, static_cast<int>(side), static_cast<int>(r_type)) == max_val) {
-            targets.push_back(c.get());
+    for (int i = static_cast<int>(row.size()) - 1; i >= 0; --i) {
+        if (auto* unit = dynamic_cast<card_unit*>(row[i].get())) {
+            if (unit->get_strength() <= 0) {
+                dead_indices.push_back(i);
+            }
         }
     }
-    return targets;
+    return dead_indices;
 }
 
 

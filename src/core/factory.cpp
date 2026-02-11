@@ -8,6 +8,7 @@
 #include "core/components/ability/ability_summon.h"
 #include "core/components/ability/ability_spy.h"
 #include "core/components/ability/ability_modifier.h"
+#include "core/components/ability/ability_strike.h"
 
 
 bool factory::load_master_data(const std::string &filepath) {
@@ -37,6 +38,8 @@ bool factory::load_master_data(const std::string &filepath) {
                 new_ability = std::make_shared<ability_spy>(ability_id, ability_name, ability_type, parsed_params);
             } else if (ability_type == "MODIFIER") {
                 new_ability = std::make_shared<ability_modifier>(ability_id, ability_name, ability_type, parsed_params);
+            } else if (ability_type == "STRIKE") {
+                new_ability = std::make_shared<ability_strike>(ability_id, ability_name, ability_type, parsed_params);
             }
 
             if (new_ability) {

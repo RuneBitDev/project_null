@@ -43,6 +43,7 @@ add_executable(project_null
         src/core/components/abilities/ability_modifier.cpp
         src/visual/layout_manager.cpp
         src/core/match_manager.cpp
+        src/core/components/abilities/ability_strike.cpp
 )
 
 # ------------------------------------------------------------------

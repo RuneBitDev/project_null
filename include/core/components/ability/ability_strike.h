@@ -1,6 +1,6 @@
 #ifndef PROJECT_NULL_ABILITY_REMOVAL_H
 #define PROJECT_NULL_ABILITY_REMOVAL_H
-#include "game/components/ability/ability.h"
+#include "core/components/ability/ability.h"
 
 class ability_strike : public ability {
 public:
@@ -10,6 +10,8 @@ public:
 private:
     int damage_amount;
     strike_type s_type;
+
+    void execute_lethal(ability_context &ctx);
 
 
 };

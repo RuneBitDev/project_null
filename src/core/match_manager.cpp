@@ -50,6 +50,8 @@ void match_manager::play_card_from_hand(int index, row_side side) {
     player& opponent = (side == row_side::PLAYER) ? p2 : p1;
 
     active.play_card(index, game_board, side, opponent);
+
+    cleanup_dead_units();
 }
 
 void match_manager::handle_input() {
@@ -72,7 +74,8 @@ void match_manager::handle_input() {
         for (int type = 0; type < 5; type++) {
             const auto& row_cards = game_board.get_row_cards(side, type);
             for (int i = 0; i < static_cast<int>(row_cards.size()); i++) {
-                Rectangle b = layout_manager::get_card_bounds(static_cast<row_side>(side), static_cast<row_type>(type), i, row_cards.size());
+                card_location loc { static_cast<row_side>(side), static_cast<row_type>(type), i };
+                Rectangle b = layout_manager::get_card_bounds(loc, row_cards.size());
                 if (CheckCollisionPointRec(mouse, b)) {
                     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
                         std::cout << "Inspecting: " << row_cards[i]->get_name() << "\n";
@@ -84,6 +87,24 @@ void match_manager::handle_input() {
                     }
                     return;
                 }
+            }
+        }
+    }
+}
+
+void match_manager::cleanup_dead_units() {
+    for (int s = 0; s < 2; ++s) {
+        row_side side = static_cast<row_side>(s);
+        player& owner = (side == row_side::PLAYER) ? p1 : p2;
+
+        for (int t = 0; t < 4; ++t) {
+            row_type type = static_cast<row_type>(t);
+
+            auto dead_indices = game_board.get_dead_unit_indices(side, type);
+
+            for (int index : dead_indices) {
+                card_location loc { side, type, index };
+                game_board.remove_card_at(loc, owner);
             }
         }
     }

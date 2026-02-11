@@ -180,7 +180,8 @@ void renderer::draw_board(const render_context& ctx) {
             int total_cards = static_cast<int>(row_cards.size());
 
             // --- ROW VISUALS ---
-            Rectangle row_ref = layout_manager::get_card_bounds(current_side, current_type, 0, 1);
+            card_location row_ref_loc { current_side, current_type, 0 };
+            Rectangle row_ref = layout_manager::get_card_bounds(row_ref_loc, 1);
             float row_width = render_config::board::BOARD_WIDTH;
             float row_x = render_config::board::START_X;
             if (type_idx >= 2) {
@@ -195,7 +196,8 @@ void renderer::draw_board(const render_context& ctx) {
 
             // --- DRAW CARDS ---
             for (int i = 0; i < total_cards; i++) {
-                Rectangle card_rect = layout_manager::get_card_bounds(current_side, current_type, i, total_cards);
+                card_location loc { current_side, current_type, i };
+                Rectangle card_rect = layout_manager::get_card_bounds(loc, total_cards);
                 draw_card(row_cards[i], card_rect.x, card_rect.y, true, &ctx, current_side, current_type);
             }
 

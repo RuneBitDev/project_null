@@ -19,6 +19,7 @@ public:
     // gameplay actions
     void play_card_from_hand(int hand_index, row_side side);
     void pass_turn(row_side side);
+    void cleanup_dead_units();
 
     // scoring and state queries
     int get_player_score(row_side side) const;
