@@ -87,12 +87,25 @@ void card_unit::change_stance() {
     current_stance = static_cast<stances>(next_int);
 }
 
+int card_unit::get_armor() const {
+    int effective_armor = armor;
+    if (current_stance == stances::DEFENSIVE) {
+        effective_armor *= 2;
+
+    }
+    return effective_armor;
+}
+
 void card_unit::change_armor(int by_amount) {
     if (current_stance == stances::DEFENSIVE && by_amount < 0) {
-        armor += (by_amount / 2);
+        int absolute_dmg = std::abs(by_amount);
+        int base_loss = (absolute_dmg + 1) / 2;
+        armor -= base_loss;
     } else {
         armor += by_amount;
     }
+
+    if (armor < 0) armor = 0;
 }
 
 int card_unit::get_attack() const {
@@ -111,13 +124,18 @@ int card_unit::get_attack() const {
     }
 }
 
-int card_unit::get_armor() const {
-    int effective_armor = armor;
-    if (current_stance == stances::DEFENSIVE) {
-        effective_armor *= 2;
+void card_unit::change_attack(int by_amount) {
+    if (by_amount == 0) return;
+    if (current_stance == stances::AGGRESSIVE && by_amount < 0) {
+        int absolute_debuff = std::abs(by_amount);
+        int base_reduction = (absolute_debuff + 1) / 2;
 
+        attack -= base_reduction;
+    } else {
+        attack += by_amount;
     }
-    return effective_armor;
+
+    if (attack < 0) attack = 0;
 }
 
 
