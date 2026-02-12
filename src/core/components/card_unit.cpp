@@ -7,7 +7,7 @@
 card_unit::card_unit(std::string card_id, std::string name, std::string faction_id, std::string card_type,
         std::string rarity, bool is_unlocked, int strength, std::string range_type, int armor, int attack)
     : card(std::move(card_id), std::move(name), std::move(faction_id), std::move(card_type), std::move(rarity), is_unlocked),
-        strength(strength), range_type(std::move(range_type)), armor(armor), attack(attack) {}
+        strength(strength), range_type(std::move(range_type)), armor(armor), attack(attack), current_stance(stances::PASSIVE) {}
 
 
 std::unique_ptr<card> card_unit::clone() const {
@@ -87,15 +87,28 @@ void card_unit::change_stance() {
     current_stance = static_cast<stances>(next_int);
 }
 
+void card_unit::change_armor(int by_amount) {
+    if (current_stance == stances::DEFENSIVE && by_amount < 0) {
+        armor += (by_amount / 2);
+    } else {
+        armor += by_amount;
+    }
+}
+
 int card_unit::get_attack() const {
     int effective_attack = attack;
-    if (current_stance == stances::AGGRESSIVE) {
-        effective_attack *= 2;
+    switch (current_stance) {
+        case stances::PASSIVE:
+            return effective_attack; // Ensure no multiplier here
+        case stances::AGGRESSIVE:
+            return effective_attack * 2;
+        case stances::DEFENSIVE:
+            return 0;
+        case stances::SUPPRESSIVE:
+            return effective_attack;
+        default:
+            return effective_attack;
     }
-    if (current_stance == stances::DEFENSIVE) {
-        effective_attack = 0;
-    }
-    return effective_attack;
 }
 
 int card_unit::get_armor() const {

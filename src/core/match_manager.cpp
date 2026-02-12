@@ -5,7 +5,10 @@
 #include <numeric>
 
 match_manager::match_manager(player player1, player player2)
-    : p1(std::move(player1)), p2(std::move(player2)), active_player_side(row_side::PLAYER) {
+    : p1(std::move(player1)),
+      p2(std::move(player2)),
+      active_player_side(row_side::PLAYER),
+      combat(game_board, p1, p2) {
     p1.set_side(row_side::PLAYER);
     p2.set_side(row_side::OPPONENT);
 }
@@ -14,8 +17,12 @@ match_manager::match_manager(player player1, player player2)
 
 void match_manager::update(float dt) {
     if (p1.get_has_passed() && p2.get_has_passed()) {
-        game_end result = end_round();
-        // do more
+        end_round();
+        return;
+    }
+
+    if (combat.is_busy()) {
+        combat.update(dt);
         return;
     }
 
@@ -35,6 +42,10 @@ void match_manager::switch_turn() {
     } else {
         if (!p1.get_has_passed()) active_player_side = row_side::PLAYER;
     }
+
+    if (active_player_side == row_side::PLAYER || p1.get_has_passed()) {
+        combat.firefight();
+    }
 }
 
 void match_manager::pass_turn(row_side side) {
@@ -51,10 +62,12 @@ void match_manager::play_card_from_hand(int index, row_side side) {
 
     active.play_card(index, game_board, side, opponent);
 
-    cleanup_dead_units();
+    combat.cleanup_dead_units();
 }
 
 void match_manager::handle_input() {
+
+    if (combat.is_busy()) return;
     if (active_player_side != row_side::PLAYER || p1.get_has_passed()) return;
 
     Vector2 mouse = render_config::get_virtual_mouse();
@@ -66,6 +79,11 @@ void match_manager::handle_input() {
             play_card_from_hand(i, row_side::PLAYER);
             switch_turn();
             return;
+        }
+        if (CheckCollisionPointRec(mouse, bounds) && IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
+            if (auto* u = dynamic_cast<card_unit*>(hand[i].get())) {
+                u->change_stance();
+            }
         }
     }
 
@@ -92,23 +110,6 @@ void match_manager::handle_input() {
     }
 }
 
-void match_manager::cleanup_dead_units() {
-    for (int s = 0; s < 2; ++s) {
-        row_side side = static_cast<row_side>(s);
-        player& owner = (side == row_side::PLAYER) ? p1 : p2;
-
-        for (int t = 0; t < 4; ++t) {
-            row_type type = static_cast<row_type>(t);
-
-            auto dead_indices = game_board.get_dead_unit_indices(side, type);
-
-            for (int index : dead_indices) {
-                card_location loc { side, type, index };
-                game_board.remove_card_at(loc, owner);
-            }
-        }
-    }
-}
 
 // ---------------------------- SCORING ----------------------------
 

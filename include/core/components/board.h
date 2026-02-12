@@ -32,6 +32,7 @@ public:
 
     // Getter & Setter
     const std::vector<std::unique_ptr<card>>& get_row_cards(int side, int type) const;
+    std::vector<std::unique_ptr<card>>& get_row_cards(int side, int type); // for combat (write access)
     void for_each_card(const std::function<void(card&)>& action) const; // Visitor Pattern still kinda Getter
     std::string get_row_name(row_type type) const;
     std::vector<card_location> get_max_value_locations_on_board(value_type v_type) const;

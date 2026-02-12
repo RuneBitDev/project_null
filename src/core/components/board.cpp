@@ -128,6 +128,10 @@ void board::clear_all_modifiers() {
 
 // ------------------------ GETTER & SETTER -------------------------
 
+std::vector<std::unique_ptr<card>>& board::get_row_cards(int side, int type) {
+    return rows[side][type];
+}
+
 // sick Visitor Pattern
 void board::for_each_card(const std::function<void(card&)>& action) const {
     for (auto& side : rows) {
@@ -193,6 +197,30 @@ std::vector<card_location> board::get_max_value_locations_on_board(value_type v_
                     targets.push_back({side, type, i});
                 }
             }
+        }
+    }
+    return targets;
+}
+
+std::vector<card_location> board::get_max_value_locations_on_row(value_type v_type, row_side side, row_type r_type) const {
+    const auto& target_row = get_row_cards(static_cast<int>(side), static_cast<int>(r_type));
+    int max_val = -1;
+    std::vector<card_location> targets;
+
+    // find max value among LIVING units
+    for (const auto& c : target_row) {
+        if (c->is_dead()) continue; // Critical skip
+
+        int val = get_val(c, v_type, *this, side, r_type);
+        if (val > max_val) max_val = val;
+    }
+
+    if (max_val == -1) return targets;
+
+    // collect all indices matching that max
+    for (int i = 0; i < (int)target_row.size(); ++i) {
+        if (!target_row[i]->is_dead() && get_val(target_row[i], v_type, *this, side, r_type) == max_val) {
+            targets.push_back({side, r_type, i});
         }
     }
     return targets;

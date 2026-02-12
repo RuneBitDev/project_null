@@ -3,6 +3,7 @@
 #include "components/board.h"
 #include "components/player.h"
 #include "types.h"
+#include "combat_manager.h"
 #include <map>
 
 enum class round_state { WIN, LOSE, DRAW };
@@ -19,7 +20,6 @@ public:
     // gameplay actions
     void play_card_from_hand(int hand_index, row_side side);
     void pass_turn(row_side side);
-    void cleanup_dead_units();
 
     // scoring and state queries
     int get_player_score(row_side side) const;
@@ -28,11 +28,12 @@ public:
     row_side get_active_side() const { return active_player_side; }
 
 private:
+    combat_manager combat;
     board game_board;
     player p1;
     player p2;
 
-    row_side active_player_side = row_side::PLAYER;
+    row_side active_player_side;
     std::map<row_side, std::vector<int>> round_scores;
 
     int current_round = 1;

@@ -30,7 +30,7 @@ public:
     void change_stance();
     stances get_stance() {return current_stance;}
     int get_armor() const override;
-    void change_armor(int by_amount) {armor += by_amount;}
+    void change_armor(int by_amount);
     int get_attack() const override;
     void change_attack(int by_amount) {attack += by_amount;}
 

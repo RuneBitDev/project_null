@@ -44,6 +44,7 @@ add_executable(project_null
         src/visual/layout_manager.cpp
         src/core/match_manager.cpp
         src/core/components/abilities/ability_strike.cpp
+        src/core/combat_manager.cpp
 )
 
 # ------------------------------------------------------------------
