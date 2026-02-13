@@ -1,5 +1,5 @@
-#ifndef PROJECT_NULL_ABILITY_WEATHER_H
-#define PROJECT_NULL_ABILITY_WEATHER_H
+#ifndef PROJECT_NULL_ABILITY_MODIFIER_H
+#define PROJECT_NULL_ABILITY_MODIFIER_H
 #include "core/components/ability/ability.h"
 
 
@@ -20,4 +20,4 @@ private:
     void execute_weather(const ability_context &ctx) const;
 };
 
-#endif //PROJECT_NULL_ABILITY_WEATHER_H
+#endif //PROJECT_NULL_ABILITY_MODIFIER_H

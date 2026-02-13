@@ -18,17 +18,17 @@ void player::draw_card(int times) {
     }
 }
 
-void player::play_card(int index, board &b, row_side side, player& opponent) {
+void player::play_card(int index, board &b, row_side side, player& opponent, combat_manager& cm) {
     if (index < 0 || index >= hand.size()) return;
 
     auto it = hand.begin() + index;
     std::unique_ptr<card> card_to_play = std::move(*it);
     hand.erase(it);
     std::cout << "\nDEBUG: Playing card : " << card_to_play->get_name() << std::endl;
-    execute_play_card(std::move(card_to_play), b, side, opponent);
+    execute_play_card(std::move(card_to_play), b, side, opponent, cm);
 }
 
-void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_side side, player& opponent) {
+void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_side side, player& opponent, combat_manager& cm) {
     if (!card_ptr) {
         std::cout << "[DEBUG] execute_play_card received null card_ptr!" << std::endl;
         return;
@@ -67,9 +67,11 @@ void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_sid
         }
     }
 
+    card_unit* caster_ptr = dynamic_cast<card_unit*>(card_ptr.get());
+
     b.add_card(std::move(card_ptr), placement_side, target_row);
 
-    ability_context ctx { b, *this, opponent };
+    ability_context ctx { cm, *this, opponent, caster_ptr };
     for (auto& ab : abilities) {
         if (ab) {
             std::cout << "[DEBUG] Triggering ability type: " << ab->get_id() << std::endl;

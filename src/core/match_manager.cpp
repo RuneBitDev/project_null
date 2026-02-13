@@ -60,7 +60,7 @@ void match_manager::play_card_from_hand(int index, row_side side) {
     player& active = (side == row_side::PLAYER) ? p1 : p2;
     player& opponent = (side == row_side::PLAYER) ? p2 : p1;
 
-    active.play_card(index, game_board, side, opponent);
+    active.play_card(index, game_board, side, opponent, combat);
 
     combat.cleanup_dead_units();
 }
@@ -152,7 +152,7 @@ void match_manager::execute_ai_turn() {
     if (p1.get_has_passed()) {
         p2.set_has_passed(true);
     } else {
-        p2.play_card(0, game_board, row_side::OPPONENT, p1);
+        p2.play_card(0, game_board, row_side::OPPONENT, p1, combat);
     }
 }
 

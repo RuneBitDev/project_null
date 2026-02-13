@@ -16,7 +16,11 @@ public:
 
     void firefight();
     bool is_busy() const { return current_phase != combat_phase::IDLE; }
+    void apply_damage_by_value(int dmg, const card_location& target_loc) const;
 
+    board& get_board() { return game_board; }
+    player& get_p1() { return p1; }
+    player& get_p2() { return p2; }
 private:
     void advance_phase();
     void resolve_turn(const player& p) const;

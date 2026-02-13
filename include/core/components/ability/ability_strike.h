@@ -8,10 +8,13 @@ public:
     void execute(ability_context &ctx) override;
 
 private:
-    int damage_amount;
     strike_type s_type;
+    strike_target s_target;
+    int damage_amount;
+
 
     void execute_lethal(ability_context &ctx);
+    void execute_splash(ability_context &ctx);
 
 
 };

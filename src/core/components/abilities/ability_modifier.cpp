@@ -1,6 +1,8 @@
 #include "core/components/ability/ability_modifier.h"
 #include <iostream>
 
+#include "core/combat_manager.h"
+
 
 ability_modifier::ability_modifier(std::string id, std::string name, const std::string &type, std::vector<ParamValue> params)
     : ability(std::move(id), std::move(name), type, std::move(params)) {
@@ -40,7 +42,7 @@ void ability_modifier::execute(ability_context &ctx) {
 
 void ability_modifier::execute_mod(const ability_context &ctx) const {
     std::cout << "INSIDE EXECUTE BUFF" << std::endl;
-    ctx.game_board.save_modifiers(ctx.owner.get_side(), target_row, m_type, m_value);
+    ctx.manager.get_board().save_modifiers(ctx.owner.get_side(), target_row, m_type, m_value);
 }
 
 
@@ -48,10 +50,10 @@ void ability_modifier::execute_weather(const ability_context& ctx) const {
     std::cout << "INSIDE EXECUTE WEATHER" << std::endl;
     if (m_type == modifier_type::CLEAR) {
         // clear all weather
-        ctx.game_board.clear_modifier(modifier_type::SET);
+        ctx.manager.get_board().clear_modifier(modifier_type::SET);
     } else {
         // Apply weather to the same row for both players on the board
-        ctx.game_board.save_modifiers(row_side::PLAYER, target_row, m_type, m_value);
-        ctx.game_board.save_modifiers(row_side::OPPONENT, target_row, m_type, m_value);
+        ctx.manager.get_board().save_modifiers(row_side::PLAYER, target_row, m_type, m_value);
+        ctx.manager.get_board().save_modifiers(row_side::OPPONENT, target_row, m_type, m_value);
     }
 }

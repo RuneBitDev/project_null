@@ -8,6 +8,7 @@
 #include "core/game_config.h"
 
 class board;
+class combat_manager;
 
 
 class player {
@@ -16,8 +17,8 @@ public:
 
     // Move Card (std::move)
     void draw_card(int times); // from deck to hand
-    void play_card(int index, board& b, row_side side, player& opponent); // from hand to board
-    void execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_side side, player& opponent); // from deck or hand to board
+    void play_card(int index, board& b, row_side side, player& opponent, combat_manager& cm); // from hand to board
+    void execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_side side, player& opponent, combat_manager& cm); // from deck or hand to board
     void add_to_graveyard(std::unique_ptr<card> card_ptr); // from board to graveyard
 
     std::unique_ptr<card> pull_from_hand_by_id(const std::string& id); // mainly for summon ability

@@ -1,6 +1,8 @@
 #include "core/components/ability/ability_summon.h"
 #include <iostream>
 
+#include "core/combat_manager.h"
+
 ability_summon::ability_summon(std::string id, std::string name, std::string type, std::vector<ParamValue> params)
     : ability(std::move(id), std::move(name), std::move(type), std::move(params)) {
 
@@ -28,7 +30,7 @@ void ability_summon::execute(ability_context &ctx) {
         }
 
         if (summoned_card) {
-            ctx.owner.execute_play_card(std::move(summoned_card), ctx.game_board, ctx.owner.get_side(), ctx.opponent);
+            ctx.owner.execute_play_card(std::move(summoned_card), ctx.manager.get_board(), ctx.owner.get_side(), ctx.target, ctx.manager);
         } else {
             std::cout << "[DEBUG] FAILED to find target_id: '" << target_id << "' in Deck or Hand." << std::endl;
         }

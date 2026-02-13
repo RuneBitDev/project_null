@@ -5,13 +5,15 @@
 #include "core/components/board.h"
 #include "core/components/player.h"
 
+class combat_manager;
+
 using ParamValue = std::variant<int, std::string>;
 
 struct ability_context {
-    board& game_board;
+    combat_manager& manager;
     player& owner;
-    player& opponent;
-
+    player& target;
+    card_unit* caster;
 };
 
 class ability {

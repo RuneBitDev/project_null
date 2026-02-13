@@ -158,6 +158,32 @@ void combat_manager::apply_damage(const card_unit* attacker, const card_location
     } else {
         target->set_dead();
     }
+}
 
+void combat_manager::apply_damage_by_value(int dmg, const card_location& target_loc) const {
 
+    auto& target_row = game_board.get_row_cards(static_cast<int>(target_loc.side),
+                                               static_cast<int>(target_loc.type));
+
+    if (target_loc.index < 0 || target_loc.index >= static_cast<int>(target_row.size())) return;
+
+    auto* target = dynamic_cast<card_unit*>(target_row[target_loc.index].get());
+    if (!target || target->is_dead()) return;
+
+    std::cout << "[ABILITY] Dealing " << dmg << " damage to " << target->get_name() << "\n";
+
+    // If unit has armor, it absorbs damage
+    if (target->get_armor() > 0) {
+        // If you want Armor to act as a "Shield" (absorbing the whole hit):
+        target->change_armor(-dmg);
+    } else {
+        // If they have no armor, they are marked for death immediately by a high-damage strike
+        target->set_dead();
+    }
+
+    // Post-damage check
+    if (target->get_armor() <= 0) {
+        target->set_dead();
+        std::cout << "  - Target destroyed or armor shattered.\n";
+    }
 }
