@@ -3,6 +3,7 @@
 
 // card specific types
 enum class value_type {STRENGTH, ARMOR, ATTACK};
+enum class card_type { UNIT, SPECIAL, LEADER };
 
 // board specific types
 enum class row_side { PLAYER, OPPONENT };
@@ -17,7 +18,7 @@ enum class modifier_type {
     SET,        // weather
     CLEAR       // clear weather
 };
-enum class strike_target { MAX_STRENGTH, MAX_ARMOR, MAX_ATTACK };
+enum class strike_target { MAX, MIN };
 enum class strike_type {
     LETHAL,     // high single target damage
     BREAKER,    // some armor shredding

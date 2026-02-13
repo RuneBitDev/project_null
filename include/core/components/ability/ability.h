@@ -12,7 +12,7 @@ using ParamValue = std::variant<int, std::string>;
 struct ability_context {
     combat_manager& manager;
     player& owner;
-    player& target;
+    player& opponent;
     card_unit* caster;
 };
 

@@ -9,12 +9,17 @@ public:
 
 private:
     strike_type s_type;
-    strike_target s_target;
+    strike_target strike_target;
+    value_type s_target_type;
     int damage_amount;
 
 
     void execute_lethal(ability_context &ctx);
     void execute_splash(ability_context &ctx);
+    void execute_frag(ability_context &ctx);
+    void execute_barrage(ability_context &ctx);
+    void execute_breaker(ability_context &ctx);
+    void execute_status(ability_context &ctx);
 
 
 };

@@ -202,6 +202,34 @@ std::vector<card_location> board::get_max_value_locations_on_board(value_type v_
     return targets;
 }
 
+
+std::vector<card_location> board::get_max_value_locations_on_side(value_type v_type, row_side side) const {
+    int max_val = -1;
+    std::vector<card_location> targets;
+    int s = static_cast<int>(side);
+    // get global max
+    for (int t = 0; t < 5; ++t) {
+        auto type = static_cast<row_type>(t);
+        for (const auto& c : rows[s][t]) {
+            max_val = std::max(max_val, get_val(c, v_type, *this, side, type));
+        }
+    }
+
+    if (max_val <= 0) return targets;
+
+    // collect global max
+    for (int t = 0; t < 5; ++t) {
+        auto side = static_cast<row_side>(s);
+        auto type = static_cast<row_type>(t);
+        for (int i = 0; i < (int)rows[s][t].size(); ++i) {
+            if (get_val(rows[s][t][i], v_type, *this, side, type) == max_val) {
+                targets.push_back({side, type, i});
+            }
+        }
+    }
+    return targets;
+}
+
 std::vector<card_location> board::get_max_value_locations_on_row(value_type v_type, row_side side, row_type r_type) const {
     const auto& target_row = get_row_cards(static_cast<int>(side), static_cast<int>(r_type));
     int max_val = -1;

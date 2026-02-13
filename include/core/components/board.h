@@ -36,6 +36,7 @@ public:
     void for_each_card(const std::function<void(card&)>& action) const; // Visitor Pattern still kinda Getter
     std::string get_row_name(row_type type) const;
     std::vector<card_location> get_max_value_locations_on_board(value_type v_type) const;
+    std::vector<card_location> get_max_value_locations_on_side(value_type v_type, row_side side) const;
     std::vector<card_location> get_max_value_locations_on_row(value_type v_type, row_side side, row_type r_type) const;
     std::vector<int> get_dead_unit_indices(row_side side, row_type type) const;
 

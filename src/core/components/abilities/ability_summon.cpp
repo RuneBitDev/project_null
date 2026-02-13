@@ -30,7 +30,7 @@ void ability_summon::execute(ability_context &ctx) {
         }
 
         if (summoned_card) {
-            ctx.owner.execute_play_card(std::move(summoned_card), ctx.manager.get_board(), ctx.owner.get_side(), ctx.target, ctx.manager);
+            ctx.owner.execute_play_card(std::move(summoned_card), ctx.manager.get_board(), ctx.owner.get_side(), ctx.opponent, ctx.manager);
         } else {
             std::cout << "[DEBUG] FAILED to find target_id: '" << target_id << "' in Deck or Hand." << std::endl;
         }
