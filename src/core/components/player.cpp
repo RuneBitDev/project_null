@@ -24,7 +24,6 @@ void player::play_card(int index, board &b, row_side side, player& opponent, com
     auto it = hand.begin() + index;
     std::unique_ptr<card> card_to_play = std::move(*it);
     hand.erase(it);
-    std::cout << "\nDEBUG: Playing card : " << card_to_play->get_name() << std::endl;
     execute_play_card(std::move(card_to_play), b, side, opponent, cm);
 }
 
@@ -67,7 +66,7 @@ void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_sid
         }
     }
 
-    card_unit* caster_ptr = dynamic_cast<card_unit*>(card_ptr.get());
+    auto* caster_ptr = dynamic_cast<card_unit*>(card_ptr.get());
 
     b.add_card(std::move(card_ptr), placement_side, target_row);
 

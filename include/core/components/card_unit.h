@@ -28,7 +28,8 @@ public:
 
     // stance & attack system
     void change_stance();
-    stances get_stance() {return current_stance;}
+    void change_stance_by_value(stances stance) { current_stance = stance; }
+    stances get_stance() const {return current_stance;}
     int get_armor() const override;
     void change_armor(int by_amount);
     int get_attack() const override;

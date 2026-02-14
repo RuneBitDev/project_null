@@ -1,11 +1,12 @@
 #include "core/components/ability/ability_strike.h"
 #include <iostream>
+#include <utility>
 #include "core/combat_manager.h"
 #include "core/components/card_unit.h"
 #include "core/components/board.h"
 
-ability_strike::ability_strike(std::string id, std::string name, const std::string &type, std::vector<ParamValue> params)
-    : ability(id, name, type, params) {
+ability_strike::ability_strike(std::string id, std::string name, const std::string &type, const std::vector<ParamValue> &params)
+    : ability(std::move(id), std::move(name), type, params) {
     if (params.size() >= 2) {
         std::string type_str = std::get<std::string>(params[0]);
         if (type_str == "LETHAL") s_type = strike_type::LETHAL;
@@ -40,7 +41,7 @@ void ability_strike::execute(ability_context &ctx) {
     }
 }
 
-void ability_strike::execute_lethal(ability_context &ctx) {
+void ability_strike::execute_lethal(const ability_context &ctx) const {
     std::vector<card_location> targets;
     board& b = ctx.manager.get_board();
 
@@ -59,14 +60,14 @@ void ability_strike::execute_lethal(ability_context &ctx) {
     for (const auto& loc : targets) {
         auto& row = b.get_row_cards(static_cast<int>(loc.side), static_cast<int>(loc.type));
 
-        if (loc.index >= 0 && loc.index < (int)row.size()) {
+        if (loc.index >= 0 && loc.index < static_cast<int>(row.size())) {
             ctx.manager.apply_damage_by_value(damage_amount, loc);
         }
     }
 }
 
 
-void ability_strike::execute_splash(ability_context &ctx) {
+void ability_strike::execute_splash(const ability_context &ctx) const {
     board& b = ctx.manager.get_board();
     row_side side = ctx.opponent.get_side();
     std::vector<card_location> centers = b.get_max_value_locations_on_side(s_target_type, side);
@@ -87,14 +88,14 @@ void ability_strike::execute_splash(ability_context &ctx) {
     }
 
     // right neighbor
-    if (center_loc.index < (int)center_row.size() - 1) {
+    if (center_loc.index < static_cast<int>(center_row.size()) - 1) {
         card_location right_loc = center_loc;
         right_loc.index++;
         ctx.manager.apply_damage_by_value(side_dmg, right_loc);
     }
 }
 
-void ability_strike::execute_frag(ability_context &ctx) {
+void ability_strike::execute_frag(const ability_context &ctx) const {
     board& b = ctx.manager.get_board();
     row_side side = ctx.opponent.get_side();
 
@@ -124,4 +125,16 @@ void ability_strike::execute_frag(ability_context &ctx) {
         back.type = static_cast<row_type>(static_cast<int>(center_loc.type) + 1);
         ctx.manager.apply_damage_by_value(side_dmg, back);
     }
+}
+
+void ability_strike::execute_barrage(ability_context &ctx) {
+
+}
+
+void ability_strike::execute_breaker(ability_context &ctx) {
+
+}
+
+void ability_strike::execute_status(ability_context &ctx) {
+
 }

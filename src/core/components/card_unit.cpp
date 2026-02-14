@@ -87,6 +87,7 @@ void card_unit::change_stance() {
     current_stance = static_cast<stances>(next_int);
 }
 
+
 int card_unit::get_armor() const {
     int effective_armor = armor;
     if (current_stance == stances::DEFENSIVE) {
