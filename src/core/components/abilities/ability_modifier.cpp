@@ -7,29 +7,12 @@
 ability_modifier::ability_modifier(std::string id, std::string name, const std::string &type, std::vector<ParamValue> params)
     : ability(std::move(id), std::move(name), type, std::move(params)) {
 
-    // parse parameters
-    for (const auto& p : ability_params) {
-        if (const auto* str_ptr = std::get_if<std::string>(&p)) {
-            const std::string& val = *str_ptr;
+    m_type     = string_to_modifier_type(get_param_string(0));
+    target_row = string_to_row_type(get_param_string(1));
+    m_target   = string_to_modifier_target(get_param_string(2));
+    m_value    = get_param_int(3);
 
-            if      (val == "SET")      m_type = modifier_type::SET;
-            else if (val == "ADD")      m_type = modifier_type::ADD;
-            else if (val == "SUB")      m_type = modifier_type::SUBTRACT;
-            else if (val == "CLEAR")    m_type = modifier_type::CLEAR;
-
-            else if (val == "MELEE")    target_row = row_type::MELEE;
-            else if (val == "RANGED")   target_row = row_type::RANGED;
-            else if (val == "HEAVY")    target_row = row_type::HEAVY;
-            else if (val == "NET")      target_row = row_type::NET;
-
-            else if (val == "ST")       m_target = modifier_target::STRENGTH;
-            else if (val == "AR")       m_target = modifier_target::ARMOR;
-            else if (val == "AT")       m_target = modifier_target::ATTACK;
-        }
-        if (std::holds_alternative<int>(p)) {
-            m_value = std::get<int>(p);
-        }
-    }
+    std::cout << "[ABILITY MODIFIER] " << get_param_string(0) << " (" << m_value << ") on " << get_param_string(1) << std::endl;
 }
 
 void ability_modifier::execute(ability_context &ctx) {

@@ -9,7 +9,7 @@ public:
 
 private:
     strike_type s_type;
-    strike_target strike_target;
+    strike_target s_strike_target;
     value_type s_target_type;
     int damage_amount;
 

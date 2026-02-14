@@ -14,6 +14,8 @@
 bool factory::load_master_data(const std::string &filepath) {
     sqlite3* db;
 
+    std::cout << "\n===========================[FACTORY START]=============================" << std::endl;
+
     // Open the database
     if (sqlite3_open(filepath.c_str(), &db) != SQLITE_OK) {
         std::cerr << "Failed to open DB: " << sqlite3_errmsg(db) << std::endl;
@@ -32,6 +34,7 @@ bool factory::load_master_data(const std::string &filepath) {
 
             std::shared_ptr<ability> new_ability = nullptr;
             std::vector<ParamValue> parsed_params = parse_params(ability_params);
+
             if (ability_type == "SUMMON") {
                 new_ability = std::make_shared<ability_summon>(ability_id, ability_name, ability_type, parsed_params);
             } else if (ability_type == "SPY") {
@@ -106,7 +109,7 @@ bool factory::load_master_data(const std::string &filepath) {
     }
     sqlite3_finalize(link_stmt);
 
-
+    std::cout << "============================[FACTORY END]==============================\n" << std::endl;
     sqlite3_close(db);
     return true;
 

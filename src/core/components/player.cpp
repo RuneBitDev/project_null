@@ -19,21 +19,23 @@ void player::draw_card(int times) {
 }
 
 void player::play_card(int index, board &b, row_side side, player& opponent, combat_manager& cm) {
+    std::cout << "\n========================================================" << std::endl;
+    std::cout << "[ACTION] Player " << (side == row_side::PLAYER ? "1" : "2")
+              << " initiates play from hand index: " << index << std::endl;
+
     if (index < 0 || index >= hand.size()) return;
 
     auto it = hand.begin() + index;
     std::unique_ptr<card> card_to_play = std::move(*it);
     hand.erase(it);
     execute_play_card(std::move(card_to_play), b, side, opponent, cm);
+    std::cout << "========================================================\n" << std::endl;
 }
 
 void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_side side, player& opponent, combat_manager& cm) {
-    if (!card_ptr) {
-        std::cout << "[DEBUG] execute_play_card received null card_ptr!" << std::endl;
-        return;
-    }
+    if (!card_ptr) return;
 
-    std::cout << "[DEBUG] Playing card: " << card_ptr->get_name() << " (ID: " << card_ptr->get_id() << ")" << std::endl;
+    std::cout << "  -> Deploying: " << card_ptr->get_name() << " [" << card_ptr->get_id() << "]" << std::endl;
 
     row_type target_row = row_type::SPECIAL;
     std::string type = card_ptr->get_card_type();
@@ -45,7 +47,7 @@ void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_sid
             else if (range == "RANGED") target_row = row_type::RANGED;
             else if (range == "HEAVY") target_row = row_type::HEAVY;
             else if (range == "NET") target_row = row_type::NET;
-            std::cout << "[DEBUG] Unit range: " << range << " -> Row: " << static_cast<int>(target_row) << std::endl;
+            std::cout << "     | Row: " << range << " | Stance: " << static_cast<int>(unit_ptr->get_stance()) << std::endl;
         }
     }
 
@@ -54,28 +56,34 @@ void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_sid
         std::cout << "[DEBUG] Special row_type: " << static_cast<int>(target_row) << std::endl;
     }
 
-    row_side placement_side = side;
     auto abilities = card_ptr->get_abilities();
-    std::cout << "[DEBUG] Card has " << abilities.size() << " abilities to trigger." << std::endl;
+    if (!abilities.empty()) {
+        std::cout << "     | Triggering " << abilities.size() << " abilities..." << std::endl;
 
-    for (auto& ab : abilities) {
-        if (ab && ab->get_type() == "SPY") {
-            // Flip the side: if I play it, it goes to the OPPONENT
-            placement_side = (side == row_side::PLAYER) ? row_side::OPPONENT : row_side::PLAYER;
-            break;
+        auto* caster_ptr = dynamic_cast<card_unit*>(card_ptr.get());
+
+        // Handle side-flipping for Spies first
+        row_side placement_side = side;
+        for (auto& ab : abilities) {
+            if (ab && ab->get_type() == "SPY") {
+                placement_side = (side == row_side::PLAYER) ? row_side::OPPONENT : row_side::PLAYER;
+                std::cout << "     | [!] SPY DETECTED: Flipping to side " << static_cast<int>(placement_side) << std::endl;
+                break;
+            }
         }
-    }
 
-    auto* caster_ptr = dynamic_cast<card_unit*>(card_ptr.get());
+        b.add_card(std::move(card_ptr), placement_side, target_row);
 
-    b.add_card(std::move(card_ptr), placement_side, target_row);
-
-    ability_context ctx { cm, *this, opponent, caster_ptr };
-    for (auto& ab : abilities) {
-        if (ab) {
-            std::cout << "[DEBUG] Triggering ability type: " << ab->get_id() << std::endl;
-            ab->execute(ctx);
+        ability_context ctx { cm, *this, opponent, caster_ptr };
+        for (auto& ab : abilities) {
+            if (ab) {
+                // Use a special symbol for abilities
+                std::cout << "     | [!] Executing: " << ab->get_id() << std::endl;
+                ab->execute(ctx);
+            }
         }
+    } else {
+        b.add_card(std::move(card_ptr), side, target_row);
     }
 }
 

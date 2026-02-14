@@ -1,19 +1,30 @@
 #include "core/components/ability/ability_summon.h"
 #include <iostream>
-
 #include "core/combat_manager.h"
 
 ability_summon::ability_summon(std::string id, std::string name, std::string type, std::vector<ParamValue> params)
     : ability(std::move(id), std::move(name), std::move(type), std::move(params)) {
 
-    for (const auto& p : ability_params) {
-        if (std::holds_alternative<std::string>(p)) {
-            target_ids.push_back(std::get<std::string>(p));
+    s_type = string_to_summon_type(get_param_string(0));
+
+    for (size_t i = 1; i < ability_params.size(); ++i) {
+        std::string id_val = get_param_string(i);
+        if (!id_val.empty()) {
+            target_ids.push_back(id_val);
         }
     }
+
+    std::cout << "[ABILITY SUMMON] Type: " << get_param_string(0) << " | Targets: " << target_ids.size() << std::endl;
 }
 
 void ability_summon::execute(ability_context &ctx) {
+    switch (s_type) {
+        case summon_type::SUMMON:   execute_summon(ctx); break;
+        case summon_type::NECRO:    execute_necro(ctx); break;
+    }
+}
+
+void ability_summon::execute_summon(ability_context &ctx) {
     std::cout << "[DEBUG] Executing SUMMON for ability: " << get_id() << std::endl;
 
     for (const auto& target_id : target_ids) {
@@ -38,4 +49,8 @@ void ability_summon::execute(ability_context &ctx) {
             std::cout << "[DEBUG] FAILED to find target_id: '" << target_id << "' in Deck or Hand." << std::endl;
         }
     }
+}
+
+void ability_summon::execute_necro(const ability_context &ctx) const {
+
 }

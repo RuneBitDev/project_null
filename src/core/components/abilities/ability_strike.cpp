@@ -7,27 +7,16 @@
 
 ability_strike::ability_strike(std::string id, std::string name, const std::string &type, const std::vector<ParamValue> &params)
     : ability(std::move(id), std::move(name), type, params) {
-    if (params.size() >= 2) {
-        std::string type_str = std::get<std::string>(params[0]);
-        if (type_str == "LETHAL") s_type = strike_type::LETHAL;
-        else if (type_str == "BREAKER") s_type = strike_type::BREAKER;
-        else if (type_str == "SPLASH") s_type = strike_type::SPLASH;
-        else if (type_str == "FRAG") s_type = strike_type::FRAG;
-        else if (type_str == "BARRAGE") s_type = strike_type::BARRAGE;
-        else if (type_str == "STATUS") s_type = strike_type::STATUS;
+    std::string type_str   = get_param_string(0);
+    std::string target_str = get_param_string(1);
+    std::string value_str  = get_param_string(2);
+    damage_amount          = get_param_int(3);
 
-        std::string target_str = std::get<std::string>(params[1]);
-        if (target_str == "MAX") strike_target = strike_target::MAX;
-        else if (target_str == "MIN") strike_target = strike_target::MIN;
+    s_type          = string_to_strike_type(type_str);
+    s_strike_target = string_to_strike_target(target_str);
+    s_target_type   = string_to_value_type(value_str);
 
-        std::string target_type_str = std::get<std::string>(params[2]);
-        if (target_type_str == "STRENGTH") s_target_type = value_type::STRENGTH;
-        else if (target_type_str == "ARMOR") s_target_type = value_type::ARMOR;
-        else if (target_type_str == "ATTACK") s_target_type = value_type::ATTACK;
-
-        damage_amount = std::get<int>(params[3]);
-        std::cout << "[STRIKE ABILITY]: Values: " << type_str << ", " << damage_amount << std::endl;
-    }
+    std::cout << "[ABILITY STRIKE] " << type_str << " (" << damage_amount << " dmg) - targeting " << value_str << std::endl;
 }
 
 void ability_strike::execute(ability_context &ctx) {
@@ -45,7 +34,7 @@ void ability_strike::execute_lethal(const ability_context &ctx) const {
     std::vector<card_location> targets;
     board& b = ctx.manager.get_board();
 
-    switch (strike_target) {
+    switch (s_strike_target) {
         case strike_target::MAX:
             targets = b.get_max_value_locations_on_board(s_target_type);
             break;
