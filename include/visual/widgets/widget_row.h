@@ -1,0 +1,27 @@
+#ifndef PROJECT_NULL_WIDGET_ROW_H
+#define PROJECT_NULL_WIDGET_ROW_H
+#include <vector>
+#include "widget.h"
+#include "widget_card.h"
+#include "core/types.h"
+#include "core/components/board.h"
+
+class widget_row : public widget {
+public:
+    widget_row(row_side side, row_type);
+    void update_row(const board& game_board);
+
+    void update() override;
+    void draw() const override;
+
+private:
+    std::vector<widget_card> card_views;
+    row_type type;
+    row_side side;
+
+    int current_score = 0;
+    std::string label;
+    Rectangle row_bounds;
+};
+
+#endif //PROJECT_NULL_WIDGET_ROW_H
