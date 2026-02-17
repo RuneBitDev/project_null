@@ -22,12 +22,12 @@ struct button {
 };
 
 struct ui_card {
-    Rectangle bounds{};
-    // png
-    bool is_hovered = false;
-    bool triggered = false;
-    bool is_face_up = false;
+    int strength = 0;
+    int armor = 0;
+    int attack = 0;
+    Color border_color = WHITE;
+    bool face_up = false;
 
-    ui_card(float x, float y, bool c_is_face_up) : bounds(x, y, card_conf::WIDTH, card_conf::HEIGHT), is_face_up(c_is_face_up) {}
+    bool is_highlighted = false;
 };
 #endif //PROJECT_NULL_UI_TYPES_H

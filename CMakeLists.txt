@@ -47,6 +47,7 @@ add_executable(project_null
         src/core/combat_manager.cpp
         src/core/components/abilities/ability.cpp
         src/core/types.cpp
+        src/visual/widgets/widget_card.cpp
 )
 
 # ------------------------------------------------------------------
