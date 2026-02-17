@@ -26,8 +26,7 @@ struct ui_card {
     int armor = 0;
     int attack = 0;
     Color border_color = WHITE;
-    bool face_up = false;
 
-    bool is_highlighted = false;
+    bool face_up = false;
 };
 #endif //PROJECT_NULL_UI_TYPES_H

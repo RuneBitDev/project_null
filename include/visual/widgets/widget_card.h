@@ -7,16 +7,17 @@
 
 class widget_card : public widget {
     public:
-    card_widget(const std::unique_ptr<card>& model, Rectangle bounds, bool face_up);
-    void update();
-    void draw(const ui_card& card) const;
+    widget_card(const card* c_ptr, Rectangle bounds, ui_card state);
+    void update() override;
+    void draw() const override;
 
 private:
-    const std::unique_ptr<card>& card_ptr;
+    const card* card_data;
     Rectangle base_bounds;
     mutable Rectangle current_bounds;
 
-    bool face_up;
+    ui_card state;
     bool hovered = false;
+    bool triggered = false;
 };
 #endif //PROJECT_NULL_WIDGET_CARD_H

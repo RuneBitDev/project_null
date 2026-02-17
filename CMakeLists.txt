@@ -48,6 +48,9 @@ add_executable(project_null
         src/core/components/abilities/ability.cpp
         src/core/types.cpp
         src/visual/widgets/widget_card.cpp
+        src/visual/widgets/widget_row.cpp
+        src/visual/widgets/widget_board.cpp
+        src/visual/widgets/widget_hand.cpp
 )
 
 # ------------------------------------------------------------------

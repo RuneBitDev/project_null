@@ -47,10 +47,5 @@ void ui_element::update_button(button &btn) {
 }
 
 void ui_element::update_card(ui_card &card) {
-    Vector2 mouse_pos = render_config::get_virtual_mouse();
-    card.is_hovered = CheckCollisionPointRec(mouse_pos, card.bounds);
 
-    if (card.is_hovered && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        card.triggered = true;
-    }
 }
