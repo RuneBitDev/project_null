@@ -128,8 +128,10 @@ void board::clear_all_modifiers() {
 
 // ------------------------ GETTER & SETTER -------------------------
 
-std::vector<std::unique_ptr<card>>& board::get_row_cards(int side, int type) {
-    return rows[side][type];
+std::vector<std::unique_ptr<card>>& board::get_row_cards(row_side side, row_type type) {
+    int s = static_cast<int>(side);
+    int t = static_cast<int>(type);
+    return rows[s][t];
 }
 
 // sick Visitor Pattern
@@ -143,8 +145,10 @@ void board::for_each_card(const std::function<void(card&)>& action) const {
     }
 }
 
-const std::vector<std::unique_ptr<card>>& board::get_row_cards(int side, int type) const {
-    return rows[side][type];
+const std::vector<std::unique_ptr<card>>& board::get_row_cards(row_side side, row_type type) const {
+    int s = static_cast<int>(side);
+    int t = static_cast<int>(type);
+    return rows[s][t];
 }
 
 
@@ -231,7 +235,7 @@ std::vector<card_location> board::get_max_value_locations_on_side(value_type v_t
 }
 
 std::vector<card_location> board::get_max_value_locations_on_row(value_type v_type, row_side side, row_type r_type) const {
-    const auto& target_row = get_row_cards(static_cast<int>(side), static_cast<int>(r_type));
+    const auto& target_row = get_row_cards(side, r_type);
     int max_val = -1;
     std::vector<card_location> targets;
 

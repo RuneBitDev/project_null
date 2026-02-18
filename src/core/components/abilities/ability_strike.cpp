@@ -47,7 +47,7 @@ void ability_strike::execute_lethal(const ability_context &ctx) const {
     }
 
     for (const auto& loc : targets) {
-        auto& row = b.get_row_cards(static_cast<int>(loc.side), static_cast<int>(loc.type));
+        auto& row = b.get_row_cards(loc.side, loc.type);
 
         if (loc.index >= 0 && loc.index < static_cast<int>(row.size())) {
             ctx.manager.apply_damage_by_value(damage_amount, loc);
@@ -67,7 +67,7 @@ void ability_strike::execute_splash(const ability_context &ctx) const {
     ctx.manager.apply_damage_by_value(damage_amount, center_loc);;
 
     int side_dmg = (damage_amount + 1) / 2;
-    auto& center_row = b.get_row_cards(static_cast<int>(center_loc.side), static_cast<int>(center_loc.type));
+    auto& center_row = b.get_row_cards(center_loc.side, center_loc.type);
 
     // left neighbor
     if (center_loc.index > 0) {

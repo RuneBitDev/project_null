@@ -15,10 +15,25 @@ widget_row::widget_row(row_side side, row_type type)
 }
 
 void widget_row::update_row(const board &game_board) {
-    const auto& row_cards = game_board.get_row_cards(static_cast<int>(side), static_cast<int>(type));
+    const auto& row_cards = game_board.get_row_cards(side, type);
     int total_cards = static_cast<int>(row_cards.size());
 
     current_score = game_board.calculate_row_score(side, type);
+
+    card_location ref_loc { side, type, 0 };
+    Rectangle ref_rect = layout_manager::get_card_bounds(ref_loc, 1);
+
+    float row_width = render_config::board::BOARD_WIDTH;
+    float row_x = render_config::board::START_X;
+
+    // Handle the "Split" rows (Type 2 and 3) logic from your original renderer
+    if (static_cast<int>(type) >= 2 && static_cast<int>(type) < 4) {
+        row_width = (render_config::board::BOARD_WIDTH / 2.0f) - 5.0f;
+        if (static_cast<int>(type) == 3) row_x += row_width + 10.0f;
+    }
+
+    // Set the bounds so the draw() function has something to render
+    row_bounds = { row_x - 10, ref_rect.y - 5, row_width, render_config::card::CARD_HEIGHT + 10 };
 
     card_views.clear();
     for (int i = 0; i < total_cards; i++) {

@@ -25,7 +25,8 @@ void combat_manager::cleanup_dead_units() const {
         player& owner = (side == row_side::PLAYER) ? p1 : p2;
 
         for (int t = 0; t < 5; ++t) {
-            auto& row = game_board.get_row_cards(s, t);
+            row_type type = static_cast<row_type>(t);
+            auto& row = game_board.get_row_cards(side, type);
 
             auto it = row.begin();
             while (it != row.end()) {
@@ -68,7 +69,7 @@ void combat_manager::resolve_turn(const player& p) const {
 
     for (int r = 0; r < 4; r++) {
         auto current_row = static_cast<row_type>(r);
-        auto& units = game_board.get_row_cards(static_cast<int>(my_side), r);
+        auto& units = game_board.get_row_cards(my_side, current_row);
 
         for (size_t i = 0; i < units.size(); ++i) {
             auto* unit = dynamic_cast<card_unit*>(units[i].get());
@@ -105,7 +106,7 @@ card_location combat_manager::find_best_target(row_side enemy_side, row_type att
     }
 
     for (row_type target_row : priorities) {
-        const auto& enemy_cards = game_board.get_row_cards(static_cast<int>(enemy_side), static_cast<int>(target_row));
+        const auto& enemy_cards = game_board.get_row_cards(enemy_side, target_row);
 
         // stat based on stance
         value_type search_stat = (stance == stances::AGGRESSIVE) ? value_type::ARMOR : value_type::ATTACK;
@@ -128,8 +129,7 @@ card_location combat_manager::find_best_target(row_side enemy_side, row_type att
 void combat_manager::apply_damage(const card_unit* attacker, const card_location& target_loc) const {
     if (!attacker) return;
 
-    auto& target_row = game_board.get_row_cards(static_cast<int>(target_loc.side),
-                                               static_cast<int>(target_loc.type));
+    auto& target_row = game_board.get_row_cards(target_loc.side, target_loc.type);
 
     // index safety check
     if (target_loc.index < 0 || target_loc.index >= static_cast<int>(target_row.size())) {
@@ -162,8 +162,7 @@ void combat_manager::apply_damage(const card_unit* attacker, const card_location
 
 void combat_manager::apply_damage_by_value(int dmg, const card_location& target_loc) const {
 
-    auto& target_row = game_board.get_row_cards(static_cast<int>(target_loc.side),
-                                               static_cast<int>(target_loc.type));
+    auto& target_row = game_board.get_row_cards(target_loc.side, target_loc.type);
 
     if (target_loc.index < 0 || target_loc.index >= static_cast<int>(target_row.size())) return;
 

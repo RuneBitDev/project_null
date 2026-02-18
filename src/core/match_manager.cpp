@@ -88,11 +88,13 @@ void match_manager::handle_input() {
     }
 
     // board interactions
-    for (int side = 0; side < 2; side++) {
-        for (int type = 0; type < 5; type++) {
+    for (int s = 0; s < 2; s++) {
+        auto side = static_cast<row_side>(s);
+        for (int t = 0; t < 5; t++) {
+            auto type = static_cast<row_type>(t);
             const auto& row_cards = game_board.get_row_cards(side, type);
             for (int i = 0; i < static_cast<int>(row_cards.size()); i++) {
-                card_location loc { static_cast<row_side>(side), static_cast<row_type>(type), i };
+                card_location loc { static_cast<row_side>(s), static_cast<row_type>(t), i };
                 Rectangle b = layout_manager::get_card_bounds(loc, row_cards.size());
                 if (CheckCollisionPointRec(mouse, b)) {
                     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
