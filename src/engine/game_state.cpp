@@ -4,6 +4,11 @@
 
 game_state::game_state(player player1, player player2) {
     match = std::make_unique<match_manager>(std::move(player1), std::move(player2));
+    background = LoadTexture("data/textures/backgrounds/board_synthetic_ebony_glow_00001_.png");
+}
+
+game_state::~game_state() {
+    UnloadTexture(background);
 }
 
 void game_state::handle_input(state_manager &manager) {
@@ -22,6 +27,8 @@ void game_state::update(float dt) {
 }
 
 void game_state::render(renderer& renderer) {
+    DrawTexture(background, 0, 0, WHITE);
+
     render_context ctx {
         match->get_board(),
         match->get_player(row_side::PLAYER),
