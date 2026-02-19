@@ -5,7 +5,9 @@
 #include "visual/ui_element.h"
 
 menu_state::menu_state(player p1, player p2)
-    : p1(std::move(p1)), p2(std::move(p2)) {}
+    : p1(std::move(p1)), p2(std::move(p2)) {
+}
+
 
 
 void menu_state::handle_input(state_manager &manager) {
@@ -30,7 +32,5 @@ void menu_state::render(renderer& renderer) {
     } else {
         renderer.draw_menu();
 
-
     }
-
 }

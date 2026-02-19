@@ -1,13 +1,23 @@
 #include "visual/renderer.h"
-
-#include <iostream>
-
 #include "visual/render_config.h"
 #include "visual/ui_element.h"
+
+renderer::renderer() {
+    matrixShader = LoadShader(0, "data/shaders/matrix_rain.fs");
+    uTimeLoc = GetShaderLocation(matrixShader, "uTime");
+    uResLoc = GetShaderLocation(matrixShader, "uResolution");
+}
+
+renderer::~renderer() {
+    UnloadShader(matrixShader);
+}
 
 
 void renderer::draw_start_screen() {
     ClearBackground(BLACK);
+
+    apply_matrix_rain();
+
     draw_text_centered("PROJECT NULL", 300, 80, GREEN);
     draw_text_centered("PROJECT NULL", 500, 40, GREEN);
     draw_text_centered("Press Enter", 1000, 30, GREEN);
@@ -72,4 +82,16 @@ void renderer::draw_text_in_rect(const char* text, Rectangle rect, int y_offset,
     float posX = rect.x + (rect.width / 2.0f) - (static_cast<float>(textWidth) / 2.0f);
 
     DrawText(text, static_cast<int>(posX), static_cast<int>(rect.y) + y_offset, size, color);
+}
+
+void renderer::apply_matrix_rain() {
+    auto time = static_cast<float>(GetTime());
+    Vector2 res = {static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())};
+
+    SetShaderValue(matrixShader, uTimeLoc, &time, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(matrixShader, uResLoc, &res, SHADER_UNIFORM_VEC2);
+
+    BeginShaderMode(matrixShader);
+        DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), WHITE);
+    EndShaderMode();
 }
