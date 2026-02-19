@@ -13,13 +13,15 @@ Rectangle layout_manager::get_card_bounds(card_location l, int total_cards) {
 
     int type_idx = static_cast<int>(l.type);
 
-    // the split of row 2 and 3
-    if (type_idx >= 2) {
-        container_width = (board::BOARD_WIDTH - 20.0f) / 2.0f;
-
-        if (type_idx == 3) {
-            container_start_x = board::START_X + container_width + 10.0f;
-        }
+    // special row
+    if (type_idx == 4) {
+        container_start_x = board::START_SPECIAL_X;
+        container_width = board::BOARD_SPECIAL_WIDTH;
+    }
+    // net row
+    else if (type_idx == 3) {
+        container_start_x += container_width + 10.0f;
+        container_width /= 4.0f;
     }
 
     // center cards
@@ -29,15 +31,21 @@ Rectangle layout_manager::get_card_bounds(card_location l, int total_cards) {
     float x = row_start_x + (l.index * (w + spacing));
 
     // vertical positioning
-    float vertical_direction = (l.side == row_side::PLAYER) ? 1.0f : -1.0f;
-    float horizon_offset = board::CENTER_Y_SPACING / 2.0f;
-    int visual_slot = (type_idx >= 2) ? 2 : type_idx;
-    float row_stack_offset = visual_slot * (h + board::ROW_SPACING);
+    float y = 0.0f;
+    if (type_idx == 4) {
+        y = board::START_Y - (h / 2.0f);
+    } else {
+        float vertical_direction = (l.side == row_side::PLAYER) ? 1.0f : -1.0f;
+        float horizon_offset = board::CENTER_Y_SPACING / 2.0f;
 
-    float y = board::START_Y + (horizon_offset + row_stack_offset) * vertical_direction;
+        int visual_slot = (type_idx >= 2) ? 2 : type_idx;
+        float row_stack_offset = visual_slot * (h + board::ROW_SPACING);
 
-    if (l.side == row_side::OPPONENT) {
-        y -= h;
+        y = board::START_Y + (horizon_offset + row_stack_offset) * vertical_direction;
+
+        if (l.side == row_side::OPPONENT) {
+            y -= h;
+        }
     }
 
     return { x, y, w, h };

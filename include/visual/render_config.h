@@ -41,8 +41,10 @@ namespace render_config {
 
     namespace board {
         constexpr float BOARD_WIDTH = 1000.0f;
+        constexpr float BOARD_SPECIAL_WIDTH = 300.0f;
         constexpr float ROW_SPACING = 30.0f;
         constexpr float START_X = 750.0f;
+        constexpr float START_SPECIAL_X = 300.0f;
         constexpr float START_Y = 600.0f;
         constexpr float CENTER_Y_SPACING = 50.0f;
     }

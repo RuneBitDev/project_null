@@ -151,6 +151,20 @@ const std::vector<std::unique_ptr<card>>& board::get_row_cards(row_side side, ro
     return rows[s][t];
 }
 
+std::vector<const card*> board::get_all_specials() const {
+    auto& part_1 = rows[0][4];
+    auto& part_2 = rows[1][4];
+
+    std::vector<const card*> combined;
+    combined.reserve(part_1.size() + part_2.size());
+
+    // extract raw pointers from unique_ptrs
+    for(const auto& c : part_1) combined.push_back(c.get());
+    for(const auto& c : part_2) combined.push_back(c.get());
+
+    return combined;
+}
+
 
 std::string board::get_row_name(row_type type) const {
     switch (type) {

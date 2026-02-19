@@ -15,6 +15,7 @@ widget_row::widget_row(row_side side, row_type type)
 }
 
 void widget_row::update_row(const board &game_board) {
+    if (type == row_type::SPECIAL) return;
     const auto& row_cards = game_board.get_row_cards(side, type);
     int total_cards = static_cast<int>(row_cards.size());
 
@@ -26,13 +27,13 @@ void widget_row::update_row(const board &game_board) {
     float row_width = render_config::board::BOARD_WIDTH;
     float row_x = render_config::board::START_X;
 
-    // Handle the "Split" rows (Type 2 and 3) logic from your original renderer
-    if (static_cast<int>(type) >= 2 && static_cast<int>(type) < 4) {
-        row_width = (render_config::board::BOARD_WIDTH / 2.0f) - 5.0f;
-        if (static_cast<int>(type) == 3) row_x += row_width + 10.0f;
+    // handle net row
+    if (static_cast<int>(type) == 3) {
+        has_score = false;
+        row_x += row_width + 10.0f;
+        row_width /= 4.0f;
     }
 
-    // Set the bounds so the draw() function has something to render
     row_bounds = { row_x - 10, ref_rect.y - 5, row_width, render_config::card::CARD_HEIGHT + 10 };
 
     card_views.clear();
@@ -48,13 +49,6 @@ void widget_row::update_row(const board &game_board) {
             state.strength = unit->get_virtual_strength(game_board, side, type);
             state.armor = unit->get_armor();
             state.attack = unit->get_attack();
-
-            switch (unit->get_stance()) {
-                case stances::AGGRESSIVE:   state.border_color = RED; break;
-                case stances::SUPPRESSIVE:  state.border_color = GREEN; break;
-                case stances::DEFENSIVE:    state.border_color = BLUE; break;
-
-            }
         }
 
         card_views.emplace_back(row_cards[i].get(), bounds, state);
@@ -72,7 +66,9 @@ void widget_row::draw() const {
 
     DrawRectangleLinesEx(row_bounds, 2, DARKGREEN);
 
-    DrawText(std::to_string(current_score).c_str(), row_bounds.x - 40, row_bounds.y, 20, DARKGREEN);
+    if (has_score) {
+        DrawText(std::to_string(current_score).c_str(), row_bounds.x - 40, row_bounds.y, 20, DARKGREEN);
+    }
 
     for (const auto& card_view : card_views) {
         card_view.draw();

@@ -19,6 +19,7 @@ private:
     row_type type;
     row_side side;
 
+    bool has_score = true;
     int current_score = 0;
     std::string label;
     Rectangle row_bounds;
