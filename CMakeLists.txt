@@ -62,9 +62,3 @@ target_include_directories(project_null PRIVATE
         include
         ${raylib_SOURCE_DIR}/src
 )
-add_custom_command(TARGET project_null POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${CMAKE_CURRENT_SOURCE_DIR}/data"
-        "$<TARGET_FILE_DIR:project_null>/data"
-        COMMENT "Copying assets to the build output directory..."
-)

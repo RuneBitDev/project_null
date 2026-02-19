@@ -13,20 +13,24 @@ void widget_card::draw() const {
     DrawRectangleLinesEx(current_bounds, hovered ? 3 : 2, state.border_color);
 
     if (state.face_up) {
-        float circle_radius = hovered ? 18.0f : 15.0f;
-        float circle_x = current_bounds.x + (hovered ? 25.0f : 20.0f);
-        float circle_y = current_bounds.y + (hovered ? 25.0f : 20.0f);
 
-        // Draw Circles
-        DrawCircleLines(circle_x, circle_y, circle_radius, GREEN);
-        DrawCircleLines(circle_x, circle_y + 30, circle_radius, BLUE);
-        DrawCircleLines(circle_x, circle_y + 60, circle_radius, RED);
 
-        // Draw Numbers using the pre-calculated state
-        int font_size = hovered ? 20 : 15;
-        DrawText(std::to_string(state.strength).c_str(), circle_x - (font_size/3), circle_y - (font_size/2), font_size, GREEN);
-        DrawText(std::to_string(state.armor).c_str(), circle_x - (font_size/3), circle_y - (font_size/2) + 30, font_size, BLUE);
-        DrawText(std::to_string(state.attack).c_str(), circle_x - (font_size/3), circle_y - (font_size/2) + 60, font_size, RED);
+        if (card_data->get_card_type() == "UNIT") {
+            float circle_radius = hovered ? 18.0f : 15.0f;
+            float circle_x = current_bounds.x + (hovered ? 25.0f : 20.0f);
+            float circle_y = current_bounds.y + (hovered ? 25.0f : 20.0f);
+            // draw Circles
+            DrawCircleLines(circle_x, circle_y, circle_radius, GREEN);
+            DrawCircleLines(circle_x, circle_y + 30, circle_radius, BLUE);
+            DrawCircleLines(circle_x, circle_y + 60, circle_radius, RED);
+
+            // draw numbers
+            int font_size = hovered ? 20 : 15;
+            DrawText(std::to_string(state.strength).c_str(), circle_x - (font_size/3), circle_y - (font_size/2), font_size, GREEN);
+            DrawText(std::to_string(state.armor).c_str(), circle_x - (font_size/3), circle_y - (font_size/2) + 30, font_size, BLUE);
+            DrawText(std::to_string(state.attack).c_str(), circle_x - (font_size/3), circle_y - (font_size/2) + 60, font_size, RED);
+
+        }
 
         // Name rendering
         int name_size = hovered ? 12 : 10;

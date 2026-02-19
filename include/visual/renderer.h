@@ -16,6 +16,9 @@ struct render_context {
 
 class renderer {
 public:
+    renderer() = default;
+    ~renderer() = default;
+
     void draw_start_screen();
     void draw_menu();
     void draw_game(const render_context& ctx);
