@@ -64,7 +64,8 @@ void widget_row::update() {
 
 void widget_row::draw() const {
 
-    DrawRectangleLinesEx(row_bounds, 2, DARKGREEN);
+    DrawRectangleRec(row_bounds, Fade(BLACK, 0.4f));
+    DrawRectangleLinesEx(row_bounds, 2, Fade(BLACK, 0.5f));
 
     if (has_score) {
         DrawText(std::to_string(current_score).c_str(), row_bounds.x - 40, row_bounds.y, 20, DARKGREEN);

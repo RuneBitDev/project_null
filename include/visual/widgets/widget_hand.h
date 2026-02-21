@@ -13,6 +13,8 @@ class widget_hand : public widget {
 
 private:
     std::vector<widget_card> card_views;
+
+    Rectangle hand_bounds;
 };
 
 #endif //PROJECT_NULL_WIDGET_HAND_H
