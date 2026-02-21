@@ -52,6 +52,7 @@ add_executable(project_null
         src/visual/widgets/widget_board.cpp
         src/visual/widgets/widget_hand.cpp
         src/visual/widgets/widget_special_row.cpp
+        src/visual/widgets/widget_graveyard.cpp
 )
 
 # ------------------------------------------------------------------

@@ -21,11 +21,18 @@ void renderer::draw_game(const render_context& ctx) {
     ClearBackground(BLACK);
     board_view.update_from_game(ctx.b);
     hand_view.update_from_player(ctx.p1);
+    graveyard_view_p1.update_from_player(ctx.p1);
+    graveyard_view_p2.update_from_player(ctx.p2);
 
+    board_view.update();
     hand_view.update();
+    graveyard_view_p1.update();
+    graveyard_view_p2.update();
 
     board_view.draw();
     hand_view.draw();
+    graveyard_view_p1.draw();
+    graveyard_view_p2.draw();
 
     draw_button(render_config::ui::PASS_BUTTON);
 

@@ -35,8 +35,9 @@ namespace render_config {
     }
 
     namespace graveyard {
-        constexpr float GY_X = 2000.0f;
+        constexpr float GY_X = 2200.0f;
         constexpr float GY_Y = 600.0f;
+        constexpr float GY_SPACING = 3.0f;
     }
 
     namespace board {

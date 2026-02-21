@@ -68,3 +68,29 @@ Rectangle layout_manager::get_hand_card_bounds(int index, int total_cards) {
 
     return { x, y, w, h };
 }
+
+Rectangle layout_manager::get_graveyard_card_bounds(int index, row_side side) {
+    using namespace render_config;
+
+    float w = card::CARD_WIDTH;
+    float h = card::CARD_HEIGHT;
+
+    float x = graveyard::GY_X;
+
+    float board_center_y = board::START_Y;
+    float horizon_offset = board::CENTER_Y_SPACING / 2.0f;
+
+    float row_stack_offset = 2 * (h + board::ROW_SPACING);
+    float vertical_direction = (side == row_side::PLAYER) ? 1.0f : -1.0f;
+
+    float y = board_center_y + (horizon_offset + row_stack_offset) * vertical_direction;
+
+    if (side == row_side::OPPONENT) {
+        y -= h;
+    }
+
+    int visual_index = std::min(index, 15);
+    float stack_offset = visual_index * graveyard::GY_SPACING;
+
+    return { x + stack_offset, y + stack_offset, w, h };
+}

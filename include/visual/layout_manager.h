@@ -9,6 +9,7 @@ public:
 
     static Rectangle get_card_bounds(card_location l, int total_cards);
     static Rectangle get_hand_card_bounds(int index, int total_cards);
+    static Rectangle get_graveyard_card_bounds(int index, row_side side);
 };
 
 #endif //PROJECT_NULL_LAYOUT_MANAGER_H
