@@ -4,7 +4,7 @@
 
 game_state::game_state(player player1, player player2) {
     match = std::make_unique<match_manager>(std::move(player1), std::move(player2));
-    background = LoadTexture("data/textures/backgrounds/board_synthetic_ebony_glow_00001_.png");
+    background = LoadTexture("data/textures/backgrounds/bckg_arasaka_01.png");
 }
 
 game_state::~game_state() {
