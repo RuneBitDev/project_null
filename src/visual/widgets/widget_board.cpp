@@ -16,12 +16,12 @@ void widget_board::update_from_game(const board &b) {
     special_row.update_from_game(b);
 }
 
-void widget_board::update() {
+void widget_board::update(float dt) {
     for (auto &row : unit_rows) {
-        row.update();
+        row.update(dt);
     }
 
-    special_row.update();
+    special_row.update(dt);
 }
 
 void widget_board::draw() const {

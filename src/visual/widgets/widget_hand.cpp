@@ -34,9 +34,9 @@ void widget_hand::update_from_player(const player& p) {
     }
 }
 
-void widget_hand::update() {
+void widget_hand::update(float dt) {
     for (auto& card_view : card_views) {
-        card_view.update();
+        card_view.update(dt);
     }
 }
 

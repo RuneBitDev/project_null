@@ -8,7 +8,7 @@
 class widget_card : public widget {
     public:
     widget_card(const card* c_ptr, Rectangle bounds, ui_card state);
-    void update() override;
+    void update(float dt) override;
     void draw() const override;
 
 private:
@@ -18,6 +18,7 @@ private:
 
     ui_card state;
     bool hovered = false;
+    float hover_timer = 0.0f;
     bool triggered = false;
 };
 #endif //PROJECT_NULL_WIDGET_CARD_H

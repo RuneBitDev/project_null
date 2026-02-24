@@ -9,7 +9,7 @@ public:
     void push_state(std::unique_ptr<state> state);
     void pop_state();
     void change_state(std::unique_ptr<state> state);
-    void update(float dt);
+    void update(float dt, renderer& renderer);
     void render(renderer& renderer);
     void handle_input();
 

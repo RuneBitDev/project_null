@@ -15,8 +15,8 @@ void state_manager::change_state(std::unique_ptr<state> state) {
     push_state(std::move(state));
 }
 
-void state_manager::update(float dt) {
-    if (!states.empty()) states.top()->update(dt);
+void state_manager::update(float dt, renderer& renderer) {
+    if (!states.empty()) states.top()->update(dt, renderer);
 }
 
 void state_manager::render(renderer& renderer) {

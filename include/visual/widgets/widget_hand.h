@@ -8,7 +8,7 @@ class widget_hand : public widget {
     public:
     void update_from_player(const player& p);
 
-    void update() override;
+    void update(float dt) override;
     void draw() const override;
 
 private:

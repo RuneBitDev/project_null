@@ -4,7 +4,7 @@
 class widget {
 public:
     virtual ~widget() = default;
-    virtual void update() = 0;
+    virtual void update(float dt) = 0;
     virtual void draw() const = 0;
 };
 

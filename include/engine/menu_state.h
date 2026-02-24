@@ -8,7 +8,7 @@ class menu_state : public state {
 public:
     menu_state(player p1, player p2);
     void handle_input(state_manager& manager) override;
-    void update(float dt) override;
+    void update(float dt, renderer& renderer) override;
     void render(renderer& renderer) override;
     std::string get_name() const override {return "Menu"; };
 

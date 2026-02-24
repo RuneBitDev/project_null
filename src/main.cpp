@@ -34,7 +34,7 @@ int main() {
 
         manager.handle_input();
         float dt = GetFrameTime();
-        manager.update(dt);
+        manager.update(dt, renderer);
 
         if (IsKeyPressed(KEY_F1)) render_config::apply_resolution(render_config::screen_720p);
         if (IsKeyPressed(KEY_F2)) render_config::apply_resolution(render_config::screen_1080p);

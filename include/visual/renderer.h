@@ -20,6 +20,8 @@ public:
     renderer() = default;
     ~renderer() = default;
 
+    void update_widgets(float dt);
+
     void draw_start_screen();
     void draw_menu();
     void draw_game(const render_context& ctx);

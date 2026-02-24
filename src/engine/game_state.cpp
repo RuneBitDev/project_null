@@ -22,8 +22,9 @@ void game_state::handle_input(state_manager &manager) {
     match->handle_input();
 }
 
-void game_state::update(float dt) {
+void game_state::update(float dt, renderer& renderer) {
     match->update(dt);
+    renderer.update_widgets(dt);
 }
 
 void game_state::render(renderer& renderer) {

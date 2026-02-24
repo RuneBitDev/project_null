@@ -9,7 +9,7 @@ public:
     game_state(player player1, player player2);
     ~game_state();
     void handle_input(state_manager& manager) override;
-    void update(float dt) override;
+    void update(float dt, renderer& renderer) override;
     void render(renderer& ren) override;
 
     std::string get_name() const override { return "game_state"; }

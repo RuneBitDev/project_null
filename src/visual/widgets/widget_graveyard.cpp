@@ -29,9 +29,9 @@ void widget_graveyard::update_from_player(const player &player) {
 }
 
 
-void widget_graveyard::update() {
+void widget_graveyard::update(float dt) {
     for (auto& card_view : graveyard_views) {
-        card_view.update();
+        card_view.update(dt);
     }
 }
 

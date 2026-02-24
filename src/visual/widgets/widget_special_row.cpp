@@ -27,9 +27,9 @@ void widget_special_row::update_from_game(const board &game_board) {
     }
 }
 
-void widget_special_row::update() {
+void widget_special_row::update(float dt) {
     for (auto& card_widget : active_specials) {
-        card_widget.update();
+        card_widget.update(dt);
     }
 }
 

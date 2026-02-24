@@ -2,6 +2,12 @@
 #include "visual/render_config.h"
 #include "visual/ui_element.h"
 
+void renderer::update_widgets(float dt) {
+    board_view.update(dt);
+    hand_view.update(dt);
+    graveyard_view_p1.update(dt);
+    graveyard_view_p2.update(dt);
+}
 
 
 void renderer::draw_start_screen() {
@@ -24,10 +30,7 @@ void renderer::draw_game(const render_context& ctx) {
     graveyard_view_p1.update_from_player(ctx.p1);
     graveyard_view_p2.update_from_player(ctx.p2);
 
-    board_view.update();
-    hand_view.update();
-    graveyard_view_p1.update();
-    graveyard_view_p2.update();
+
 
     board_view.draw();
     hand_view.draw();

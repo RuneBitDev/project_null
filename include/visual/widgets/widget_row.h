@@ -11,7 +11,7 @@ public:
     widget_row(row_side side, row_type);
     void update_row(const board& game_board);
 
-    void update() override;
+    void update(float dt) override;
     void draw() const override;
 
 private:

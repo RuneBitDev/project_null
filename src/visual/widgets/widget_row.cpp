@@ -55,9 +55,9 @@ void widget_row::update_row(const board &game_board) {
     }
 }
 
-void widget_row::update() {
+void widget_row::update(float dt) {
     for (auto& card : card_views) {
-        card.update();
+        card.update(dt);
     }
 }
 

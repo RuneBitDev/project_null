@@ -11,7 +11,7 @@ class widget_board : public widget {
 
     void update_from_game(const board& b);
 
-    void update() override;
+    void update(float dt) override;
     void draw() const override;
 
 private:

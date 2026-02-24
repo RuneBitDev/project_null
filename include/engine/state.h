@@ -11,7 +11,7 @@ public:
     virtual ~state() = default;
 
     virtual void handle_input(state_manager& manager) = 0;
-    virtual void update(float dt) = 0;
+    virtual void update(float dt, renderer& renderer) = 0;
     virtual void render(renderer& renderer) = 0;
 
     virtual std::string get_name() const = 0;

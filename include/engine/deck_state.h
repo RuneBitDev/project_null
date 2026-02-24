@@ -7,7 +7,7 @@ public:
     deck_state();
 
     void handle_input(state_manager& manager) override;
-    void update(float dt) override;
+    void update(float dt, renderer& renderer) override;
     void render(renderer& ren) override;
 
 private:

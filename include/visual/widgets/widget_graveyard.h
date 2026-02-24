@@ -10,7 +10,7 @@ class widget_graveyard : public widget {
     widget_graveyard() = default;
 
     void update_from_player(const player& player);
-    void update() override;
+    void update(float dt) override;
     void draw() const override;
 
 private:

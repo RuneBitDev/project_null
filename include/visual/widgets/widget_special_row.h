@@ -10,7 +10,7 @@ class widget_special_row : public widget {
 
     void update_from_game(const board& game_board);
 
-    void update() override;
+    void update(float dt) override;
     void draw() const override;
 
 private:

@@ -23,7 +23,8 @@ void menu_state::handle_input(state_manager &manager) {
 
 }
 
-void menu_state::update(float dt) {
+void menu_state::update(float dt, renderer& renderer) {
+    renderer.update_widgets(dt);
 }
 
 void menu_state::render(renderer& renderer) {
