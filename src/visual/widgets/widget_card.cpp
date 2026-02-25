@@ -92,7 +92,7 @@ void widget_card::update(float dt) {
     hover_timer = std::fmaxf(0.0f, std::fminf(hover_timer, 1.0f)); // clamp
 
     // position lerping
-    float lerp_speed = 12.0f;
+    float lerp_speed = 1.0f;
     float t = 1.0f - expf(-lerp_speed * dt);
     current_bounds.x += (target_bounds.x - current_bounds.x) * t;
     current_bounds.y += (target_bounds.y - current_bounds.y) * t;

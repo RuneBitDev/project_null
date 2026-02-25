@@ -5,11 +5,6 @@
 enum button_type { CLICKABLE, HOLDABLE};
 enum class card_position { DECK, HAND, ROW, GRAVEYARD };
 
-namespace card_conf {
-    constexpr float WIDTH = 100.0f;
-    constexpr float HEIGHT = 150.0f;
-}
-
 struct button {
     Rectangle bounds{};
     button_type type;

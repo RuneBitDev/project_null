@@ -6,6 +6,7 @@
 #include "../core/components/board.h"
 #include "../core/components/player.h"
 #include "widgets/widget_board.h"
+#include "widgets/widget_deck.h"
 #include "widgets/widget_graveyard.h"
 #include "widgets/widget_hand.h"
 
@@ -34,6 +35,8 @@ private:
     widget_hand hand_view;
     widget_graveyard graveyard_view_p1;
     widget_graveyard graveyard_view_p2;
+    widget_deck deck_view_p1;
+    widget_deck deck_view_p2;
 
     void draw_button(button& btn);
     void draw_text_centered(const char* text, int y, int size, Color color);

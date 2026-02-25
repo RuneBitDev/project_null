@@ -40,6 +40,12 @@ namespace render_config {
         constexpr float GY_SPACING = 3.0f;
     }
 
+    namespace deck {
+        constexpr float DECK_X = 2200.0f;
+        constexpr Rectangle DECK_PLAYER = {2350.0f, 980.0f, 130.0f, 180.0f};
+        constexpr Rectangle DECK_OPPONENT = {2350.0f, 50.0f, 130.0f, 180.0f};
+    }
+
     namespace board {
         constexpr float BOARD_WIDTH = 1000.0f;
         constexpr float BOARD_SPECIAL_WIDTH = 300.0f;

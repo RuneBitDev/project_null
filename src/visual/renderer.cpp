@@ -7,6 +7,8 @@ void renderer::update_widgets(float dt) {
     hand_view.update(dt);
     graveyard_view_p1.update(dt);
     graveyard_view_p2.update(dt);
+    deck_view_p1.update(dt);
+    deck_view_p2.update(dt);
 }
 
 
@@ -29,30 +31,45 @@ void renderer::draw_game(const render_context& ctx) {
     hand_view.update_from_player(ctx.p1, manager);
     graveyard_view_p1.update_from_player(ctx.p1, manager);
     graveyard_view_p2.update_from_player(ctx.p2, manager);
-
-
+    deck_view_p1.update_from_deck(ctx.p1.get_deck(), manager);
+    deck_view_p2.update_from_deck(ctx.p2.get_deck(), manager);
 
     board_view.draw();
     hand_view.draw();
     graveyard_view_p1.draw();
     graveyard_view_p2.draw();
+    deck_view_p1.draw();
+    deck_view_p2.draw();
 
     draw_button(render_config::ui::PASS_BUTTON);
 
 }
 
 void renderer::init_match_widgets(const player& p1, const player& p2) {
+    manager.clear_card_widgets();
 
-    auto register_cards = [&](const std::vector<card*>& cards) {
-        for (card* c : cards) {
+    // initilaize the deck view positions
+    deck_view_p1.init_deck(row_side::PLAYER);
+    deck_view_p2.init_deck(row_side::OPPONENT);
+
+    auto spawn_cards = [&](const player& p, row_side side) {
+        Rectangle deck_pos = (side == row_side::PLAYER) ?
+                             render_config::deck::DECK_PLAYER :
+                             render_config::deck::DECK_OPPONENT;
+
+        for (card* c : p.get_deck().get_card_ptrs()) {
             card_context ctx;
+            ctx.card_bounds = deck_pos;
+            ctx.position = card_position::DECK;
             ctx.face_up = false;
-            manager.manage_card_widget(c, ctx);
+
+            widget_card* w = manager.manage_card_widget(c, ctx);
+            w->set_bounds(deck_pos);
         }
     };
 
-    register_cards(p1.get_deck().get_card_ptrs());
-    register_cards(p2.get_deck().get_card_ptrs());
+    spawn_cards(p1, row_side::PLAYER);
+    spawn_cards(p2, row_side::OPPONENT);
 }
 
 

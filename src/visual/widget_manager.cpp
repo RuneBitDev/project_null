@@ -1,7 +1,5 @@
 #include "visual/widget_manager.h"
 
-
-
 widget_card* widget_manager::manage_card_widget(const card *card_ptr, card_context card_ctx) {
     auto it = card_widgets.find(card_ptr);
     if (it == card_widgets.end()) {
