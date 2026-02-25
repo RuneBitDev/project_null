@@ -5,12 +5,12 @@
 #include <iostream>
 
 widget_card::widget_card(const card* c_ptr, card_context card_ctx)
-    : card_data(c_ptr), base_bounds(card_ctx.card_bounds), current_bounds(card_ctx.card_bounds), card_ctx(card_ctx) {}
+    : card_data(c_ptr), base_bounds(card_ctx.card_bounds), current_bounds(card_ctx.card_bounds), target_bounds(card_ctx.card_bounds), card_ctx(card_ctx) {}
 
 void widget_card::draw() const {
 
     Color border_color = card_ctx.border_color;
-    Rectangle draw_rect = base_bounds;
+    Rectangle draw_rect = current_bounds;
 
     float lift = hover_timer * 15.0f;
     float expansion = hover_timer * 10.0f;
@@ -20,13 +20,16 @@ void widget_card::draw() const {
     draw_rect.width += expansion;
     draw_rect.height += expansion;
 
-    if (auto unit = dynamic_cast<const card_unit*>(card_data)) {
-        switch (unit->get_stance()) {
-            case stances::AGGRESSIVE:  border_color = RED;      break;
-            case stances::SUPPRESSIVE: border_color = GREEN;    break;
-            case stances::DEFENSIVE:   border_color = BLUE;     break;
+    if (card_ctx.position == card_position::HAND || card_ctx.position == card_position::ROW) {
+        if (auto unit = dynamic_cast<const card_unit*>(card_data)) {
+            switch (unit->get_stance()) {
+                case stances::AGGRESSIVE:  border_color = RED;      break;
+                case stances::SUPPRESSIVE: border_color = GREEN;    break;
+                case stances::DEFENSIVE:   border_color = BLUE;     break;
+            }
         }
     }
+
 
     float thickness = 2.0f + (hover_timer * 2.0f);
     DrawRectangleLinesEx(draw_rect, thickness, border_color);
@@ -77,27 +80,36 @@ void widget_card::draw() const {
 
 void widget_card::update(float dt) {
     Vector2 mouse_pos = render_config::get_virtual_mouse();
-    hovered = CheckCollisionPointRec(mouse_pos, base_bounds);
-    float hover_speed = 10.0f;
+    hovered = CheckCollisionPointRec(mouse_pos, current_bounds);
 
+    // hover logic
+    float hover_speed = 10.0f;
     if (hovered) {
         hover_timer += hover_speed * dt;
-
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-            triggered = true;
-        }
-
     } else {
         hover_timer -= hover_speed * dt;
     }
-    // clamp
-    hover_timer = std::fmaxf(0.0f, std::fminf(hover_timer, 1.0f));
+    hover_timer = std::fmaxf(0.0f, std::fminf(hover_timer, 1.0f)); // clamp
+
+    // position lerping
+    float lerp_speed = 12.0f;
+    float t = 1.0f - expf(-lerp_speed * dt);
+    current_bounds.x += (target_bounds.x - current_bounds.x) * t;
+    current_bounds.y += (target_bounds.y - current_bounds.y) * t;
+    current_bounds.width += (target_bounds.width - current_bounds.width) * t;
+    current_bounds.height += (target_bounds.height - current_bounds.height) * t;
+
+    // trigger logic
+    if (hovered && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        triggered = true;
+    }
+
+
 }
 
 void widget_card::sync_card_context(const card_context& new_ctx) {
     this->card_ctx = new_ctx;
-
-    this->base_bounds = new_ctx.card_bounds;
+    this->target_bounds = new_ctx.card_bounds;
 }
 
 void widget_card::set_bounds(Rectangle new_bounds) {

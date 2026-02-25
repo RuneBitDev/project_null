@@ -17,7 +17,8 @@ class widget_card : public widget {
 private:
     const card* card_data;
     Rectangle base_bounds;
-    mutable Rectangle current_bounds;
+    Rectangle current_bounds;
+    Rectangle target_bounds;
 
     card_context card_ctx;
     bool hovered = false;

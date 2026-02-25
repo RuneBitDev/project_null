@@ -22,6 +22,7 @@ void widget_hand::update_from_player(const player& p, widget_manager& manager) {
 
         card_context ctx;
         ctx.face_up = true;
+        ctx.position = card_position::HAND;
         ctx.card_bounds = layout_manager::get_hand_card_bounds(i, total_cards);
 
         if (auto* unit = dynamic_cast<card_unit*>(hand[i].get())) {
