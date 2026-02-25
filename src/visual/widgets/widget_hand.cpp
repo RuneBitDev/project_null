@@ -3,7 +3,7 @@
 #include "core/components/card_unit.h"
 #include "visual/render_config.h"
 
-void widget_hand::update_from_player(const player& p) {
+void widget_hand::update_from_player(const player& p, widget_manager& manager) {
     const auto& hand = p.get_hand();
     int total_cards = static_cast<int>(hand.size());
 
@@ -16,27 +16,31 @@ void widget_hand::update_from_player(const player& p) {
 
     hand_bounds = { box_x, box_y, box_w, box_h };
 
-    card_views.clear();
+    card_view_ptrs.clear();
     for (int i = 0; i < total_cards; i++) {
-        Rectangle bounds = layout_manager::get_hand_card_bounds(i, total_cards);
+        const card* logic_ptr = hand[i].get();
 
-        ui_card state;
-        state.face_up = true;
+        card_context ctx;
+        ctx.face_up = true;
+        ctx.card_bounds = layout_manager::get_hand_card_bounds(i, total_cards);
 
         if (auto* unit = dynamic_cast<card_unit*>(hand[i].get())) {
-            state.strength = unit->get_strength();
-            state.armor = unit->get_armor();
-            state.attack = unit->get_attack();
-            state.border_color = WHITE;
+            ctx.strength = unit->get_strength();
+            ctx.armor = unit->get_armor();
+            ctx.attack = unit->get_attack();
         }
 
-        card_views.emplace_back(hand[i].get(), bounds, state);
+        widget_card* visual = manager.manage_card_widget(logic_ptr, ctx);
+
+        visual->set_bounds(ctx.card_bounds);
+
+        card_view_ptrs.push_back(visual);
     }
 }
 
 void widget_hand::update(float dt) {
-    for (auto& card_view : card_views) {
-        card_view.update(dt);
+    for (auto& card_view : card_view_ptrs) {
+        card_view->update(dt);
     }
 }
 
@@ -45,7 +49,7 @@ void widget_hand::draw() const {
     DrawRectangleRec(hand_bounds, Fade(BLACK, 0.4f));
     DrawRectangleLinesEx(hand_bounds, 2, Fade(BLACK, 0.5f));
 
-    for (const auto& card_view : card_views) {
-        card_view.draw();
+    for (const auto& card_view : card_view_ptrs) {
+        card_view->draw();
     }
 }

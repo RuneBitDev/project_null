@@ -25,10 +25,10 @@ void renderer::draw_menu() {
 
 void renderer::draw_game(const render_context& ctx) {
     ClearBackground(BLACK);
-    board_view.update_from_game(ctx.b);
-    hand_view.update_from_player(ctx.p1);
-    graveyard_view_p1.update_from_player(ctx.p1);
-    graveyard_view_p2.update_from_player(ctx.p2);
+    board_view.update_from_game(ctx.b, manager);
+    hand_view.update_from_player(ctx.p1, manager);
+    graveyard_view_p1.update_from_player(ctx.p1, manager);
+    graveyard_view_p2.update_from_player(ctx.p2, manager);
 
 
 
@@ -39,6 +39,20 @@ void renderer::draw_game(const render_context& ctx) {
 
     draw_button(render_config::ui::PASS_BUTTON);
 
+}
+
+void renderer::init_match_widgets(const player& p1, const player& p2) {
+
+    auto register_cards = [&](const std::vector<card*>& cards) {
+        for (card* c : cards) {
+            card_context ctx;
+            ctx.face_up = false;
+            manager.manage_card_widget(c, ctx);
+        }
+    };
+
+    register_cards(p1.get_deck().get_card_ptrs());
+    register_cards(p2.get_deck().get_card_ptrs());
 }
 
 

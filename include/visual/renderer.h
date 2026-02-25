@@ -20,13 +20,16 @@ public:
     renderer() = default;
     ~renderer() = default;
 
-    void update_widgets(float dt);
-
     void draw_start_screen();
     void draw_menu();
     void draw_game(const render_context& ctx);
 
+    void init_match_widgets(const player& p1, const player& p2);
+    void update_widgets(float dt);
+
 private:
+    widget_manager manager;
+
     widget_board board_view;
     widget_hand hand_view;
     widget_graveyard graveyard_view_p1;

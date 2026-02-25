@@ -24,6 +24,7 @@ public:
     std::unique_ptr<card> pull_from_hand_by_id(const std::string& id); // mainly for summon ability
 
     // Getter & Setter
+    const deck& get_deck() const { return player_deck; }
     deck& get_deck() { return player_deck; }
     const std::vector<std::unique_ptr<card>>& get_hand() const { return hand; }
     const std::vector<std::unique_ptr<card>>& get_graveyard() const { return graveyard; }

@@ -1,4 +1,7 @@
 #include "engine/game_state.h"
+
+#include <iostream>
+
 #include "visual/render_config.h"
 #include "visual/ui_element.h"
 
@@ -23,6 +26,12 @@ void game_state::handle_input(state_manager &manager) {
 }
 
 void game_state::update(float dt, renderer& renderer) {
+    if (!widgets_initialized) {
+        renderer.init_match_widgets(match->get_player(row_side::PLAYER),
+                                    match->get_player(row_side::OPPONENT));
+        widgets_initialized = true;
+    }
+
     match->update(dt);
     renderer.update_widgets(dt);
 }

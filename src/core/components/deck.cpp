@@ -7,6 +7,14 @@
 deck::deck(std::unique_ptr<card> c_leader, std::vector<std::unique_ptr<card>> c_cards)
     : leader(std::move(c_leader)), cards(std::move(c_cards)) {}
 
+std::vector<card*> deck::get_card_ptrs() const {
+    std::vector<card*> ptrs;
+    for (const auto& c : cards) {
+        ptrs.push_back(c.get());
+    }
+    return ptrs;
+}
+
 bool deck::is_valid() {
     int count_units = 0;
     int count_specials = 0;

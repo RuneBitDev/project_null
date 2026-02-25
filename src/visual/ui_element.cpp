@@ -45,7 +45,3 @@ void ui_element::update_button(button &btn) {
         btn.hold_progress = 0.0f;
     }
 }
-
-void ui_element::update_card(ui_card &card) {
-
-}

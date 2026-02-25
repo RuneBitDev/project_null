@@ -14,10 +14,9 @@ widget_row::widget_row(row_side side, row_type type)
     }
 }
 
-void widget_row::update_row(const board &game_board) {
+void widget_row::update_row(const board &game_board, widget_manager& manager) {
     if (type == row_type::SPECIAL) return;
     const auto& row_cards = game_board.get_row_cards(side, type);
-    int total_cards = static_cast<int>(row_cards.size());
 
     current_score = game_board.calculate_row_score(side, type);
 
@@ -36,28 +35,31 @@ void widget_row::update_row(const board &game_board) {
 
     row_bounds = { row_x - 10, ref_rect.y - 5, row_width, render_config::card::CARD_HEIGHT + 10 };
 
-    card_views.clear();
-    for (int i = 0; i < total_cards; i++) {
-        card_location loc { side, type, i };
-        Rectangle bounds = layout_manager::get_card_bounds(loc, total_cards);
+    card_view_ptrs.clear();
+    for (size_t i = 0; i < row_cards.size(); i++) {
+        // get the persistent widget from the manager
+        card_context card_ctx;
 
-        ui_card state;
-        state.face_up = true;
-
-        auto* unit = dynamic_cast<card_unit*>(row_cards[i].get());
-        if (unit) {
-            state.strength = unit->get_virtual_strength(game_board, side, type);
-            state.armor = unit->get_armor();
-            state.attack = unit->get_attack();
+        if (auto* unit = dynamic_cast<card_unit*>(row_cards[i].get())) {
+            card_ctx.virtual_strength = unit->get_virtual_strength(game_board, side, type);
+            card_ctx.strength = unit->get_strength();
+            card_ctx.armor = unit->get_armor();
+            card_ctx.attack = unit->get_attack();
         }
 
-        card_views.emplace_back(row_cards[i].get(), bounds, state);
+        card_ctx.face_up = true;
+        card_ctx.card_bounds = layout_manager::get_card_bounds({side, type, (int)i}, row_cards.size());
+        card_ctx.position = card_position::ROW;
+
+        widget_card* visual = manager.manage_card_widget(row_cards[i].get(), card_ctx);
+
+        card_view_ptrs.push_back(visual);
     }
 }
 
 void widget_row::update(float dt) {
-    for (auto& card : card_views) {
-        card.update(dt);
+    for (auto& card : card_view_ptrs) {
+        card->update(dt);
     }
 }
 
@@ -71,8 +73,8 @@ void widget_row::draw() const {
         DrawText(std::to_string(current_score).c_str(), row_bounds.x - 40, row_bounds.y, 20, DARKGREEN);
     }
 
-    for (const auto& card_view : card_views) {
-        card_view.draw();
+    for (const auto& card_view : card_view_ptrs) {
+        card_view->draw();
     }
 
 }

@@ -9,6 +9,7 @@ public:
     deck(std::unique_ptr<card> c_leader, std::vector<std::unique_ptr<card>> c_cards);
 
     std::unique_ptr<card> get_leader_card() const;
+    std::vector<card*> get_card_ptrs() const;
     std::unique_ptr<card> draw_top_card();
     std::unique_ptr<card> pull_card_by_id(const std::string& id);
     int get_size() const;

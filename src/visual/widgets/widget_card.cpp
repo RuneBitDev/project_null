@@ -1,13 +1,24 @@
 #include "visual/widgets/widget_card.h"
-
 #include "core/components/card_unit.h"
 #include "visual/render_config.h"
+#include <cmath>
+#include <iostream>
 
-widget_card::widget_card(const card* c_ptr, Rectangle bounds, ui_card s)
-    : card_data(c_ptr), base_bounds(bounds), current_bounds(bounds), state(s) {}
+widget_card::widget_card(const card* c_ptr, card_context card_ctx)
+    : card_data(c_ptr), base_bounds(card_ctx.card_bounds), current_bounds(card_ctx.card_bounds), card_ctx(card_ctx) {}
 
 void widget_card::draw() const {
-    Color border_color = state.border_color;
+
+    Color border_color = card_ctx.border_color;
+    Rectangle draw_rect = base_bounds;
+
+    float lift = hover_timer * 15.0f;
+    float expansion = hover_timer * 10.0f;
+
+    draw_rect.y -= lift;
+    draw_rect.x -= expansion / 2.0f;
+    draw_rect.width += expansion;
+    draw_rect.height += expansion;
 
     if (auto unit = dynamic_cast<const card_unit*>(card_data)) {
         switch (unit->get_stance()) {
@@ -17,16 +28,19 @@ void widget_card::draw() const {
         }
     }
 
-    DrawRectangleLinesEx(current_bounds, hovered ? 3 : 2, border_color);
+    float thickness = 2.0f + (hover_timer * 2.0f);
+    DrawRectangleLinesEx(draw_rect, thickness, border_color);
 
-    if (state.face_up) {
+    if (card_ctx.face_up) {
 
         if (card_data->get_card_type() == "UNIT") {
-            float offset = hovered ? 5.0f : 0.0f;
-            float radius = 15.0f + (hovered ? 3.0f : 0.0f);
-            int font_size = hovered ? 20 : 15;
+            float radius = 15.0f + (hover_timer * 3.0f);
+            int font_size = (int)(15.0f + (hover_timer * 5.0f));
 
-            Vector2 stat_pos = { current_bounds.x + 20.0f + offset, current_bounds.y + 20.0f + offset };
+            Vector2 stat_pos = {
+                draw_rect.x + 20.0f,
+                draw_rect.y + 20.0f
+            };
 
             // helper
             auto DrawStat = [&](int value, Color col, float y_off) {
@@ -36,27 +50,56 @@ void widget_card::draw() const {
                 DrawText(txt.c_str(), stat_pos.x - spacing, stat_pos.y + y_off - (font_size/2), font_size, col);
             };
 
-            DrawStat(state.strength, GREEN, 0);
-            DrawStat(state.armor,    BLUE,  30);
-            DrawStat(state.attack,   RED,   60);
+            int strength = card_ctx.strength;
+            Color stat_color = WHITE;
+
+            if (card_ctx.position == card_position::ROW) {
+                strength = card_ctx.virtual_strength;
+                if (strength > card_ctx.strength) stat_color = GREEN;
+                else if (strength < card_ctx.strength) stat_color = RED;
+            }
+
+            DrawStat(strength, stat_color, 0);
+
+            DrawStat(card_ctx.armor,    BLUE,  30);
+            DrawStat(card_ctx.attack,   RED,   60);
         }
 
         // name rendering
-        int name_size = hovered ? 12 : 10;
+        int name_size = (int)(10.0f + (hover_timer * 2.0f));
         int textWidth = MeasureText(card_data->get_name().c_str(), name_size);
-        float posX = current_bounds.x + (current_bounds.width / 2.0f) - (static_cast<float>(textWidth) / 2.0f);
-        DrawText(card_data->get_name().c_str(), static_cast<int>(posX),
-                 static_cast<int>(current_bounds.y) + static_cast<int>(current_bounds.height) - (hovered ? 30 : 25),
-                 name_size, GREEN);
+        float posX = draw_rect.x + (draw_rect.width / 2.0f) - (textWidth / 2.0f);
+        float posY = draw_rect.y + draw_rect.height - (25.0f + (hover_timer * 5.0f));
+
+        DrawText(card_data->get_name().c_str(), (int)posX, (int)posY, name_size, GREEN);
     }
 }
 
 void widget_card::update(float dt) {
     Vector2 mouse_pos = render_config::get_virtual_mouse();
     hovered = CheckCollisionPointRec(mouse_pos, base_bounds);
+    float hover_speed = 10.0f;
 
-    if (hovered && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        hover_timer += 0.01f;
-        triggered = true;
+    if (hovered) {
+        hover_timer += hover_speed * dt;
+
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            triggered = true;
+        }
+
+    } else {
+        hover_timer -= hover_speed * dt;
     }
+    // clamp
+    hover_timer = std::fmaxf(0.0f, std::fminf(hover_timer, 1.0f));
+}
+
+void widget_card::sync_card_context(const card_context& new_ctx) {
+    this->card_ctx = new_ctx;
+
+    this->base_bounds = new_ctx.card_bounds;
+}
+
+void widget_card::set_bounds(Rectangle new_bounds) {
+    base_bounds = new_bounds;
 }

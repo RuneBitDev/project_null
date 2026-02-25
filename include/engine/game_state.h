@@ -17,6 +17,7 @@ public:
 private:
     std::unique_ptr<match_manager> match;
     Texture2D background;
+    bool widgets_initialized = false;
 };
 
 #endif //PROJECT_NULL_GAME_STATE_H
