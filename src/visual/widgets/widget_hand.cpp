@@ -39,6 +39,22 @@ void widget_hand::update_from_player(const player& p, widget_manager& manager) {
     }
 }
 
+void widget_hand::update_from_player_opponent(const player &p, widget_manager &manager) {
+    const auto& hand_cards = p.get_hand();
+
+    for (size_t i = 0; i < hand_cards.size(); i++) {
+        card* c = hand_cards[i].get();
+
+        card_context ctx;
+        ctx.card_bounds = layout_manager::get_hand_card_bounds(i, hand_cards.size());
+        ctx.card_bounds.y = 50.0f;
+        ctx.position = card_position::HAND;
+        ctx.face_up = false;
+
+        manager.manage_card_widget(c, ctx);
+    }
+}
+
 void widget_hand::update(float dt) {
     for (auto& card_view : card_view_ptrs) {
         card_view->update(dt);

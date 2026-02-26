@@ -3,7 +3,7 @@
 #include "visual/render_config.h"
 
 widget_row::widget_row(row_side side, row_type type)
-    : side(side), type(type) {
+    : type(type), side(side) {
     switch (type) {
         case row_type::MELEE:   label = "MELEE";    break;
         case row_type::RANGED:  label = "RANGED";   break;
@@ -48,7 +48,7 @@ void widget_row::update_row(const board &game_board, widget_manager& manager) {
         }
 
         card_ctx.face_up = true;
-        card_ctx.card_bounds = layout_manager::get_card_bounds({side, type, (int)i}, row_cards.size());
+        card_ctx.card_bounds = layout_manager::get_card_bounds({side, type, static_cast<int>(i)}, row_cards.size());
         card_ctx.position = card_position::ROW;
 
         widget_card* visual = manager.manage_card_widget(row_cards[i].get(), card_ctx);

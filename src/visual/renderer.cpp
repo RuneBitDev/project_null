@@ -29,6 +29,7 @@ void renderer::draw_game(const render_context& ctx) {
     ClearBackground(BLACK);
     board_view.update_from_game(ctx.b, manager);
     hand_view.update_from_player(ctx.p1, manager);
+    hand_view.update_from_player_opponent(ctx.p2, manager);
     graveyard_view_p1.update_from_player(ctx.p1, manager);
     graveyard_view_p2.update_from_player(ctx.p2, manager);
     deck_view_p1.update_from_deck(ctx.p1.get_deck(), manager);

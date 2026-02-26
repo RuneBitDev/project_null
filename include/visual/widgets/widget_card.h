@@ -7,7 +7,7 @@
 
 class widget_card : public widget {
     public:
-    widget_card(const card* c_ptr, card_context card_ctx);
+    widget_card(const card* c_ptr, const card_context &card_ctx);
     void update(float dt) override;
     void draw() const override;
 

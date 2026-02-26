@@ -8,6 +8,7 @@
 class widget_hand : public widget {
     public:
     void update_from_player(const player& p, widget_manager& manager);
+    void update_from_player_opponent(const player& p, widget_manager& manager);
 
     void update(float dt) override;
     void draw() const override;
@@ -15,7 +16,7 @@ class widget_hand : public widget {
 private:
     std::vector<widget_card*> card_view_ptrs;
 
-    Rectangle hand_bounds;
+    Rectangle hand_bounds{};
 };
 
 #endif //PROJECT_NULL_WIDGET_HAND_H

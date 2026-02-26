@@ -4,7 +4,7 @@
 #include <cmath>
 #include <iostream>
 
-widget_card::widget_card(const card* c_ptr, card_context card_ctx)
+widget_card::widget_card(const card* c_ptr, const card_context &card_ctx)
     : card_data(c_ptr), base_bounds(card_ctx.card_bounds), current_bounds(card_ctx.card_bounds), target_bounds(card_ctx.card_bounds), card_ctx(card_ctx) {}
 
 void widget_card::draw() const {
@@ -38,7 +38,7 @@ void widget_card::draw() const {
 
         if (card_data->get_card_type() == "UNIT") {
             float radius = 15.0f + (hover_timer * 3.0f);
-            int font_size = (int)(15.0f + (hover_timer * 5.0f));
+            int font_size = static_cast<int>(15.0f + (hover_timer * 5.0f));
 
             Vector2 stat_pos = {
                 draw_rect.x + 20.0f,
@@ -69,12 +69,12 @@ void widget_card::draw() const {
         }
 
         // name rendering
-        int name_size = (int)(10.0f + (hover_timer * 2.0f));
+        int name_size = static_cast<int>(10.0f + (hover_timer * 2.0f));
         int textWidth = MeasureText(card_data->get_name().c_str(), name_size);
         float posX = draw_rect.x + (draw_rect.width / 2.0f) - (textWidth / 2.0f);
         float posY = draw_rect.y + draw_rect.height - (25.0f + (hover_timer * 5.0f));
 
-        DrawText(card_data->get_name().c_str(), (int)posX, (int)posY, name_size, GREEN);
+        DrawText(card_data->get_name().c_str(), static_cast<int>(posX), static_cast<int>(posY), name_size, GREEN);
     }
 }
 
@@ -92,7 +92,7 @@ void widget_card::update(float dt) {
     hover_timer = std::fmaxf(0.0f, std::fminf(hover_timer, 1.0f)); // clamp
 
     // position lerping
-    float lerp_speed = 1.0f;
+    float lerp_speed = 9.0f;
     float t = 1.0f - expf(-lerp_speed * dt);
     current_bounds.x += (target_bounds.x - current_bounds.x) * t;
     current_bounds.y += (target_bounds.y - current_bounds.y) * t;

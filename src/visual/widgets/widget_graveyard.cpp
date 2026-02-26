@@ -27,6 +27,7 @@ void widget_graveyard::update_from_player(const player &player, widget_manager& 
         ctx.card_bounds = target_bounds;
         ctx.face_up = false;
         ctx.border_color = GRAY;
+        ctx.position = card_position::GRAVEYARD;
 
         widget_card* visual = manager.manage_card_widget(logic_ptr, ctx);
 
