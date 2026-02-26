@@ -18,8 +18,8 @@ struct render_context {
 
 class renderer {
 public:
-    renderer() = default;
-    ~renderer() = default;
+    renderer();
+    ~renderer();
 
     void draw_start_screen();
     void draw_menu();
@@ -38,7 +38,10 @@ private:
     widget_deck deck_view_p1;
     widget_deck deck_view_p2;
 
+    Font main_font;
+
     void draw_button(button& btn);
+    void draw_text_cyber(const Font &font, const char* text, Vector2 pos, float size, Color mainColor);
     void draw_text_centered(const char* text, int y, int size, Color color);
     void draw_text_in_rect(const char* text, Rectangle rect, int y_offset, int size, Color color);
 };

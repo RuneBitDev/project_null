@@ -2,6 +2,14 @@
 #include "visual/render_config.h"
 #include "visual/ui_element.h"
 
+renderer::renderer() {
+    main_font = LoadFontEx("data/fonts/Cyberway Riders.otf", 64, nullptr, 0);
+}
+
+renderer::~renderer() {
+    UnloadFont(main_font);
+}
+
 void renderer::update_widgets(float dt) {
     board_view.update(dt);
     hand_view.update(dt);
@@ -15,9 +23,9 @@ void renderer::update_widgets(float dt) {
 void renderer::draw_start_screen() {
     ClearBackground(BLACK);
 
-    draw_text_centered("PROJECT NULL", 300, 80, GREEN);
-    draw_text_centered("PROJECT NULL", 500, 40, GREEN);
-    draw_text_centered("Press Enter", 1000, 30, GREEN);
+    draw_text_centered("PROJECT    NULL", 300, 80, GREEN);
+    draw_text_centered("PROJECT    NULL", 500, 40, GREEN);
+    draw_text_centered("Press  Enter", 1000, 30, GREEN);
 }
 
 void renderer::draw_menu() {
@@ -103,9 +111,21 @@ void renderer::draw_button(button& btn) {
 
 }
 
+void renderer::draw_text_cyber(const Font &font, const char* text, Vector2 pos, float size, Color mainColor) {
+    float spacing = 2.0f;
+
+    float jitterX = static_cast<float>(GetRandomValue(-100, 100)) / 100.0f;
+    float jitterY = static_cast<float>(GetRandomValue(-100, 100)) / 100.0f;
+
+    DrawTextEx(font, text, { pos.x - 2 + jitterX, pos.y + jitterY }, size, spacing, Fade(RED, 0.4f));
+    DrawTextEx(font, text, { pos.x + 2 - jitterX, pos.y - jitterY }, size, spacing, Fade(BLUE, 0.4f));
+    DrawTextEx(font, text, pos, size, spacing, mainColor);
+}
+
 void renderer::draw_text_centered(const char* text, int y, int size, Color color) {
-    int width = MeasureText(text, size);
-    DrawText(text, render_config::VIRTUAL_WIDTH / 2 - width / 2, y, size, color);
+    Vector2 textSize = MeasureTextEx(main_font, text, static_cast<float>(size), 2.0f);
+    float x_pos = (render_config::VIRTUAL_WIDTH - textSize.x) / 2.0f;
+    draw_text_cyber(main_font, text, { x_pos, static_cast<float>(y) }, static_cast<float>(size), color);
 }
 
 void renderer::draw_text_in_rect(const char* text, Rectangle rect, int y_offset, int size, Color color) {
