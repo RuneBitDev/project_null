@@ -9,6 +9,7 @@
 #include "widgets/widget_deck.h"
 #include "widgets/widget_graveyard.h"
 #include "widgets/widget_hand.h"
+#include "widgets/widget_popup.h"
 
 struct render_context {
     const board& b;
@@ -25,10 +26,14 @@ public:
     void draw_menu();
     void draw_game(const render_context& ctx);
 
+    // widget management
+    void add_popup(const std::string& text, Color color, float duration, popup_type p_type);
     void init_match_widgets(const player& p1, const player& p2);
     void update_widgets(float dt);
 
 private:
+    std::vector<std::unique_ptr<widget_popup>> active_popups;
+
     widget_manager manager;
 
     widget_board board_view;

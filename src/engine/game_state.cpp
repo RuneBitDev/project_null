@@ -32,7 +32,30 @@ void game_state::update(float dt, renderer& renderer) {
         widgets_initialized = true;
     }
 
-    match->update(dt);
+    auto result = match->update(dt);
+    if (result.has_value()) {
+        switch (result.value()) {
+            case game_end::CONTINUE: {
+                int p1_score = match->get_player_score(row_side::PLAYER);
+                int p2_score = match->get_player_score(row_side::OPPONENT);
+
+                if (p1_score > p2_score) renderer.add_popup("ROUND WON", GREEN, 5.0f, popup_type::BANNER);
+                else if (p2_score > p1_score) renderer.add_popup("ROUND LOST", RED, 5.0f, popup_type::BANNER);
+                else renderer.add_popup("ROUND DRAW", GRAY, 5.0f, popup_type::BANNER);
+                break;
+            }
+            case game_end::WIN:
+                renderer.add_popup("MISSION SUCCESS", LIME, 5.0f, popup_type::BANNER);
+                break;
+            case game_end::LOSE:
+                renderer.add_popup("SYSTEM CRITICAL: DEFEAT", RED, 5.0f, popup_type::BANNER);
+                break;
+            case game_end::DRAW:
+                renderer.add_popup("MUTUAL DESTRUCTION", GRAY, 5.0f, popup_type::BANNER);
+                break;
+        }
+    }
+
     renderer.update_widgets(dt);
 }
 

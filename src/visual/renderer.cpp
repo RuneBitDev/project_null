@@ -10,16 +10,6 @@ renderer::~renderer() {
     UnloadFont(main_font);
 }
 
-void renderer::update_widgets(float dt) {
-    board_view.update(dt);
-    hand_view.update(dt);
-    graveyard_view_p1.update(dt);
-    graveyard_view_p2.update(dt);
-    deck_view_p1.update(dt);
-    deck_view_p2.update(dt);
-}
-
-
 void renderer::draw_start_screen() {
     ClearBackground(BLACK);
 
@@ -52,6 +42,18 @@ void renderer::draw_game(const render_context& ctx) {
 
     draw_button(render_config::ui::PASS_BUTTON);
 
+    for (const auto& p : active_popups) {
+        p->draw();
+    }
+
+}
+
+
+// ------------------------ WIDGET MANAGEMENT ------------------------
+
+
+void renderer::add_popup(const std::string& text, Color color, float duration, popup_type p_type) {
+    active_popups.push_back(std::make_unique<widget_popup>(text, color, duration, p_type));
 }
 
 void renderer::init_match_widgets(const player& p1, const player& p2) {
@@ -79,6 +81,21 @@ void renderer::init_match_widgets(const player& p1, const player& p2) {
 
     spawn_cards(p1, row_side::PLAYER);
     spawn_cards(p2, row_side::OPPONENT);
+}
+
+void renderer::update_widgets(float dt) {
+    board_view.update(dt);
+    hand_view.update(dt);
+    graveyard_view_p1.update(dt);
+    graveyard_view_p2.update(dt);
+    deck_view_p1.update(dt);
+    deck_view_p2.update(dt);
+
+    for (auto it = active_popups.begin(); it != active_popups.end();) {
+        (*it)->update(dt);
+        if ((*it)->is_finished()) it = active_popups.erase(it);
+        else ++it;
+    }
 }
 
 

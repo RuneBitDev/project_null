@@ -15,18 +15,14 @@ match_manager::match_manager(player player1, player player2)
 
 // ---------------------------- TURN LOGIC ----------------------------
 
-void match_manager::update(float dt) {
+std::optional<game_end> match_manager::update(float dt) {
     if (p1.get_has_passed() && p2.get_has_passed()) {
-        end_round();
-        return;
+        return end_round();
     }
 
     if (combat.is_busy()) {
         combat.update(dt);
-        return;
-    }
-
-    if (active_player_side == row_side::OPPONENT && !p2.get_has_passed()) {
+    } else if (active_player_side == row_side::OPPONENT && !p2.get_has_passed()) {
         ai_timer += dt;
         if (ai_timer >= 1.5f) {
             execute_ai_turn();
@@ -34,6 +30,8 @@ void match_manager::update(float dt) {
             switch_turn();
         }
     }
+
+    return std::nullopt;
 }
 
 void match_manager::switch_turn() {
@@ -151,11 +149,21 @@ game_end match_manager::end_round() {
 
 void match_manager::execute_ai_turn() {
     const auto& hand = p2.get_hand();
-    if (p1.get_has_passed()) {
+    if (hand.empty()) {
         p2.set_has_passed(true);
-    } else {
-        p2.play_card(0, game_board, row_side::OPPONENT, p1, combat);
+        return;
     }
+
+    if (p1.get_has_passed()) {
+        // simple AI: if p1 passed and p2 is winning, p2 passes too.
+        if (get_player_score(row_side::OPPONENT) > get_player_score(row_side::PLAYER)) {
+            p2.set_has_passed(true);
+            return;
+        }
+    }
+
+    // play the first card for now
+    p2.play_card(0, game_board, row_side::OPPONENT, p1, combat);
 }
 
 const player& match_manager::get_player(row_side side) const {

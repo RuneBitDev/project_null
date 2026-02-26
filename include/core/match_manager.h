@@ -5,6 +5,7 @@
 #include "types.h"
 #include "combat_manager.h"
 #include <map>
+#include <optional>
 
 enum class round_state { WIN, LOSE, DRAW };
 enum class game_end { WIN, LOSE, DRAW, CONTINUE };
@@ -14,7 +15,7 @@ public:
     match_manager(player p1, player p2);
 
     // main engine hooks
-    void update(float dt);
+    std::optional<game_end> update(float dt);
     void handle_input();
 
     // gameplay actions

@@ -4,6 +4,7 @@
 
 enum button_type { CLICKABLE, HOLDABLE};
 enum class card_position { DECK, HAND, ROW, GRAVEYARD };
+enum class popup_type { BANNER };
 
 struct button {
     Rectangle bounds{};
@@ -28,5 +29,7 @@ struct card_context {
 
     bool face_up = false;
 };
+
+
 
 #endif //PROJECT_NULL_UI_TYPES_H
