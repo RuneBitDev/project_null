@@ -44,7 +44,4 @@ void widget_special_row::draw() const {
     DrawRectangleRec(bounds, Fade(BLACK, 0.4f));
     DrawRectangleLinesEx(bounds, 2, Fade(BLACK, 0.5f));
 
-    for (const auto& card_widget : special_row_ptrs) {
-        card_widget->draw();
-    }
 }

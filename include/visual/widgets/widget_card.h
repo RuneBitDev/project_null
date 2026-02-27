@@ -24,5 +24,7 @@ private:
     bool hovered = false;
     float hover_timer = 0.0f;
     bool triggered = false;
+
+    void draw_stat_banner(Vector2 pos, float width, float height, int value, Color base_color, Color value_color) const;
 };
 #endif //PROJECT_NULL_WIDGET_CARD_H

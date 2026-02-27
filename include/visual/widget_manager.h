@@ -8,6 +8,7 @@ class widget_manager {
     void update(float dt);
 
     widget_card* manage_card_widget(const card* card_ptr, card_context card_ctx);
+    void draw_card_widgets();
     void clear_card_widgets();
 
 private:

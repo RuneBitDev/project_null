@@ -11,6 +11,12 @@ widget_card* widget_manager::manage_card_widget(const card *card_ptr, card_conte
     return &it->second;
 }
 
+void widget_manager::draw_card_widgets() {
+    for (const auto& [key, value] : card_widgets) {
+        value.draw();
+    }
+}
+
 void widget_manager::clear_card_widgets() {
     card_widgets.clear();
 }

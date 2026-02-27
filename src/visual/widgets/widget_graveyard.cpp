@@ -46,9 +46,5 @@ void widget_graveyard::draw() const {
 
     DrawRectangleRec(graveyard_bounds, Fade(BLACK, 0.4f));
     DrawRectangleLinesEx(graveyard_bounds, 2, Fade(BLACK, 0.5f));
-
-    for (const auto& card_view : graveyard_view_ptrs) {
-        card_view->draw();
-    }
 }
 

@@ -31,30 +31,19 @@ void widget_card::draw() const {
     }
 
 
-    float thickness = 2.0f + (hover_timer * 2.0f);
+    float thickness = 2.0f;
     DrawRectangleLinesEx(draw_rect, thickness, border_color);
 
     if (card_ctx.face_up) {
 
         if (card_data->get_card_type() == "UNIT") {
-            float radius = 15.0f + (hover_timer * 3.0f);
-            int font_size = static_cast<int>(15.0f + (hover_timer * 5.0f));
 
-            Vector2 stat_pos = {
-                draw_rect.x + 20.0f,
-                draw_rect.y + 20.0f
-            };
-
-            // helper
-            auto DrawStat = [&](int value, Color col, float y_off) {
-                DrawCircleLines(stat_pos.x, stat_pos.y + y_off, radius, col);
-                std::string txt = std::to_string(value);
-                int spacing = MeasureText(txt.c_str(), font_size) / 2;
-                DrawText(txt.c_str(), stat_pos.x - spacing, stat_pos.y + y_off - (font_size/2), font_size, col);
-            };
+            Vector2 stat_pos = {draw_rect.x,draw_rect.y + 10.0f};
 
             int strength = card_ctx.strength;
-            Color stat_color = WHITE;
+            auto stat_color = WHITE;
+            float banner_w = 25.0f + (hover_timer * 5.0f);
+            float banner_h = 20.0f;
 
             if (card_ctx.position == card_position::ROW) {
                 strength = card_ctx.virtual_strength;
@@ -62,10 +51,11 @@ void widget_card::draw() const {
                 else if (strength < card_ctx.strength) stat_color = RED;
             }
 
-            DrawStat(strength, stat_color, 0);
-
-            DrawStat(card_ctx.armor,    BLUE,  30);
-            DrawStat(card_ctx.attack,   RED,   60);
+            draw_stat_banner(stat_pos, banner_w, banner_h, strength, WHITE, stat_color);
+            stat_pos.y += 25.0f;
+            draw_stat_banner(stat_pos, banner_w, banner_h, card_ctx.armor, BLUE, WHITE);
+            stat_pos.y += 25.0f;
+            draw_stat_banner(stat_pos, banner_w, banner_h, card_ctx.attack, RED, WHITE);
         }
 
         // name rendering
@@ -114,4 +104,34 @@ void widget_card::sync_card_context(const card_context& new_ctx) {
 
 void widget_card::set_bounds(Rectangle new_bounds) {
     base_bounds = new_bounds;
+}
+
+
+void widget_card::draw_stat_banner(Vector2 pos, float width, float height, int value, Color base_color, Color value_color) const{
+
+    Vector2 vertices[6] = {
+        { pos.x, pos.y },
+        { pos.x + width, pos.y },
+        { pos.x + width + (height/2), pos.y + height/2 },
+        { pos.x + width, pos.y + height },
+        { pos.x, pos.y + height },
+        { pos.x + (height/2), pos.y + height/2 }
+    };
+    DrawTriangleFan(vertices, 6, base_color);
+
+    Vector2 outline[7] = {
+        vertices[0], vertices[1], vertices[2],
+        vertices[3], vertices[4], vertices[5], vertices[0]
+    };
+    DrawLineStrip(outline, 7, base_color);
+
+    int fontSize = static_cast<int>(height * 0.6f);
+    std::string text = std::to_string(value);
+
+    int textWidth = MeasureText(text.c_str(), fontSize);
+
+    float textPosX = pos.x + (width / 2.0f) - (textWidth / 2.0f) + (height / 4.0f);
+    float textPosY = pos.y + (height / 2.0f) - (fontSize / 2.0f);
+
+    DrawText(text.c_str(), static_cast<int>(textPosX), static_cast<int>(textPosY), fontSize, value_color);
 }

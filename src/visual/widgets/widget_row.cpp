@@ -73,8 +73,4 @@ void widget_row::draw() const {
         DrawText(std::to_string(current_score).c_str(), row_bounds.x - 40, row_bounds.y, 20, DARKGREEN);
     }
 
-    for (const auto& card_view : card_view_ptrs) {
-        card_view->draw();
-    }
-
 }

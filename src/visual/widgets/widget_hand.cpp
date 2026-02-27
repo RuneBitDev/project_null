@@ -47,7 +47,7 @@ void widget_hand::update_from_player_opponent(const player &p, widget_manager &m
 
         card_context ctx;
         ctx.card_bounds = layout_manager::get_hand_card_bounds(i, hand_cards.size());
-        ctx.card_bounds.y = 50.0f;
+        ctx.card_bounds.y = -150.0f;
         ctx.position = card_position::HAND;
         ctx.face_up = false;
 
@@ -65,8 +65,4 @@ void widget_hand::draw() const {
 
     DrawRectangleRec(hand_bounds, Fade(BLACK, 0.4f));
     DrawRectangleLinesEx(hand_bounds, 2, Fade(BLACK, 0.5f));
-
-    for (const auto& card_view : card_view_ptrs) {
-        card_view->draw();
-    }
 }

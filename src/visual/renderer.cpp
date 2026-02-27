@@ -40,6 +40,8 @@ void renderer::draw_game(const render_context& ctx) {
     deck_view_p1.draw();
     deck_view_p2.draw();
 
+    manager.draw_card_widgets();
+
     draw_button(render_config::ui::PASS_BUTTON);
 
     for (const auto& p : active_popups) {
