@@ -8,14 +8,14 @@
 #include <optional>
 
 enum class round_state { WIN, LOSE, DRAW };
-enum class game_end { WIN, LOSE, DRAW, CONTINUE };
+enum class game_status { WIN, LOSE, DRAW, CONTINUE };
 
 class match_manager {
 public:
     match_manager(player p1, player p2);
 
     // main engine hooks
-    std::optional<game_end> update(float dt);
+    std::optional<game_status> update(float dt);
     void handle_input();
 
     // gameplay actions
@@ -23,6 +23,7 @@ public:
     void pass_turn(row_side side);
 
     // scoring and state queries
+    round_state end_round();
     int get_player_score(row_side side) const;
     const board& get_board() const { return game_board; }
     const player& get_player(row_side side) const;
@@ -42,7 +43,7 @@ private:
 
     // internal logic helpers
     void execute_ai_turn();
-    game_end end_round();
+    game_status end_game();
     void switch_turn();
 };
 

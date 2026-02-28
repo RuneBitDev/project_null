@@ -19,7 +19,7 @@ void board::clear_board(player &p1, player &p2) {
             auto& current_row = rows[side][type];
 
             for (auto& card_ptr : current_row) {
-                if (card_ptr->get_card_type() == "UNIT") {
+                if (card_ptr && card_ptr->get_card_type() == "UNIT") {
                     target_player.add_to_graveyard(std::move(card_ptr));
                 }
             }

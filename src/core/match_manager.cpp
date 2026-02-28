@@ -15,9 +15,9 @@ match_manager::match_manager(player player1, player player2)
 
 // ---------------------------- TURN LOGIC ----------------------------
 
-std::optional<game_end> match_manager::update(float dt) {
+std::optional<game_status> match_manager::update(float dt) {
     if (p1.get_has_passed() && p2.get_has_passed()) {
-        return end_round();
+        return end_game();
     }
 
     if (combat.is_busy()) {
@@ -117,7 +117,7 @@ int match_manager::get_player_score(row_side side) const {
     return game_board.calculate_total_score(side);
 }
 
-game_end match_manager::end_round() {
+round_state match_manager::end_round() {
     int p1_score = get_player_score(row_side::PLAYER);
     int p2_score = get_player_score(row_side::OPPONENT);
 
@@ -125,26 +125,38 @@ game_end match_manager::end_round() {
     round_scores[row_side::PLAYER].push_back(p1_score);
     round_scores[row_side::OPPONENT].push_back(p2_score);
 
-    // winner winner chicken diner
-    if (p1_score > p2_score) {
-        p2.lose_live();
-    } else if (p2_score > p1_score) {
-        p1.lose_live();
-    } else {
-        p1.lose_live();
-        p2.lose_live();
-    }
-
-    if (p1.get_lives() <= 0 && p2.get_lives() <= 0) return game_end::DRAW;
-    if (p1.get_lives() <= 0) return game_end::LOSE;
-    if (p2.get_lives() <= 0) return game_end::WIN;
-
     game_board.clear_board(p1, p2);
     p1.set_has_passed(false);
     p2.set_has_passed(false);
     current_round++;
 
-    return game_end::CONTINUE;
+    // winner winner chicken diner
+    if (p1_score > p2_score) {
+        p2.lose_live();
+        return round_state::WIN;
+    } else if (p2_score > p1_score) {
+        p1.lose_live();
+        return round_state::LOSE;
+    } else {
+        p1.lose_live();
+        p2.lose_live();
+        return round_state::DRAW;
+    }
+}
+
+game_status match_manager::end_game() {
+    int p1_lives = p1.get_lives();
+    int p2_lives = p2.get_lives();
+
+    if (p1_lives == 0 && p2_lives > 0) {
+        return game_status::LOSE;
+    } else if (p1_lives > 0 && p2_lives == 0) {
+        return game_status::WIN;
+    } else if (p1_lives == 0 && p2_lives == 0) {
+        return game_status::DRAW;
+    } else {
+        return game_status::CONTINUE;
+    }
 }
 
 void match_manager::execute_ai_turn() {

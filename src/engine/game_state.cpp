@@ -33,24 +33,23 @@ void game_state::update(float dt, renderer& renderer) {
     }
 
     auto result = match->update(dt);
+
     if (result.has_value()) {
         switch (result.value()) {
-            case game_end::CONTINUE: {
-                int p1_score = match->get_player_score(row_side::PLAYER);
-                int p2_score = match->get_player_score(row_side::OPPONENT);
+            case game_status::CONTINUE:
+                switch (match->end_round()) {
+                    case round_state::WIN:  renderer.add_popup("ROUND WON", GREEN, 5.0f, popup_type::BANNER);   break;
+                    case round_state::LOSE: renderer.add_popup("ROUND LOST", RED, 5.0f, popup_type::BANNER);    break;
+                    case round_state::DRAW: renderer.add_popup("ROUND DRAW", GRAY, 5.0f, popup_type::BANNER);   break;
 
-                if (p1_score > p2_score) renderer.add_popup("ROUND WON", GREEN, 5.0f, popup_type::BANNER);
-                else if (p2_score > p1_score) renderer.add_popup("ROUND LOST", RED, 5.0f, popup_type::BANNER);
-                else renderer.add_popup("ROUND DRAW", GRAY, 5.0f, popup_type::BANNER);
-                break;
-            }
-            case game_end::WIN:
+                } break;
+            case game_status::WIN:
                 renderer.add_popup("MISSION SUCCESS", LIME, 5.0f, popup_type::BANNER);
                 break;
-            case game_end::LOSE:
+            case game_status::LOSE:
                 renderer.add_popup("SYSTEM CRITICAL: DEFEAT", RED, 5.0f, popup_type::BANNER);
                 break;
-            case game_end::DRAW:
+            case game_status::DRAW:
                 renderer.add_popup("MUTUAL DESTRUCTION", GRAY, 5.0f, popup_type::BANNER);
                 break;
         }
