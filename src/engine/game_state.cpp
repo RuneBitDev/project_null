@@ -32,21 +32,21 @@ void game_state::update(float dt, renderer& renderer) {
         widgets_initialized = true;
     }
 
-    auto result = match->update(dt);
+    auto status = match->update(dt);
 
-    if (result.has_value()) {
-        switch (result.value()) {
+    if (status.has_value()) {
+        switch (status->game_status) {
             case game_status::CONTINUE:
-                switch (match->end_round()) {
-                    case round_state::WIN:  renderer.add_popup("ROUND WON", GREEN, 5.0f, popup_type::BANNER);   break;
-                    case round_state::LOSE: renderer.add_popup("ROUND LOST", RED, 5.0f, popup_type::BANNER);    break;
-                    case round_state::DRAW: renderer.add_popup("ROUND DRAW", GRAY, 5.0f, popup_type::BANNER);   break;
+                switch (status->round_status) {
+                    case round_status::WIN:  renderer.add_popup("ROUND WON", GREEN, 5.0f, popup_type::BANNER);   break;
+                    case round_status::LOSS: renderer.add_popup("ROUND LOST", RED, 5.0f, popup_type::BANNER);    break;
+                    case round_status::DRAW: renderer.add_popup("ROUND DRAW", GRAY, 5.0f, popup_type::BANNER);   break;
 
                 } break;
             case game_status::WIN:
                 renderer.add_popup("MISSION SUCCESS", LIME, 5.0f, popup_type::BANNER);
                 break;
-            case game_status::LOSE:
+            case game_status::LOSS:
                 renderer.add_popup("SYSTEM CRITICAL: DEFEAT", RED, 5.0f, popup_type::BANNER);
                 break;
             case game_status::DRAW:
