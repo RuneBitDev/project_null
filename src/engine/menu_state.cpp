@@ -26,7 +26,9 @@ void menu_state::update(float dt, renderer& renderer) {
         renderer.init_menu_widgets();
         widgets_initialized = true;
     }
-    start_button_is_pressed = renderer.start_triggered();
+    if (!show_start_screen && renderer.is_button_triggered("START")) {
+        start_button_is_pressed = true;
+    }
     renderer.update_widgets(dt);
 }
 

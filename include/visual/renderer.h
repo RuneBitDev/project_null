@@ -33,16 +33,13 @@ public:
     void add_popup(const std::string& text, Color color, float duration, popup_type p_type);
     void init_match_widgets(const player& p1, const player& p2);
     void init_menu_widgets();
-    bool start_triggered() const { return start_button.is_triggered(); }
-    bool pass_triggered() const { return pass_button.is_triggered(); }
+    bool is_button_triggered(const std::string& id);
     void update_widgets(float dt);
 
 private:
     std::vector<std::unique_ptr<widget_popup>> active_popups;
 
     widget_manager manager;
-    widget_button pass_button;
-    widget_button start_button;
 
     widget_board board_view;
     widget_hand hand_view;

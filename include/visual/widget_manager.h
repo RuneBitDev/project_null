@@ -3,6 +3,8 @@
 #include "widgets/widget_card.h"
 #include <map>
 
+#include "widgets/widget_button.h"
+
 class widget_manager {
     public:
     void update(float dt);
@@ -11,8 +13,14 @@ class widget_manager {
     void draw_card_widgets();
     void clear_card_widgets();
 
+    widget_button* manage_button_widget(const std::string& id, const char* text, button_type, int key, Rectangle bounds);
+    widget_button* get_button(const std::string& id);
+    void draw_buttons();
+    void clear_button_widgets();
+
 private:
     std::map<const card*, widget_card> card_widgets;
+    std::map<std::string, widget_button> button_widgets;
 };
 
 #endif //PROJECT_NULL_WIDGET_MANAGER_H

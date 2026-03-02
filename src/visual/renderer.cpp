@@ -20,7 +20,7 @@ void renderer::draw_start_screen() {
 
 void renderer::draw_menu() {
     ClearBackground(BLACK);
-    start_button.draw();
+    manager.draw_buttons();
 }
 
 void renderer::draw_game(const render_context& ctx) {
@@ -34,10 +34,8 @@ void renderer::draw_game(const render_context& ctx) {
     deck_view_p2.update_from_deck(ctx.p2.get_deck(), manager);
 
     player_context p_ctx { ctx.state };
-
     player_view_p1.update_from_player(ctx.p1, p_ctx);
     player_view_p2.update_from_player(ctx.p2, p_ctx);
-    pass_button.draw();
 
     board_view.draw();
     hand_view.draw();
@@ -49,7 +47,7 @@ void renderer::draw_game(const render_context& ctx) {
     player_view_p2.draw();
 
     manager.draw_card_widgets();
-
+    manager.draw_buttons();
 
 
     for (const auto& p : active_popups) {
@@ -68,6 +66,7 @@ void renderer::add_popup(const std::string& text, Color color, float duration, p
 
 void renderer::init_match_widgets(const player& p1, const player& p2) {
     manager.clear_card_widgets();
+    manager.clear_button_widgets();
 
     // initilaize the deck view positions
     deck_view_p1.init_deck(row_side::PLAYER);
@@ -76,7 +75,7 @@ void renderer::init_match_widgets(const player& p1, const player& p2) {
     player_view_p1.init_player_info(row_side::PLAYER);
     player_view_p2.init_player_info(row_side::OPPONENT);
 
-    pass_button.init_button("PASS",HOLDABLE, KEY_SPACE, render_config::buttons::PASS_BUTTON);
+    manager.manage_button_widget("PASS", "PASS",HOLDABLE, KEY_SPACE, render_config::buttons::PASS_BUTTON);
 
 
     auto spawn_cards = [&](const player& p, row_side side) {
@@ -100,10 +99,22 @@ void renderer::init_match_widgets(const player& p1, const player& p2) {
 }
 
 void renderer::init_menu_widgets() {
-    start_button.init_button("START", CLICKABLE, 0, render_config::buttons::START_BUTTON);
+    manager.clear_card_widgets();
+    manager.clear_button_widgets();
+
+    manager.manage_button_widget("START", "START", CLICKABLE, 0, render_config::buttons::START_BUTTON);
+
+}
+
+bool renderer::is_button_triggered(const std::string& id) {
+    auto* btn = manager.get_button(id);
+    return btn && btn->is_triggered();
 }
 
 void renderer::update_widgets(float dt) {
+
+    manager.update(dt);
+
     board_view.update(dt);
     hand_view.update(dt);
     graveyard_view_p1.update(dt);
@@ -112,8 +123,6 @@ void renderer::update_widgets(float dt) {
     deck_view_p2.update(dt);
     player_view_p1.update(dt);
     player_view_p2.update(dt);
-    pass_button.update(dt);
-    start_button.update(dt);
 
     for (auto it = active_popups.begin(); it != active_popups.end();) {
         (*it)->update(dt);

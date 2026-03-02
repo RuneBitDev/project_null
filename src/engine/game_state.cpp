@@ -15,6 +15,7 @@ game_state::~game_state() {
 void game_state::handle_input(state_manager &manager) {
     if (is_pass_button_pressed) {
         match->pass_turn(row_side::PLAYER);
+        is_pass_button_pressed = false;
         return;
     }
     match->handle_input();
@@ -27,7 +28,11 @@ void game_state::update(float dt, renderer& renderer) {
         widgets_initialized = true;
     }
 
-    is_pass_button_pressed = renderer.pass_triggered();
+    renderer.update_widgets(dt);
+
+    if (renderer.is_button_triggered("PASS")) {
+        is_pass_button_pressed = true;
+    }
 
     auto status = match->update(dt);
 
@@ -52,7 +57,7 @@ void game_state::update(float dt, renderer& renderer) {
         }
     }
 
-    renderer.update_widgets(dt);
+
 }
 
 void game_state::render(renderer& renderer) {
