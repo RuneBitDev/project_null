@@ -143,6 +143,11 @@ deck factory::build_deck(const std::string& faction) {
         }
     }
 
+    std::cout << "[DEBUG] Building deck for: " << faction << " | Found: " << deck_cards.size() << " units." << std::endl;
+    for(const auto& c : deck_cards) {
+        std::cout << "  -> Card: " << c->get_name() << " | Row: " << c->get_range_type() << std::endl;
+    }
+
     return deck(std::move(leader_ptr), std::move(deck_cards));
 }
 

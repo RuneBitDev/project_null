@@ -32,7 +32,7 @@ public:
     // widget management
     void add_popup(const std::string& text, Color color, float duration, popup_type p_type);
     void init_match_widgets(const player& p1, const player& p2);
-    void init_menu_widgets();
+    void init_menu_widgets(const std::vector<std::string>& factions, const std::string& p1_select, const std::string& p2_select);
     bool is_button_triggered(const std::string& id);
     void update_widgets(float dt);
 

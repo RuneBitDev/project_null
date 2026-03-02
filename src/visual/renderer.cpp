@@ -98,12 +98,26 @@ void renderer::init_match_widgets(const player& p1, const player& p2) {
     spawn_cards(p2, row_side::OPPONENT);
 }
 
-void renderer::init_menu_widgets() {
-    manager.clear_card_widgets();
+void renderer::init_menu_widgets(const std::vector<std::string>& factions, const std::string& p1_select, const std::string& p2_select) {
     manager.clear_button_widgets();
 
-    manager.manage_button_widget("START", "START", CLICKABLE, 0, render_config::buttons::START_BUTTON);
+    // Player 1 Faction Buttons (Left)
+    float start_y = 400.0f;
+    for (size_t i = 0; i < factions.size(); ++i) {
+        Rectangle rect = { 400, start_y + (i * 120), 300, 100 };
+        // Highlight the button if it's selected
+        const char* label = factions[i].c_str();
+        manager.manage_button_widget("P1_" + factions[i], label, CLICKABLE, 0, rect);
+    }
 
+    // Player 2 Faction Buttons (Right)
+    for (size_t i = 0; i < factions.size(); ++i) {
+        Rectangle rect = { 1860, start_y + (i * 120), 300, 100 };
+        manager.manage_button_widget("P2_" + factions[i], factions[i].c_str(), CLICKABLE, 0, rect);
+    }
+
+    // Centered Start Button
+    manager.manage_button_widget("START", "START OPERATION", CLICKABLE, 0, render_config::buttons::START_BUTTON);
 }
 
 bool renderer::is_button_triggered(const std::string& id) {

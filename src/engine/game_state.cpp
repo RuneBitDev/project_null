@@ -1,9 +1,12 @@
 #include "engine/game_state.h"
+#include "engine/menu_state.h"
 #include <iostream>
-#include "visual/render_config.h"
+
+#include "engine/state_manager.h"
 
 
-game_state::game_state(player player1, player player2) {
+game_state::game_state(player player1, player player2, factory& factory)
+    : data_factory(factory) {
     match = std::make_unique<match_manager>(std::move(player1), std::move(player2));
     background = LoadTexture("data/textures/backgrounds/bckg_arasaka_01.png");
 }
@@ -13,12 +16,20 @@ game_state::~game_state() {
 }
 
 void game_state::handle_input(state_manager &manager) {
+
+    if (game_over && end_screen_timer <= 0.0f) {
+        manager.change_state(std::make_unique<menu_state>(data_factory));
+        std::cout << "GAME OVER" << std::endl;
+        return;
+    }
     if (is_pass_button_pressed) {
         match->pass_turn(row_side::PLAYER);
         is_pass_button_pressed = false;
         return;
     }
-    match->handle_input();
+    if (!game_over) {
+        match->handle_input();
+    }
 }
 
 void game_state::update(float dt, renderer& renderer) {
@@ -47,14 +58,21 @@ void game_state::update(float dt, renderer& renderer) {
                 } break;
             case game_status::WIN:
                 renderer.add_popup("MISSION SUCCESS", LIME, 5.0f, popup_type::BANNER);
+                game_over = true;
                 break;
             case game_status::LOSS:
                 renderer.add_popup("SYSTEM CRITICAL: DEFEAT", RED, 5.0f, popup_type::BANNER);
+                game_over = true;
                 break;
             case game_status::DRAW:
                 renderer.add_popup("MUTUAL DESTRUCTION", GRAY, 5.0f, popup_type::BANNER);
+                game_over = true;
                 break;
         }
+    }
+
+    if (game_over) {
+        end_screen_timer -= dt;
     }
 
 

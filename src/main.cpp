@@ -23,12 +23,14 @@ int main() {
         std::cerr << "CRITICAL ERROR: Could not load data.sqlite" << std::endl;
         CloseWindow();
         return 1;
+    } else {
+        std::cout << "[INIT] Factory loaded " << game_factory.get_unit_library().size()
+              << " units and " << game_factory.get_special_library().size()
+              << " special cards." << std::endl;
     }
 
-    player p1("Arasaka", game_factory.build_deck("maelstrom"));
-    player p2("Barghest", game_factory.build_deck("arasaka"));
 
-    manager.push_state(std::make_unique<menu_state>(std::move(p1), std::move(p2)));
+    manager.push_state(std::make_unique<menu_state>(game_factory));
 
     while (!WindowShouldClose()) {
 
