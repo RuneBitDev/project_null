@@ -1,6 +1,7 @@
 #ifndef PROJECT_NULL_UI_TYPES_H
 #define PROJECT_NULL_UI_TYPES_H
 #include "raylib.h"
+#include "core/match_manager.h"
 
 enum button_type { CLICKABLE, HOLDABLE};
 enum class card_position { DECK, HAND, ROW, GRAVEYARD };
@@ -28,6 +29,15 @@ struct card_context {
     card_position position;
 
     bool face_up = false;
+};
+
+struct player_context {
+    current_state current_state;
+};
+
+struct match_context {
+    match_status m_status;
+    current_state current_state;
 };
 
 

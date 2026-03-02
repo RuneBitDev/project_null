@@ -32,6 +32,8 @@ void renderer::draw_game(const render_context& ctx) {
     graveyard_view_p2.update_from_player(ctx.p2, manager);
     deck_view_p1.update_from_deck(ctx.p1.get_deck(), manager);
     deck_view_p2.update_from_deck(ctx.p2.get_deck(), manager);
+    player_view_p1.update_from_player(ctx.p1, manager);
+    player_view_p2.update_from_player(ctx.p2, manager);
 
     board_view.draw();
     hand_view.draw();
@@ -39,6 +41,8 @@ void renderer::draw_game(const render_context& ctx) {
     graveyard_view_p2.draw();
     deck_view_p1.draw();
     deck_view_p2.draw();
+    player_view_p1.draw();
+    player_view_p2.draw();
 
     manager.draw_card_widgets();
 
@@ -64,6 +68,9 @@ void renderer::init_match_widgets(const player& p1, const player& p2) {
     // initilaize the deck view positions
     deck_view_p1.init_deck(row_side::PLAYER);
     deck_view_p2.init_deck(row_side::OPPONENT);
+
+    player_view_p1.init_player_info(row_side::PLAYER);
+    player_view_p2.init_player_info(row_side::OPPONENT);
 
     auto spawn_cards = [&](const player& p, row_side side) {
         Rectangle deck_pos = (side == row_side::PLAYER) ?
@@ -92,6 +99,8 @@ void renderer::update_widgets(float dt) {
     graveyard_view_p2.update(dt);
     deck_view_p1.update(dt);
     deck_view_p2.update(dt);
+    player_view_p1.update(dt);
+    player_view_p2.update(dt);
 
     for (auto it = active_popups.begin(); it != active_popups.end();) {
         (*it)->update(dt);

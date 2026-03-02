@@ -23,7 +23,7 @@ void widget_row::update_row(const board &game_board, widget_manager& manager) {
     card_location ref_loc { side, type, 0 };
     Rectangle ref_rect = layout_manager::get_card_bounds(ref_loc, 1);
 
-    float row_width = render_config::board::BOARD_WIDTH;
+    float row_width = render_config::board::ROW_WIDTH;
     float row_x = render_config::board::START_X;
 
     // handle net row

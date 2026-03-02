@@ -56,6 +56,7 @@ add_executable(project_null
         src/visual/widget_manager.cpp
         src/visual/widgets/widget_deck.cpp
         src/visual/widgets/widget_popup.cpp
+        src/visual/widgets/widget_player_info.cpp
 )
 
 # ------------------------------------------------------------------

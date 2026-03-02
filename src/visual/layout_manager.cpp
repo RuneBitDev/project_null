@@ -8,7 +8,7 @@ Rectangle layout_manager::get_card_bounds(card_location l, int total_cards) {
     float spacing = card::CARD_SPACING;
 
     // horizontal container
-    float container_width = board::BOARD_WIDTH;
+    float container_width = board::ROW_WIDTH;
     float container_start_x = board::START_X;
 
     int type_idx = static_cast<int>(l.type);
@@ -61,7 +61,7 @@ Rectangle layout_manager::get_hand_card_bounds(int index, int total_cards) {
     float total_hand_width = (total_cards * w) + ((total_cards - 1) * spacing);
 
     // centering
-    float start_x = board::START_X + (board::BOARD_WIDTH / 2.0f) - (total_hand_width / 2.0f);
+    float start_x = board::START_X + (board::ROW_WIDTH / 2.0f) - (total_hand_width / 2.0f);
 
     float x = start_x + (index * (w + spacing));
     float y = hand::Y_OFFSET;

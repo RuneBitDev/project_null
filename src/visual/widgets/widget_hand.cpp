@@ -11,7 +11,7 @@ void widget_hand::update_from_player(const player& p, widget_manager& manager) {
     float box_h = render_config::card::CARD_HEIGHT + padding;
     float box_y = render_config::hand::Y_OFFSET - padding / 2.0f;
 
-    float box_w = render_config::board::BOARD_WIDTH + padding;
+    float box_w = render_config::board::ROW_WIDTH + padding;
     float box_x = render_config::board::START_X - padding / 2.0f;
 
     hand_bounds = { box_x, box_y, box_w, box_h };

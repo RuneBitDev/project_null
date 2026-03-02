@@ -9,6 +9,7 @@
 #include "widgets/widget_deck.h"
 #include "widgets/widget_graveyard.h"
 #include "widgets/widget_hand.h"
+#include "widgets/widget_player_info.h"
 #include "widgets/widget_popup.h"
 
 struct render_context {
@@ -42,6 +43,8 @@ private:
     widget_graveyard graveyard_view_p2;
     widget_deck deck_view_p1;
     widget_deck deck_view_p2;
+    widget_player_info player_view_p1;
+    widget_player_info player_view_p2;
 
     Font main_font;
 
