@@ -7,17 +7,6 @@ enum button_type { CLICKABLE, HOLDABLE};
 enum class card_position { DECK, HAND, ROW, GRAVEYARD };
 enum class popup_type { BANNER };
 
-struct button {
-    Rectangle bounds{};
-    button_type type;
-    int shortcut_key{};
-    const char* text{};
-
-    bool is_hovered = false;
-    bool is_down = false;
-    float hold_progress = 0.0f;
-    bool triggered = false;
-};
 
 struct card_context {
     int strength = 0;

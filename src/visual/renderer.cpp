@@ -1,6 +1,6 @@
 #include "visual/renderer.h"
 #include "visual/render_config.h"
-#include "visual/ui_element.h"
+
 
 renderer::renderer() {
     main_font = LoadFontEx("data/fonts/Cyberway Riders.otf", 64, nullptr, 0);
@@ -20,7 +20,7 @@ void renderer::draw_start_screen() {
 
 void renderer::draw_menu() {
     ClearBackground(BLACK);
-    draw_button(render_config::ui::START_BUTTON);
+    start_button.draw();
 }
 
 void renderer::draw_game(const render_context& ctx) {
@@ -37,6 +37,7 @@ void renderer::draw_game(const render_context& ctx) {
 
     player_view_p1.update_from_player(ctx.p1, p_ctx);
     player_view_p2.update_from_player(ctx.p2, p_ctx);
+    pass_button.draw();
 
     board_view.draw();
     hand_view.draw();
@@ -49,7 +50,7 @@ void renderer::draw_game(const render_context& ctx) {
 
     manager.draw_card_widgets();
 
-    draw_button(render_config::ui::PASS_BUTTON);
+
 
     for (const auto& p : active_popups) {
         p->draw();
@@ -75,6 +76,9 @@ void renderer::init_match_widgets(const player& p1, const player& p2) {
     player_view_p1.init_player_info(row_side::PLAYER);
     player_view_p2.init_player_info(row_side::OPPONENT);
 
+    pass_button.init_button("PASS",HOLDABLE, KEY_SPACE, render_config::buttons::PASS_BUTTON);
+
+
     auto spawn_cards = [&](const player& p, row_side side) {
         Rectangle deck_pos = (side == row_side::PLAYER) ?
                              render_config::deck::DECK_PLAYER :
@@ -95,6 +99,10 @@ void renderer::init_match_widgets(const player& p1, const player& p2) {
     spawn_cards(p2, row_side::OPPONENT);
 }
 
+void renderer::init_menu_widgets() {
+    start_button.init_button("START", CLICKABLE, 0, render_config::buttons::START_BUTTON);
+}
+
 void renderer::update_widgets(float dt) {
     board_view.update(dt);
     hand_view.update(dt);
@@ -104,6 +112,8 @@ void renderer::update_widgets(float dt) {
     deck_view_p2.update(dt);
     player_view_p1.update(dt);
     player_view_p2.update(dt);
+    pass_button.update(dt);
+    start_button.update(dt);
 
     for (auto it = active_popups.begin(); it != active_popups.end();) {
         (*it)->update(dt);
@@ -117,30 +127,6 @@ void renderer::update_widgets(float dt) {
 // HELPER FUNCTIONS
 // ---------------------------------------------------------------------
 
-
-void renderer::draw_button(button& btn) {
-    ui_element::update_button(btn);
-    Color tint = btn.is_hovered ? LIME : BLACK;
-
-    DrawRectangleRec(btn.bounds, tint);
-    DrawRectangleLinesEx(btn.bounds, 2 , GREEN);
-
-    if (btn.text) {
-        int fontSize = 40;
-        int textWidth = MeasureText(btn.text, fontSize);
-        DrawText(btn.text,
-            static_cast<int>(btn.bounds.x + (btn.bounds.width / 2 - textWidth / 2)),
-            static_cast<int>(btn.bounds.y + (btn.bounds.height / 2 - fontSize / 2)),
-            fontSize, GREEN);
-    }
-
-    if (btn.type == HOLDABLE) {
-        float progress_width = btn.bounds.width * btn.hold_progress;
-        Rectangle fill_rect = {btn.bounds.x, btn.bounds.y, progress_width, btn.bounds.height};
-        DrawRectangleRec(fill_rect, GREEN);
-    }
-
-}
 
 void renderer::draw_text_cyber(const Font &font, const char* text, Vector2 pos, float size, Color mainColor) {
     float spacing = 2.0f;

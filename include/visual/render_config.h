@@ -18,9 +18,9 @@ namespace render_config {
     constexpr Res screen_1080p = {1920, 1080, "1920x1080"};
     constexpr Res screen_1440p = {2560, 1440, "2560x1440"};
 
-    namespace ui {
-        inline button START_BUTTON = { 1080, 600, 400, 100, CLICKABLE, 0, "Start Game"};
-        inline button PASS_BUTTON = { 100, 100, 300, 100, HOLDABLE, KEY_SPACE, "PASS"};
+    namespace buttons {
+        inline Rectangle START_BUTTON = { 1080, 600, 400, 100};
+        inline Rectangle PASS_BUTTON = { 100, 100, 300, 100};
     }
 
     namespace card {

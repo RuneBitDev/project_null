@@ -14,14 +14,14 @@ public:
     void draw() const override;
 
 private:
-    Rectangle bounds;
-    Texture2D faction_logo;
+    Rectangle bounds{};
+    Texture2D faction_logo = {};
 
     row_side side;
     current_state current_state;
 
     std::string name;
-    int cards_in_hand;
+    int cards_in_hand = 0;
     int current_lives = 0;
 
 };

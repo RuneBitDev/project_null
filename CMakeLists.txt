@@ -37,7 +37,6 @@ add_executable(project_null
         src/engine/menu_state.cpp
         src/engine/state_manager.cpp
         src/visual/renderer.cpp
-        src/visual/ui_element.cpp
         src/core/components/abilities/ability_summon.cpp
         src/core/components/abilities/ability_spy.cpp
         src/core/components/abilities/ability_modifier.cpp
@@ -57,6 +56,7 @@ add_executable(project_null
         src/visual/widgets/widget_deck.cpp
         src/visual/widgets/widget_popup.cpp
         src/visual/widgets/widget_player_info.cpp
+        src/visual/widgets/widget_button.cpp
 )
 
 # ------------------------------------------------------------------

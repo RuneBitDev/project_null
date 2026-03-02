@@ -1,9 +1,7 @@
 #include "engine/game_state.h"
-
 #include <iostream>
-
 #include "visual/render_config.h"
-#include "visual/ui_element.h"
+
 
 game_state::game_state(player player1, player player2) {
     match = std::make_unique<match_manager>(std::move(player1), std::move(player2));
@@ -15,13 +13,10 @@ game_state::~game_state() {
 }
 
 void game_state::handle_input(state_manager &manager) {
-    ui_element::update_button(render_config::ui::PASS_BUTTON);
-
-    if (render_config::ui::PASS_BUTTON.triggered) {
+    if (is_pass_button_pressed) {
         match->pass_turn(row_side::PLAYER);
         return;
     }
-
     match->handle_input();
 }
 
@@ -31,6 +26,8 @@ void game_state::update(float dt, renderer& renderer) {
                                     match->get_player(row_side::OPPONENT));
         widgets_initialized = true;
     }
+
+    is_pass_button_pressed = renderer.pass_triggered();
 
     auto status = match->update(dt);
 

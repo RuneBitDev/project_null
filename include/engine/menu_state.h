@@ -14,6 +14,8 @@ public:
 
 private:
     bool show_start_screen = true;
+    bool widgets_initialized = false;
+    bool start_button_is_pressed = false;
     player p1;
     player p2;
 };
