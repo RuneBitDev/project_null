@@ -36,6 +36,7 @@ public:
     void set_side(row_side s) { assigned_side = s; }
     int get_lives() const { return lives; }
     void lose_live() { lives --; }
+    std::string get_name() const { return name; }
 
 
 private:

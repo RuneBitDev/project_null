@@ -32,8 +32,11 @@ void renderer::draw_game(const render_context& ctx) {
     graveyard_view_p2.update_from_player(ctx.p2, manager);
     deck_view_p1.update_from_deck(ctx.p1.get_deck(), manager);
     deck_view_p2.update_from_deck(ctx.p2.get_deck(), manager);
-    player_view_p1.update_from_player(ctx.p1, manager);
-    player_view_p2.update_from_player(ctx.p2, manager);
+
+    player_context p_ctx { ctx.state };
+
+    player_view_p1.update_from_player(ctx.p1, p_ctx);
+    player_view_p2.update_from_player(ctx.p2, p_ctx);
 
     board_view.draw();
     hand_view.draw();

@@ -16,6 +16,7 @@ struct render_context {
     const board& b;
     const player& p1;
     const player& p2;
+    current_state state;
 };
 
 class renderer {

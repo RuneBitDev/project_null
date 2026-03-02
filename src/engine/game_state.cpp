@@ -64,7 +64,8 @@ void game_state::render(renderer& renderer) {
     render_context ctx {
         match->get_board(),
         match->get_player(row_side::PLAYER),
-        match->get_player(row_side::OPPONENT)
+        match->get_player(row_side::OPPONENT),
+        match->get_current_state()
     };
 
     renderer.draw_game(ctx);
