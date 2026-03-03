@@ -4,6 +4,7 @@
 #include "engine/menu_state.h"
 #include "engine/state_manager.h"
 #include "visual/render_config.h"
+#include "visual/texture_factory.h"
 
 int main() {
 
@@ -17,6 +18,7 @@ int main() {
 
     state_manager manager;
     factory game_factory;
+    texture_factory texture_factory;
     renderer renderer;
 
     if (!game_factory.load_master_data("data.sqlite")) {
@@ -27,6 +29,11 @@ int main() {
         std::cout << "[INIT] Factory loaded " << game_factory.get_unit_library().size()
               << " units and " << game_factory.get_special_library().size()
               << " special cards." << std::endl;
+    }
+    if (!texture_factory.initialize_manifest("data.sqlite")) {
+        std::cerr << "CRITICAL ERROR: Could not load data.sqlite" << std::endl;
+        CloseWindow();
+        return 1;
     }
 
 

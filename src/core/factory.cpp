@@ -16,6 +16,7 @@ bool factory::load_master_data(const std::string &filepath) {
 
     std::cout << "\n===========================[FACTORY START]=============================" << std::endl;
 
+
     // Open the database
     if (sqlite3_open(filepath.c_str(), &db) != SQLITE_OK) {
         std::cerr << "Failed to open DB: " << sqlite3_errmsg(db) << std::endl;
