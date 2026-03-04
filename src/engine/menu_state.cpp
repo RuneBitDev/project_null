@@ -30,16 +30,21 @@ void menu_state::update(float dt, renderer& renderer) {
     renderer.update_widgets(dt);
 
 
-    for (const auto& faction : available_factions) {
-        if (renderer.is_button_triggered("P1_" + faction)) {
-            p1_faction = faction;
+    auto update_selection = [&](const std::string& prev_id, const std::string& next_id, int& index, std::string& faction) {
+        if (renderer.is_button_triggered(prev_id)) {
+            index = (index - 1 + static_cast<int>(available_factions.size())) % static_cast<int>(available_factions.size());
+            faction = available_factions[index];
             widgets_initialized = false;
         }
-        if (renderer.is_button_triggered("P2_" + faction)) {
-            p2_faction = faction;
+        if (renderer.is_button_triggered(next_id)) {
+            index = (index + 1) % static_cast<int>(available_factions.size());
+            faction = available_factions[index];
             widgets_initialized = false;
         }
-    }
+    };
+
+    update_selection("P1_PREV", "P1_NEXT", p1_select, p1_faction);
+    update_selection("P2_PREV", "P2_NEXT", p2_select, p2_faction);
 
     if (!show_start_screen && renderer.is_button_triggered("START")) {
         start_button_is_pressed = true;
@@ -50,7 +55,7 @@ void menu_state::render(renderer& renderer) {
     if (show_start_screen) {
         renderer.draw_start_screen();
     } else {
-        renderer.draw_menu();
+        renderer.draw_menu(p1_select, p2_select, available_factions);
 
     }
 }

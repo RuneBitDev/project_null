@@ -17,12 +17,15 @@ private:
     factory& data_factory;
     texture_factory& tex_factory;
 
-    std::vector< std::string > available_factions = {"arasaka", "afterlife", "aldecaldos", "maelstrom", "vodoo boys", "nusa", "barghest"};
+    std::vector< std::string > available_factions = {"arasaka", "afterlife", "aldecaldos", "maelstrom", "vodoo_boys", "fia", "barghest"};
     bool show_start_screen = true;
     bool widgets_initialized = false;
     bool start_button_is_pressed = false;
-    std::string p1_faction;
-    std::string p2_faction;
+    std::string p1_faction = "arasaka";
+    std::string p2_faction = "arasaka";
+
+    int p1_select = 0;
+    int p2_select = 0;
 };
 
 

@@ -24,6 +24,7 @@ public:
 
     void load_texture(const std::vector<std::string>& asset_ids);
     void load_texture_for_cards(const std::vector<std::string>& card_ids);
+    void load_texture_all_ui();
     Texture2D get_texture(const std::string& texture_id);
     Texture2D get_texture_for_card(const std::string& card_id);
 

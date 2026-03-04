@@ -26,7 +26,7 @@ public:
     ~renderer();
 
     void draw_start_screen();
-    void draw_menu();
+    void draw_menu(int p1_idx, int p2_idx, const std::vector<std::string>& factions);
     void draw_game(const render_context& ctx);
 
     // widget management

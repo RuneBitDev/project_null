@@ -19,11 +19,40 @@ void renderer::draw_start_screen() {
     draw_text_centered("Press  Enter", 1000, 30, GREEN);
 }
 
-void renderer::draw_menu() {
-    ClearBackground(BLACK);
+void renderer::draw_menu(int p1_idx, int p2_idx, const std::vector<std::string>& factions) {
+    ClearBackground({ 10, 10, 15, 255 });
+    float centerX = render_config::VIRTUAL_WIDTH / 2.0f;
+
+    auto draw_selection_slot = [&](int idx, float y, Color theme, const char* title) {
+        Texture2D tex = texture_factory::instance->get_texture("selection_" + factions[idx]);
+        Rectangle dest = { centerX - 600, y, 1200, 400 };
+
+        // background glow
+        DrawRectangleGradientV(dest.x, dest.y, dest.width, dest.height, Fade(theme, 0.1f), Fade(BLACK, 0.3f));
+
+        if (tex.id > 0) {
+            DrawTexturePro(tex, {0, 0, static_cast<float>(tex.width), static_cast<float>(tex.height)}, dest, {0,0}, 0.0f, WHITE);
+        }
+
+        // cyberpunk frame
+        DrawRectangleLinesEx(dest, 2.0f, Fade(theme, 0.5f));
+        DrawRectangle(dest.x, dest.y - 40, 300, 40, theme);
+        DrawText(title, dest.x + 10, dest.y - 35, 25, BLACK);
+
+        std::string name = factions[idx];
+        for(auto & c: name) c = toupper(c);
+        DrawText(name.c_str(), dest.x + 10, dest.y + dest.height + 10, 40, theme);
+    };
+
+    draw_selection_slot(p2_idx, 180.0f, RED, "HOSTILE_ID");
+    draw_selection_slot(p1_idx, 860.0f, GREEN, "OPERATIVE_USER");
+
+    // central divider
+    DrawLineEx({0, 720}, {centerX - 300, 720}, 2.0f, Fade(GREEN, 0.3f));
+    DrawLineEx({centerX + 300, 720}, {2560, 720}, 2.0f, Fade(RED, 0.3f));
+
     manager.draw_buttons();
 }
-
 void renderer::draw_game(const render_context& ctx) {
     ClearBackground(BLACK);
     board_view.update_from_game(ctx.b, manager);
@@ -104,21 +133,27 @@ void renderer::init_match_widgets(const player& p1, const player& p2, texture_fa
 void renderer::init_menu_widgets(const std::vector<std::string>& factions, const std::string& p1_select, const std::string& p2_select) {
     manager.clear_button_widgets();
 
-    // p1 faction buttons
-    float start_y = 400.0f;
-    for (size_t i = 0; i < factions.size(); ++i) {
-        Rectangle rect = { 400, start_y + (i * 120), 300, 100 };
-        const char* label = factions[i].c_str();
-        manager.manage_button_widget("P1_" + factions[i], label, CLICKABLE, 0, rect);
-    }
+    float centerX = render_config::VIRTUAL_WIDTH / 2.0f;
 
-    // p2 faction buttons
-    for (size_t i = 0; i < factions.size(); ++i) {
-        Rectangle rect = { 1860, start_y + (i * 120), 300, 100 };
-        manager.manage_button_widget("P2_" + factions[i], factions[i].c_str(), CLICKABLE, 0, rect);
-    }
+    float imgWidth = 1200.0f;
+    float imgHeight = 400.0f;
+    float arrowW = 80.0f;
+    float arrowH = 120.0f;
 
-    manager.manage_button_widget("START", "START OPERATION", CLICKABLE, 0, render_config::buttons::START_BUTTON);
+    // p2 top section
+    float p2_y = 180.0f;
+    Rectangle p2_rect = { centerX - (imgWidth / 2.0f), p2_y, imgWidth, imgHeight };
+    manager.manage_button_widget("P2_PREV", "<", CLICKABLE, 0, { p2_rect.x - arrowW - 40, p2_y + (imgHeight/2 - arrowH/2), arrowW, arrowH });
+    manager.manage_button_widget("P2_NEXT", ">", CLICKABLE, 0, { p2_rect.x + imgWidth + 40, p2_y + (imgHeight/2 - arrowH/2), arrowW, arrowH });
+
+    // p1 bottom section
+    float p1_y = 860.0f;
+    Rectangle p1_rect = { centerX - (imgWidth / 2.0f), p1_y, imgWidth, imgHeight };
+    manager.manage_button_widget("P1_PREV", "<", CLICKABLE, 0, { p1_rect.x - arrowW - 40, p1_y + (imgHeight/2 - arrowH/2), arrowW, arrowH });
+    manager.manage_button_widget("P1_NEXT", ">", CLICKABLE, 0, { p1_rect.x + imgWidth + 40, p1_y + (imgHeight/2 - arrowH/2), arrowW, arrowH });
+
+    Rectangle start_rect = { centerX - 250, 670, 500, 100 };
+    manager.manage_button_widget("START", "INITIALIZE OPERATION", CLICKABLE, 0, start_rect);
 }
 
 bool renderer::is_button_triggered(const std::string& id) {

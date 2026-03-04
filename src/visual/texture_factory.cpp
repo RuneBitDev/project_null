@@ -89,6 +89,17 @@ void texture_factory::load_texture_for_cards(const std::vector<std::string>& car
     load_texture(assets_to_load);
 }
 
+void texture_factory::load_texture_all_ui() {
+    std::vector<std::string> ui_ids;
+    for (const auto& [id, info] : manifest) {
+
+        if (info.type == "UI" || info.type == "BACKGROUND") {
+            ui_ids.push_back(id);
+        }
+    }
+    load_texture(ui_ids);
+}
+
 Texture2D texture_factory::get_texture(const std::string& texture_id) {
     auto it = texture_map.find(texture_id);
 

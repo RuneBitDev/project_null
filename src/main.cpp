@@ -36,6 +36,7 @@ int main() {
         return 1;
     }
 
+    texture_factory.load_texture_all_ui();
 
     manager.push_state(std::make_unique<menu_state>(game_factory, texture_factory));
 
