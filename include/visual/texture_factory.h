@@ -18,14 +18,18 @@ public:
     texture_factory();
     ~texture_factory();
 
+    static texture_factory* instance;
+
     bool initialize_manifest(const std::string& filepath);
 
     void load_texture(const std::vector<std::string>& asset_ids);
     void load_texture_for_cards(const std::vector<std::string>& card_ids);
     Texture2D get_texture(const std::string& texture_id);
-    Texture2D get_texture_for_card(const std::string& card_ids);
+    Texture2D get_texture_for_card(const std::string& card_id);
 
     void unload_all();
+
+    void debug_print_manifest();
 
 private:
     std::map<std::string, asset_info> manifest;

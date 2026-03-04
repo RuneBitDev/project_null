@@ -1,9 +1,8 @@
 #ifndef PROJECT_NULL_WIDGET_MANAGER_H
 #define PROJECT_NULL_WIDGET_MANAGER_H
 #include "widgets/widget_card.h"
-#include <map>
-
 #include "widgets/widget_button.h"
+#include <map>
 
 class widget_manager {
     public:

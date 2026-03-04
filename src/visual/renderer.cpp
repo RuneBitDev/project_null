@@ -2,6 +2,7 @@
 #include "visual/render_config.h"
 
 
+
 renderer::renderer() {
     main_font = LoadFontEx("data/fonts/Cyberway Riders.otf", 64, nullptr, 0);
 }
@@ -64,11 +65,11 @@ void renderer::add_popup(const std::string& text, Color color, float duration, p
     active_popups.push_back(std::make_unique<widget_popup>(text, color, duration, p_type));
 }
 
-void renderer::init_match_widgets(const player& p1, const player& p2) {
+void renderer::init_match_widgets(const player& p1, const player& p2, texture_factory& tex_factory) {
     manager.clear_card_widgets();
     manager.clear_button_widgets();
 
-    // initilaize the deck view positions
+    // initialize the deck view positions
     deck_view_p1.init_deck(row_side::PLAYER);
     deck_view_p2.init_deck(row_side::OPPONENT);
 
@@ -90,6 +91,8 @@ void renderer::init_match_widgets(const player& p1, const player& p2) {
             ctx.face_up = false;
 
             widget_card* w = manager.manage_card_widget(c, ctx);
+
+            w->set_card_texture(tex_factory.get_texture_for_card(c->get_id()));
             w->set_bounds(deck_pos);
         }
     };
@@ -101,22 +104,20 @@ void renderer::init_match_widgets(const player& p1, const player& p2) {
 void renderer::init_menu_widgets(const std::vector<std::string>& factions, const std::string& p1_select, const std::string& p2_select) {
     manager.clear_button_widgets();
 
-    // Player 1 Faction Buttons (Left)
+    // p1 faction buttons
     float start_y = 400.0f;
     for (size_t i = 0; i < factions.size(); ++i) {
         Rectangle rect = { 400, start_y + (i * 120), 300, 100 };
-        // Highlight the button if it's selected
         const char* label = factions[i].c_str();
         manager.manage_button_widget("P1_" + factions[i], label, CLICKABLE, 0, rect);
     }
 
-    // Player 2 Faction Buttons (Right)
+    // p2 faction buttons
     for (size_t i = 0; i < factions.size(); ++i) {
         Rectangle rect = { 1860, start_y + (i * 120), 300, 100 };
         manager.manage_button_widget("P2_" + factions[i], factions[i].c_str(), CLICKABLE, 0, rect);
     }
 
-    // Centered Start Button
     manager.manage_button_widget("START", "START OPERATION", CLICKABLE, 0, render_config::buttons::START_BUTTON);
 }
 

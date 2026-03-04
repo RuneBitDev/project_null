@@ -2,7 +2,10 @@
 #include "sqlite3.h"
 #include <iostream>
 
+texture_factory* texture_factory::instance = nullptr;
+
 texture_factory::texture_factory() {
+    instance = this;
 }
 
 texture_factory::~texture_factory() {
@@ -49,8 +52,9 @@ bool texture_factory::initialize_manifest(const std::string& filepath) {
     return true;
 }
 
-void texture_factory::load_texture(const std::vector<std::string> &asset_ids) {
+void texture_factory::load_texture(const std::vector<std::string>& asset_ids) {
     for (const auto& id : asset_ids) {
+        // Skip if already in texture_map
         if (texture_map.find(id) != texture_map.end()) continue;
 
         auto it = manifest.find(id);
@@ -59,23 +63,50 @@ void texture_factory::load_texture(const std::vector<std::string> &asset_ids) {
 
             if (tex.id > 0) {
                 texture_map[id] = tex;
+                TraceLog(LOG_INFO, "FACTORY: Successfully loaded [%s]", id.c_str());
+            } else {
+                TraceLog(LOG_ERROR, "FACTORY: Failed to load file at [%s]", it->second.path.c_str());
             }
         }
     }
 }
 
-void texture_factory::load_texture_for_cards(const std::vector<std::string> &card_ids) {
+void texture_factory::load_texture_for_cards(const std::vector<std::string>& card_ids) {
     std::vector<std::string> assets_to_load;
 
     for (const auto& c_id : card_ids) {
-        for (auto const& [asset_id, info] : manifest) {
+        bool found = false;
+        for (const auto& [asset_id, info] : manifest) {
             if (info.card_id == c_id) {
                 assets_to_load.push_back(asset_id);
+                found = true;
             }
         }
+        if (!found) {
+            TraceLog(LOG_WARNING, "FACTORY: No asset link found for card [%s]", c_id.c_str());
+        }
+    }
+    load_texture(assets_to_load);
+}
+
+Texture2D texture_factory::get_texture(const std::string& texture_id) {
+    auto it = texture_map.find(texture_id);
+
+    if (it != texture_map.end()) {
+        return it->second;
     }
 
-    load_texture(assets_to_load);
+    TraceLog(LOG_WARNING, "TEXTURE: Get failed for ID [%s]", texture_id.c_str());
+    return { 0 };
+}
+
+Texture2D texture_factory::get_texture_for_card(const std::string& card_id) {
+    for (const auto& [asset_id, info] : manifest) {
+        if (info.card_id == card_id) {
+            return get_texture(asset_id);
+        }
+    }
+    return { 0 };
 }
 
 void texture_factory::unload_all() {
@@ -84,4 +115,13 @@ void texture_factory::unload_all() {
     }
     texture_map.clear();
     TraceLog(LOG_INFO, "TEXTURE: All textures unloaded from VRAM");
+}
+
+
+void texture_factory::debug_print_manifest() {
+    std::cout << "\n--- [MANIFEST DEBUG START] ---" << std::endl;
+    for (const auto& [asset_id, info] : manifest) {
+        std::cout << "Asset: " << asset_id << " | Linked Card: " << info.card_id << " | Path: " << info.path << std::endl;
+    }
+    std::cout << "--- [MANIFEST DEBUG END] ---\n" << std::endl;
 }

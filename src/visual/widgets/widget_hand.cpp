@@ -56,9 +56,6 @@ void widget_hand::update_from_player_opponent(const player &p, widget_manager &m
 }
 
 void widget_hand::update(float dt) {
-    for (auto& card_view : card_view_ptrs) {
-        card_view->update(dt);
-    }
 }
 
 void widget_hand::draw() const {

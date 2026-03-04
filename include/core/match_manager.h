@@ -49,7 +49,7 @@ private:
     player p1;
     player p2;
 
-    current_state current_match_state;
+    current_state current_match_state = current_state::PLAYER_TURN;
     row_side active_player_side;
     int total_turns_this_round;
     int clash_counter;

@@ -18,6 +18,9 @@ void widget_deck::update_from_deck(const deck &d, widget_manager &manager) {
     }
 }
 
+void widget_deck::update(float dt) {
+}
+
 void widget_deck::draw() const {
     DrawRectangleRec(deck_bounds, Fade(BLACK, 0.4f));
     DrawRectangleLinesEx(deck_bounds, 2, Fade(BLACK, 0.5f));
@@ -26,8 +29,5 @@ void widget_deck::draw() const {
     DrawText(TextFormat("%d", card_count), deck_bounds.x + 40, deck_bounds.y + 60, 20, WHITE);
 
 
-}
-
-void widget_deck::update(float dt) {
 }
 

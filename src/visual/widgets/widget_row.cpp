@@ -58,9 +58,6 @@ void widget_row::update_row(const board &game_board, widget_manager& manager) {
 }
 
 void widget_row::update(float dt) {
-    for (auto& card : card_view_ptrs) {
-        card->update(dt);
-    }
 }
 
 

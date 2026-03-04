@@ -4,8 +4,14 @@
 #include <cmath>
 #include <iostream>
 
+#include "visual/texture_factory.h"
+
 widget_card::widget_card(const card* c_ptr, const card_context &card_ctx)
-    : card_data(c_ptr), base_bounds(card_ctx.card_bounds), current_bounds(card_ctx.card_bounds), target_bounds(card_ctx.card_bounds), card_ctx(card_ctx) {}
+    : card_data(c_ptr), base_bounds(card_ctx.card_bounds), current_bounds(card_ctx.card_bounds), target_bounds(card_ctx.card_bounds), card_ctx(card_ctx) {
+    if (texture_factory::instance) {
+        this->card_texture = texture_factory::instance->get_texture_for_card(c_ptr->get_id());
+    }
+}
 
 void widget_card::draw() const {
 
@@ -35,6 +41,11 @@ void widget_card::draw() const {
     DrawRectangleLinesEx(draw_rect, thickness, border_color);
 
     if (card_ctx.face_up) {
+
+        DrawTexturePro(card_texture,
+            { 0, 0, static_cast<float>(card_texture.width), static_cast<float>(card_texture.height) },
+            draw_rect,
+            { 0, 0 }, 0.0f, WHITE);
 
         if (card_data->get_card_type() == "UNIT") {
 

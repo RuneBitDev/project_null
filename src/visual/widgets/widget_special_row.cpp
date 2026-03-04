@@ -34,9 +34,6 @@ void widget_special_row::update_from_game(const board &game_board, widget_manage
 }
 
 void widget_special_row::update(float dt) {
-    for (auto& card_widget : special_row_ptrs) {
-        card_widget->update(dt);
-    }
 }
 
 void widget_special_row::draw() const {

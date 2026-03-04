@@ -5,20 +5,34 @@
 #include "engine/state_manager.h"
 
 
-game_state::game_state(player player1, player player2, factory& factory)
-    : data_factory(factory) {
+game_state::game_state(player player1, player player2, factory& factory, texture_factory& texture_factory)
+    : data_factory(factory), tex_factory(texture_factory) {
+
+    std::vector<std::string> cards_to_load;
+    for (const auto& card : player1.get_deck().get_card_ptrs()) {
+        cards_to_load.push_back(card->get_id());
+    }
+    for (const auto& card : player2.get_deck().get_card_ptrs()) {
+        cards_to_load.push_back(card->get_id());
+    }
+    tex_factory.load_texture_for_cards(cards_to_load);
+
+    player1.draw_card(10);
+    player2.draw_card(10);
     match = std::make_unique<match_manager>(std::move(player1), std::move(player2));
+
     background = LoadTexture("data/textures/backgrounds/bckg_arasaka_01.png");
 }
 
 game_state::~game_state() {
     UnloadTexture(background);
+    tex_factory.unload_all();
 }
 
 void game_state::handle_input(state_manager &manager) {
 
     if (game_over && end_screen_timer <= 0.0f) {
-        manager.change_state(std::make_unique<menu_state>(data_factory));
+        manager.change_state(std::make_unique<menu_state>(data_factory, tex_factory));
         std::cout << "GAME OVER" << std::endl;
         return;
     }
@@ -34,8 +48,7 @@ void game_state::handle_input(state_manager &manager) {
 
 void game_state::update(float dt, renderer& renderer) {
     if (!widgets_initialized) {
-        renderer.init_match_widgets(match->get_player(row_side::PLAYER),
-                                    match->get_player(row_side::OPPONENT));
+        renderer.init_match_widgets(match->get_player(row_side::PLAYER), match->get_player(row_side::OPPONENT), tex_factory);
         widgets_initialized = true;
     }
 

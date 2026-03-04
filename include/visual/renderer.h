@@ -3,10 +3,10 @@
 #include "raylib.h"
 #include "ui_types.h"
 #include "layout_manager.h"
+#include "texture_factory.h"
 #include "../core/components/board.h"
 #include "../core/components/player.h"
 #include "widgets/widget_board.h"
-#include "widgets/widget_button.h"
 #include "widgets/widget_deck.h"
 #include "widgets/widget_graveyard.h"
 #include "widgets/widget_hand.h"
@@ -31,7 +31,7 @@ public:
 
     // widget management
     void add_popup(const std::string& text, Color color, float duration, popup_type p_type);
-    void init_match_widgets(const player& p1, const player& p2);
+    void init_match_widgets(const player& p1, const player& p2, texture_factory& tex_factory);
     void init_menu_widgets(const std::vector<std::string>& factions, const std::string& p1_select, const std::string& p2_select);
     bool is_button_triggered(const std::string& id);
     void update_widgets(float dt);

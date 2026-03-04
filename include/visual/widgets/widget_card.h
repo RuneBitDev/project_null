@@ -13,8 +13,10 @@ class widget_card : public widget {
 
     void sync_card_context(const card_context& card_ctx);
     void set_bounds(Rectangle new_bounds);
+    void set_card_texture(Texture2D new_texture) { card_texture = new_texture; }
 
 private:
+    Texture2D card_texture;
     const card* card_data;
     Rectangle base_bounds;
     Rectangle current_bounds;

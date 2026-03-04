@@ -4,8 +4,8 @@
 #include "engine/state_manager.h"
 
 
-menu_state::menu_state(factory& game_factory)
-    : data_factory(game_factory) {}
+menu_state::menu_state(factory& game_factory, texture_factory& texture_factory)
+    : data_factory(game_factory), tex_factory(texture_factory) {}
 
 
 void menu_state::handle_input(state_manager &manager) {
@@ -14,11 +14,10 @@ void menu_state::handle_input(state_manager &manager) {
     }
 
     if (start_button_is_pressed) {
-        // Use the selected faction strings to build the decks
         player player1("V", data_factory.build_deck(p1_faction));
         player player2("Opponent", data_factory.build_deck(p2_faction));
 
-        manager.change_state(std::make_unique<game_state>(std::move(player1), std::move(player2), data_factory));
+        manager.change_state(std::make_unique<game_state>(std::move(player1), std::move(player2), data_factory, tex_factory));
     }
 }
 
@@ -30,11 +29,11 @@ void menu_state::update(float dt, renderer& renderer) {
 
     renderer.update_widgets(dt);
 
-    // Check Player 1 Selections
+
     for (const auto& faction : available_factions) {
         if (renderer.is_button_triggered("P1_" + faction)) {
             p1_faction = faction;
-            widgets_initialized = false; // Re-init to update button highlights/colors
+            widgets_initialized = false;
         }
         if (renderer.is_button_triggered("P2_" + faction)) {
             p2_faction = faction;

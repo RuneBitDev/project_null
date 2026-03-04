@@ -37,7 +37,7 @@ int main() {
     }
 
 
-    manager.push_state(std::make_unique<menu_state>(game_factory));
+    manager.push_state(std::make_unique<menu_state>(game_factory, texture_factory));
 
     while (!WindowShouldClose()) {
 
