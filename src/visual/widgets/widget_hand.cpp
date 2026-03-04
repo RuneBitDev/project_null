@@ -1,4 +1,7 @@
 #include "visual/widgets/widget_hand.h"
+
+#include <cmath>
+
 #include "visual/layout_manager.h"
 #include "core/components/card_unit.h"
 #include "visual/render_config.h"
@@ -59,7 +62,31 @@ void widget_hand::update(float dt) {
 }
 
 void widget_hand::draw() const {
+    Color themeColor = GREEN;
+    float pulse = (sinf(GetTime() * 1.5f) * 0.5f + 0.5f);
+    float pulseOpacity = 0.15f + (pulse * 0.35f);
 
-    DrawRectangleRec(hand_bounds, Fade(BLACK, 0.4f));
-    DrawRectangleLinesEx(hand_bounds, 2, Fade(BLACK, 0.5f));
+    // 2. Draw Subtle Tray Glow
+    DrawRectangleGradientV(hand_bounds.x, hand_bounds.y, hand_bounds.width, hand_bounds.height,
+                           Fade(themeColor, 0.05f), Fade(BLACK, 0.0f));
+
+    // 3. The Pulsing Border
+    DrawRectangleLinesEx(hand_bounds, 1.5f, Fade(themeColor, pulseOpacity));
+
+    // 4. Tech Accents: Decorative Brackets
+    float lineLen = 40.0f;
+    float x = hand_bounds.x;
+    float y = hand_bounds.y;
+    float w = hand_bounds.width;
+    float h = hand_bounds.height;
+    DrawLineEx({x, y}, {x + lineLen, y}, 2, themeColor);
+    DrawLineEx({x, y}, {x, y + lineLen}, 2, themeColor);
+    DrawLineEx({x, y + h}, {x + lineLen, y + h}, 2, themeColor);
+    DrawLineEx({x, y + h}, {x, y + h - lineLen}, 2, themeColor);
+
+    // labeling
+    DrawText("OPERATIVE_HAND_INTERFACE", x + 10, y - 25, 18, Fade(themeColor, 0.8f));
+    int count = card_view_ptrs.size();
+    Color countColor = (count >= 10) ? ORANGE : themeColor;
+    DrawText(TextFormat("SLOTS_FILLED: %d/10", count), x + w - 180, y - 25, 18, countColor);
 }

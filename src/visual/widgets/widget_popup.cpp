@@ -1,4 +1,6 @@
 #include "visual/widgets/widget_popup.h"
+
+#include <cmath>
 #include <utility>
 
 #include "visual/render_config.h"
@@ -22,18 +24,43 @@ void widget_popup::update(float dt) {
 
 void widget_popup::draw() const {
     float screen_w = render_config::VIRTUAL_WIDTH;
-    float screen_h = render_config::VIRTUAL_HEIGHT;
+    float horizon_y = render_config::board::START_Y;
+
     Rectangle bar{};
-    switch (p_type) {
-        case popup_type::BANNER: bar = { 0, screen_h / 2 - 100, screen_w, 200 };
+    if (p_type == popup_type::BANNER) {
+        bar = { 0, horizon_y - 100, screen_w, 200 };
     }
 
+    // scanline background
+    DrawRectangleRec(bar, Fade(BLACK, alpha * 0.85f));
+    for (float i = bar.y; i < bar.y + bar.height; i += 8) {
+        DrawRectangle(bar.x, i, bar.width, 2, Fade(theme_color, alpha * 0.1f));
+    }
 
-    DrawRectangleRec(bar, Fade(BLACK, alpha * 0.8f));
-    DrawRectangleLinesEx(bar, 4, Fade(theme_color, alpha));
+    // border
+    float pulse = (sinf(GetTime() * 10.0f) * 0.5f + 0.5f); // Fast pulse for alerts
+    DrawRectangleLinesEx(bar, 2, Fade(theme_color, alpha * 0.6f));
+    DrawRectangle(bar.x, bar.y, bar.width, 4, Fade(theme_color, alpha * (0.4f + pulse * 0.4f)));
+    DrawRectangle(bar.x, bar.y + bar.height - 4, bar.width, 4, Fade(theme_color, alpha * (0.4f + pulse * 0.4f)));
 
-    int fontSize = 80;
+    // text
+    int fontSize = 90;
     int textWidth = MeasureText(message.c_str(), fontSize);
-    DrawText(message.c_str(), (screen_w / 2) - (textWidth / 2), (screen_h / 2) - (fontSize / 2), fontSize, Fade(theme_color, alpha));
 
+    float jitter = (alpha > 0.9f) ? GetRandomValue(-2, 2) : 0;
+    DrawText(message.c_str(),
+             (screen_w / 2) - (textWidth / 2) + 4 + jitter,
+             horizon_y - (fontSize / 2) + 4,
+             fontSize, Fade(BLACK, alpha));
+
+    DrawText(message.c_str(),
+             (screen_w / 2) - (textWidth / 2) + jitter,
+             horizon_y - (fontSize / 2),
+             fontSize, Fade(theme_color, alpha));
+
+    // sub-text
+    const char* deco = ">> SYSTEM_NOTIFICATION_CRITICAL <<";
+    int decoSize = 20;
+    int decoWidth = MeasureText(deco, decoSize);
+    DrawText(deco, (screen_w / 2) - (decoWidth / 2), bar.y + 10, decoSize, Fade(theme_color, alpha * 0.5f));
 }

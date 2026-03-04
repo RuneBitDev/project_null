@@ -43,8 +43,26 @@ void widget_graveyard::update(float dt) {
 }
 
 void widget_graveyard::draw() const {
+    bool is_opponent = (graveyard_bounds.y < 600.0f);
+    Color themeColor = is_opponent ? RED : GREEN;
 
-    DrawRectangleRec(graveyard_bounds, Fade(BLACK, 0.4f));
-    DrawRectangleLinesEx(graveyard_bounds, 2, Fade(BLACK, 0.5f));
+    DrawRectangleRec(graveyard_bounds, Fade(BLACK, 0.6f));
+    DrawRectangleLinesEx(graveyard_bounds, 2.0f, Fade(themeColor, 0.4f));
+
+    // label
+    const char* statusText = "MIKOSHI";
+    DrawText(statusText, graveyard_bounds.x, graveyard_bounds.y - 20, 15, Fade(themeColor, 0.7f));
+
+    // large x
+    float centerX = graveyard_bounds.x + graveyard_bounds.width / 2.0f;
+    float centerY = graveyard_bounds.y + graveyard_bounds.height / 2.0f;
+    float iconSize = 40.0f;
+
+    DrawLineEx({centerX - iconSize, centerY - iconSize}, {centerX + iconSize, centerY + iconSize}, 3.0f, Fade(themeColor, 0.2f));
+    DrawLineEx({centerX + iconSize, centerY - iconSize}, {centerX - iconSize, centerY + iconSize}, 3.0f, Fade(themeColor, 0.2f));
+
+    // 5. Card Count
+    std::string count = std::to_string(graveyard_view_ptrs.size());
+    DrawText(count.c_str(), graveyard_bounds.x - 15, graveyard_bounds.y + 5, 20, themeColor);
 }
 

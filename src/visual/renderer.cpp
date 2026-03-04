@@ -12,7 +12,10 @@ renderer::~renderer() {
 }
 
 void renderer::draw_start_screen() {
-    ClearBackground(BLACK);
+    ClearBackground({ 10, 10, 15, 255 });
+    for (int i = 0; i < 1440; i += 5) {
+        DrawLine(0, i, 2560, i, Fade(RAYWHITE, 0.05f));
+    }
 
     draw_text_centered("PROJECT    NULL", 300, 80, GREEN);
     draw_text_centered("PROJECT    NULL", 500, 40, GREEN);
@@ -21,14 +24,16 @@ void renderer::draw_start_screen() {
 
 void renderer::draw_menu(int p1_idx, int p2_idx, const std::vector<std::string>& factions) {
     ClearBackground({ 10, 10, 15, 255 });
+    for (int i = 0; i < 1440; i += 5) {
+        DrawLine(0, i, 2560, i, Fade(RAYWHITE, 0.05f));
+    }
+
     float centerX = render_config::VIRTUAL_WIDTH / 2.0f;
 
     auto draw_selection_slot = [&](int idx, float y, Color theme, const char* title) {
         Texture2D tex = texture_factory::instance->get_texture("selection_" + factions[idx]);
         Rectangle dest = { centerX - 600, y, 1200, 400 };
 
-        // background glow
-        DrawRectangleGradientV(dest.x, dest.y, dest.width, dest.height, Fade(theme, 0.1f), Fade(BLACK, 0.3f));
 
         if (tex.id > 0) {
             DrawTexturePro(tex, {0, 0, static_cast<float>(tex.width), static_cast<float>(tex.height)}, dest, {0,0}, 0.0f, WHITE);
@@ -53,8 +58,13 @@ void renderer::draw_menu(int p1_idx, int p2_idx, const std::vector<std::string>&
 
     manager.draw_buttons();
 }
+
 void renderer::draw_game(const render_context& ctx) {
-    ClearBackground(BLACK);
+    ClearBackground({ 10, 10, 15, 255 });
+    for (int i = 0; i < 1440; i += 5) {
+        DrawLine(0, i, 2560, i, Fade(RAYWHITE, 0.05f));
+    }
+
     board_view.update_from_game(ctx.b, manager);
     hand_view.update_from_player(ctx.p1, manager);
     hand_view.update_from_player_opponent(ctx.p2, manager);

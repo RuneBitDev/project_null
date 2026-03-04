@@ -1,4 +1,7 @@
 #include "visual/widgets/widget_row.h"
+
+#include <cmath>
+
 #include "visual/layout_manager.h"
 #include "visual/render_config.h"
 
@@ -62,12 +65,38 @@ void widget_row::update(float dt) {
 
 
 void widget_row::draw() const {
+    Color themeColor = (side == row_side::PLAYER) ? GREEN : RED;
+    float x = row_bounds.x;
+    float y = row_bounds.y;
+    float w = row_bounds.width;
+    float h = row_bounds.height;
+    // row background
+    DrawRectangleGradientH(x, y, w, h, Fade(themeColor, 0.15f), Fade(BLACK, 0.0f));
 
-    DrawRectangleRec(row_bounds, Fade(BLACK, 0.4f));
-    DrawRectangleLinesEx(row_bounds, 2, Fade(BLACK, 0.5f));
+    // tech-borders
+    float lineLen = 30.0f;
+    DrawLineEx({x, y}, {x + lineLen, y}, 2, themeColor);
+    DrawLineEx({x, y}, {x, y + lineLen}, 2, themeColor);
+    DrawLineEx({x, y + h}, {x + lineLen, y + h}, 2, themeColor);
+    DrawLineEx({x, y + h}, {x, y + h - lineLen}, 2, themeColor);
 
+    float pulse = (sinf(GetTime() * 1.5f) * 0.5f + 0.5f);
+    // Pulse the opacity between 0.1 and 0.5
+    float pulseOpacity = 0.1f + (pulse * 0.4f);
+
+    DrawRectangleLinesEx(row_bounds, 1.5f, Fade(themeColor, pulseOpacity));
+
+
+    // score banner
     if (has_score) {
-        DrawText(std::to_string(current_score).c_str(), row_bounds.x - 40, row_bounds.y, 20, DARKGREEN);
-    }
+        Rectangle scoreTab = { x - 60, y + (h / 2) - 20, 50, 40 };
+        DrawRectangleRec(scoreTab, Fade(themeColor, 0.2f));
+        DrawRectangleLinesEx(scoreTab, 1, themeColor);
 
+        std::string scoreStr = std::to_string(current_score);
+        int textW = MeasureText(scoreStr.c_str(), 24);
+        DrawText(scoreStr.c_str(), scoreTab.x + (scoreTab.width/2 - textW/2), scoreTab.y + 8, 24, RAYWHITE);
+
+        DrawText(label.c_str(), scoreTab.x, scoreTab.y - 15, 12, themeColor);
+    }
 }

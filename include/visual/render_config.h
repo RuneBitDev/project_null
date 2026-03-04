@@ -20,7 +20,7 @@ namespace render_config {
 
     namespace buttons {
         inline Rectangle START_BUTTON = { 1080, 600, 400, 100};
-        inline Rectangle PASS_BUTTON = { 100, 100, 300, 100};
+        inline Rectangle PASS_BUTTON = { 150, 820, 350, 40 };
     }
 
     namespace card {
@@ -42,7 +42,7 @@ namespace render_config {
 
     namespace deck {
         constexpr float DECK_X = 2200.0f;
-        constexpr Rectangle DECK_PLAYER = {2350.0f, 980.0f, 130.0f, 180.0f};
+        constexpr Rectangle DECK_PLAYER = {2350.0f, 970.0f, 130.0f, 180.0f};
         constexpr Rectangle DECK_OPPONENT = {2350.0f, 50.0f, 130.0f, 180.0f};
     }
 

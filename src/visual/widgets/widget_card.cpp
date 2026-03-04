@@ -14,6 +14,7 @@ widget_card::widget_card(const card* c_ptr, const card_context &card_ctx)
 }
 
 void widget_card::draw() const {
+    if (card_ctx.position == card_position::DECK) return;
 
     Color border_color = card_ctx.border_color;
     Rectangle draw_rect = current_bounds;

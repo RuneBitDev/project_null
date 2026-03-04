@@ -1,4 +1,7 @@
 #include "visual/widgets/widget_special_row.h"
+
+#include <cmath>
+
 #include "visual/layout_manager.h"
 #include "visual/render_config.h"
 
@@ -38,7 +41,20 @@ void widget_special_row::update(float dt) {
 
 void widget_special_row::draw() const {
 
-    DrawRectangleRec(bounds, Fade(BLACK, 0.4f));
-    DrawRectangleLinesEx(bounds, 2, Fade(BLACK, 0.5f));
+    Color themeColor = PURPLE;
+    DrawRectangleGradientH(bounds.x, bounds.y, bounds.width, bounds.height,
+                           Fade(themeColor, 0.2f), Fade(BLACK, 0.0f));
 
+    // brackets
+    float thickness = 2.0f;
+    DrawLineEx({bounds.x, bounds.y}, {bounds.x, bounds.y + bounds.height}, thickness, themeColor);
+    DrawLineEx({bounds.x, bounds.y}, {bounds.x + 20, bounds.y}, thickness, themeColor);
+    DrawLineEx({bounds.x, bounds.y + bounds.height}, {bounds.x + 20, bounds.y + bounds.height}, thickness, themeColor);
+
+    // text
+    DrawText("GLOBAL_MODIFIERS", bounds.x + 10, bounds.y - 20, 15, themeColor);
+
+    // pulse
+    float pulse = (sinf(GetTime() * 1.5f) * 0.5f + 0.5f) * 0.3f;
+    DrawRectangleLinesEx(bounds, 1, Fade(themeColor, pulse));
 }

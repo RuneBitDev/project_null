@@ -1,5 +1,7 @@
 #include "visual/widgets/widget_board.h"
 
+#include <cmath>
+
 #include "visual/render_config.h"
 
 widget_board::widget_board() {
@@ -31,8 +33,26 @@ void widget_board::draw() const {
         row.draw();
     }
     special_row.draw();
+
+    float layoutHorizonY = render_config::board::START_Y;
     float start_x = render_config::board::BOARD_EDGE_X;
     float end_x = render_config::board::BOARD_EDGE_X2;
-    DrawRectangle(static_cast<int>(start_x), 0, 10, 1440, BLACK);
-    DrawRectangle(static_cast<int>(end_x), 0, 10, 1440, BLACK);
+
+    // centerline
+    DrawLineEx({start_x, layoutHorizonY}, {end_x, layoutHorizonY}, 3.0f, Fade(WHITE, 0.4f));
+    for (int i = 0; i < 20; i++) {
+        float dotX = start_x + (i * (end_x - start_x) / 20.0f);
+        float pulse = sinf(GetTime() * 2.0f + i) * 0.5f + 0.5f;
+        DrawCircleV({dotX, layoutHorizonY}, 3.0f, Fade(WHITE, pulse));
+    }
+
+    // side borders
+    auto draw_tech_border = [&](float x) {
+
+        DrawRectangle(static_cast<int>(x), 0, 10, 1440, Fade(WHITE, 0.3f));
+        DrawRectangleLines(static_cast<int>(x), 0, 10, 1440, WHITE);
+
+    };
+    draw_tech_border(start_x);
+    draw_tech_border(end_x);
 }

@@ -18,12 +18,9 @@ game_state::game_state(player player1, player player2, factory& factory, texture
     tex_factory.load_texture_for_cards(cards_to_load);
 
     match = std::make_unique<match_manager>(std::move(player1), std::move(player2));
-
-    background = LoadTexture("data/textures/backgrounds/bckg_arasaka_01.png");
 }
 
 game_state::~game_state() {
-    UnloadTexture(background);
     tex_factory.unload_all();
 }
 
@@ -101,12 +98,9 @@ void game_state::update(float dt, renderer& renderer) {
     if (game_over) {
         end_screen_timer -= dt;
     }
-
-
 }
 
 void game_state::render(renderer& renderer) {
-    DrawTexture(background, 0, 0, WHITE);
 
     render_context ctx {
         match->get_board(),
@@ -114,6 +108,5 @@ void game_state::render(renderer& renderer) {
         match->get_player(row_side::OPPONENT),
         match->get_current_state()
     };
-
     renderer.draw_game(ctx);
 }

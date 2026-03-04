@@ -1,5 +1,7 @@
 #include "visual/widgets/widget_button.h"
 
+#include <cmath>
+
 #include "visual/render_config.h"
 
 void widget_button::init_button(const char* text, button_type b_type, int key, Rectangle bounds) {
@@ -37,23 +39,38 @@ void widget_button::update(float dt) {
 }
 
 void widget_button::draw() const {
-    Color tint = is_hovered ? LIME : BLACK;
+    float pulse = (sinf(GetTime() * 2.0f) * 0.5f + 0.5f);
+    Color themeColor = is_hovered ? LIME : GREEN;
+    float alpha = is_hovered ? 0.3f : 0.1f;
 
-    DrawRectangleRec(bounds, tint);
-    DrawRectangleLinesEx(bounds, 2 , GREEN);
+    float x = bounds.x;
+    float y = bounds.y;
+    float w = bounds.width;
+    float h = bounds.height;
 
+    DrawRectangleRec(bounds, Fade(BLACK, 0.8f));
+    DrawRectangleGradientV(x, y, w, h,Fade(themeColor, alpha), Fade(BLACK, 0.0f));
+
+    DrawRectangleLinesEx(bounds, is_hovered ? 2.0f : 1.0f, Fade(themeColor, 0.4f + (pulse * 0.3f)));
+
+    // cyber jitter on hover
     if (text) {
-        int fontSize = 40;
+        int fontSize = 24;
         int textWidth = MeasureText(text, fontSize);
-        DrawText(text,
-            static_cast<int>(bounds.x + (bounds.width / 2 - textWidth / 2)),
-            static_cast<int>(bounds.y + (bounds.height / 2 - fontSize / 2)),
-            fontSize, GREEN);
+        Vector2 textPos = {x + (w / 2 - textWidth / 2), y + (h / 2 - fontSize / 2)};
+
+        if (is_hovered) {
+            DrawText(text, textPos.x + 1, textPos.y + 1, fontSize, RED); // Ghosting effect
+        }
+        DrawText(text, textPos.x, textPos.y, fontSize, themeColor);
     }
 
-    if (b_type == HOLDABLE) {
-        float progress_width = bounds.width * hold_progress;
-        Rectangle fill_rect = {bounds.x, bounds.y, progress_width, bounds.height};
-        DrawRectangleRec(fill_rect, GREEN);
+    // loading bar
+    if (b_type == HOLDABLE && hold_progress > 0.0f) {
+        float progressWidth = (w - 10) * hold_progress;
+        Rectangle progressRect = { x + 5, y + h - 8, progressWidth, 4 };
+
+        DrawRectangleRec(progressRect, themeColor);
+        DrawCircle(progressRect.x + progressWidth, progressRect.y + 2, 4, WHITE);
     }
 }

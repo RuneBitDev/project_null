@@ -18,7 +18,6 @@ public:
 
 private:
     std::unique_ptr<match_manager> match;
-    Texture2D background;
     bool widgets_initialized = false;
     bool is_pass_button_pressed = false;
 

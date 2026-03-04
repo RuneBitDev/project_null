@@ -32,45 +32,58 @@ void widget_player_info::draw() const {
     bool is_my_turn = (side == row_side::PLAYER && current_state == current_state::PLAYER_TURN) ||
                       (side == row_side::OPPONENT && current_state == current_state::AI_TURN);
 
-    Color borderColor = is_my_turn ? ORANGE : Fade(GRAY, 0.3f);
-    float borderThick = is_my_turn ? 4.0f : 2.0f;
+    Color sideColor = (side == row_side::PLAYER) ? GREEN : RED;
 
-    DrawRectangleRec(bounds, Fade(BLACK, 0.7f));
-    DrawRectangleLinesEx(bounds, borderThick, borderColor);
+    float pulse = (sinf(GetTime() * 1.5f) * 0.5f + 0.5f);
+    float pulseOpacity = 0.15f + (pulse * 0.45f);
+
+    // borders
+    Color borderColor = is_my_turn ? sideColor : Fade(GRAY, 0.4f);
+    float borderThick = is_my_turn ? 3.0f : 1.5f;
+    DrawRectangleRec(bounds, Fade(BLACK, 0.8f));
+    DrawRectangleLinesEx(bounds, borderThick, Fade(borderColor, pulseOpacity));
+
+    // corners
+    float lineLen = 25.0f;
+    float x = bounds.x;
+    float y = bounds.y;
+    float h = bounds.height;
+    Color cornerColor = is_my_turn ? sideColor : GRAY;
+    DrawLineEx({x, y}, {x + lineLen, y}, 2, cornerColor);
+    DrawLineEx({x, y}, {x, y + lineLen}, 2, cornerColor);
+    // bottom-left
+    DrawLineEx({x, y + h}, {x + lineLen, y + h}, 2, cornerColor);
+    DrawLineEx({x, y + h}, {x, y + h - lineLen}, 2, cornerColor);
 
     float margin = 15.0f;
     float iconSize = 70.0f;
     float iconX, textX;
-
-    if (side == row_side::PLAYER) {
-        iconX = bounds.x + margin;
-        textX = iconX + iconSize + 15.0f;
-    } else {
-        iconX = bounds.x + bounds.width - iconSize - margin;
-        textX = bounds.x + margin;
-    }
+    iconX = bounds.x + margin;
+    textX = iconX + iconSize + 15.0f;
 
     Rectangle dest = { iconX, bounds.y + (bounds.height / 2) - (iconSize / 2), iconSize, iconSize };
-    DrawTexturePro(faction_logo, { 0, 0, (float)faction_logo.width, (float)faction_logo.height },
+    DrawTexturePro(faction_logo, { 0, 0, static_cast<float>(faction_logo.width), static_cast<float>(faction_logo.height) },
                    dest, { 0, 0 }, 0.0f, WHITE);
 
 
     DrawCircleLines(dest.x + iconSize/2, dest.y + iconSize/2, iconSize/2, borderColor);
 
-
     float nameY = bounds.y + 20;
     float statsY = nameY + 30;
 
     DrawText(name.c_str(), textX, nameY, 22, RAYWHITE);
-
-    DrawRectangle(textX, statsY, 12, 18, LIGHTGRAY); // Simple Card Silhouette
+    Color pulseColor = Fade(is_my_turn ? sideColor : GOLD, 0.4f + (pulse * 0.4f));
+    DrawRectangleLinesEx({textX - 2, statsY - 2, 45, 22}, 1, Fade(sideColor, 0.3f));
+    DrawRectangle(textX + 4, statsY + 4, 10, 14, Fade(sideColor, 0.5f));
+    DrawRectangleLines(textX + 2, statsY + 2, 10, 14, pulseColor);
     DrawText(std::to_string(cards_in_hand).c_str(), textX + 18, statsY, 18, GOLD);
 
-    float gemX = textX + 50;
+    // life gems
+    float gemX = textX + 65;
     for (int i = 0; i < 2; i++) {
-        Color gemColor = (i < current_lives) ? RED : DARKGRAY;
-        DrawCircle(gemX + (i * 22), statsY + 10, 6, gemColor);
-        DrawCircleLines(gemX + (i * 22), statsY + 10, 6, GOLD);
+        bool isAlive = (i < current_lives);
+        Color gemColor = isAlive ? RED : DARKGRAY;
+        DrawCircle(gemX + (i * 24), statsY + 10, 6, gemColor);
     }
 
     // sub panel

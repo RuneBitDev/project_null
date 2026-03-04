@@ -1,4 +1,7 @@
 #include "visual/widgets/widget_deck.h"
+
+#include <cmath>
+
 #include "visual/render_config.h"
 
 void widget_deck::init_deck(row_side side) {
@@ -22,12 +25,27 @@ void widget_deck::update(float dt) {
 }
 
 void widget_deck::draw() const {
-    DrawRectangleRec(deck_bounds, Fade(BLACK, 0.4f));
-    DrawRectangleLinesEx(deck_bounds, 2, Fade(BLACK, 0.5f));
+    Color themeColor = (side == row_side::PLAYER) ? GREEN : RED;
 
-    if (card_count <= 0) return;
-    DrawText(TextFormat("%d", card_count), deck_bounds.x + 40, deck_bounds.y + 60, 20, WHITE);
+    DrawRectangleRec(deck_bounds, Fade(BLACK, 0.8f));
+    DrawRectangleLinesEx(deck_bounds, 2.0f, themeColor);
 
+    // scanning bar
+    float scanY = deck_bounds.y + (deck_bounds.height * (sinf(GetTime() * 2.0f) * 0.5f + 0.5f));
+    DrawLineEx({deck_bounds.x, scanY}, {deck_bounds.x + deck_bounds.width, scanY}, 1.0f, Fade(themeColor, 0.4f));
 
+    if (card_count <= 0) {
+        DrawText("DEPLETED", deck_bounds.x + 10, deck_bounds.y + deck_bounds.height/2 - 10, 15, RED);
+        return;
+    }
+
+    // card count
+    Rectangle badge = { deck_bounds.x - 15, deck_bounds.y - 15, 45, 45 };
+    DrawCircleV({badge.x + 22, badge.y + 22}, 22, BLACK);
+    DrawCircleLines(badge.x + 22, badge.y + 22, 22, themeColor);
+
+    std::string countStr = std::to_string(card_count);
+    int textWidth = MeasureText(countStr.c_str(), 20);
+    DrawText(countStr.c_str(), badge.x + 22 - textWidth/2, badge.y + 12, 20, RAYWHITE);
 }
 

@@ -33,7 +33,7 @@ Rectangle layout_manager::get_card_bounds(card_location l, int total_cards) {
     // vertical positioning
     float y = 0.0f;
     if (type_idx == 4) {
-        y = board::START_Y - (h / 2.0f);
+        y = board::BOARD_Y_CENTER - (h / 2.0f); // true horizon
     } else {
         float vertical_direction = (l.side == row_side::PLAYER) ? 1.0f : -1.0f;
         float horizon_offset = board::CENTER_Y_SPACING / 2.0f;
@@ -56,14 +56,24 @@ Rectangle layout_manager::get_hand_card_bounds(int index, int total_cards) {
 
     float w = card::CARD_WIDTH;
     float h = card::CARD_HEIGHT;
-    float spacing = 10.0f;
+    float max_width = board::ROW_WIDTH;
+    float preferred_spacing = 10.0f;
 
-    float total_hand_width = (total_cards * w) + ((total_cards - 1) * spacing);
+    float natural_width = (total_cards * w) + ((total_cards - 1) * preferred_spacing);
 
-    // centering
-    float start_x = board::START_X + (board::ROW_WIDTH / 2.0f) - (total_hand_width / 2.0f);
+    float actual_spacing = preferred_spacing;
+    float total_w = natural_width;
 
-    float x = start_x + (index * (w + spacing));
+    // if overflow, calculate
+    if (natural_width > max_width) {
+        actual_spacing = (max_width - (total_cards * w)) / (total_cards - 1);
+        total_w = max_width;
+    }
+
+    // center horizontally
+    float start_x = board::START_X + (board::ROW_WIDTH / 2.0f) - (total_w / 2.0f);
+
+    float x = start_x + (index * (w + actual_spacing));
     float y = hand::Y_OFFSET;
 
     return { x, y, w, h };
