@@ -39,6 +39,7 @@ public:
     // scoring and state queries
     int get_player_score(row_side side) const;
     const board& get_board() const { return game_board; }
+    player& get_player(row_side side);
     const player& get_player(row_side side) const;
     row_side get_active_side() const { return active_player_side; }
     current_state get_current_state() const { return current_match_state; }

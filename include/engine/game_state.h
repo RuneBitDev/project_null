@@ -26,6 +26,14 @@ private:
     float end_screen_timer = 10.0f;
     factory& data_factory;
     texture_factory& tex_factory;
+
+    // initialization hand drawing
+    const int INITIAL_HAND_SIZE = game_config::player_config::HAND_SIZE;
+    const float TIME_BETWEEN_CARDS = 0.1f;
+    int cards_drawn = 0;
+    float draw_timer = 0.0f;
+    bool intro_delay_finished = false;
+    float intro_timer = 3.0f;
 };
 
 #endif //PROJECT_NULL_GAME_STATE_H

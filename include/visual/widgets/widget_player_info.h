@@ -24,5 +24,8 @@ private:
     int cards_in_hand = 0;
     int current_lives = 0;
 
+    std::string get_state_string() const;
+    Color get_state_color() const;
+
 };
 #endif //PROJECT_NULL_WIDGET_PLAYER_INFO_H

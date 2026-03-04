@@ -263,6 +263,10 @@ void match_manager::execute_ai_turn() {
     p2.play_card(0, game_board, row_side::OPPONENT, p1, combat);
 }
 
+player & match_manager::get_player(row_side side) {
+    return (side == row_side::PLAYER) ? p1 : p2;
+}
+
 const player& match_manager::get_player(row_side side) const {
     return (side == row_side::PLAYER) ? p1 : p2;
 }

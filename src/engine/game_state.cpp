@@ -17,8 +17,6 @@ game_state::game_state(player player1, player player2, factory& factory, texture
     }
     tex_factory.load_texture_for_cards(cards_to_load);
 
-    player1.draw_card(10);
-    player2.draw_card(10);
     match = std::make_unique<match_manager>(std::move(player1), std::move(player2));
 
     background = LoadTexture("data/textures/backgrounds/bckg_arasaka_01.png");
@@ -53,6 +51,22 @@ void game_state::update(float dt, renderer& renderer) {
     }
 
     renderer.update_widgets(dt);
+
+    if (cards_drawn < INITIAL_HAND_SIZE) {
+        if (!intro_delay_finished) {
+            intro_timer -= dt;
+            if (intro_timer <= 0) intro_delay_finished = true;
+        } else {
+            draw_timer += dt;
+            if (draw_timer >= TIME_BETWEEN_CARDS) {
+                match->get_player(row_side::PLAYER).draw_card(1);
+                match->get_player(row_side::OPPONENT).draw_card(1);
+
+                cards_drawn++;
+                draw_timer = 0.0f;
+            }
+        }
+    }
 
     if (renderer.is_button_triggered("PASS")) {
         is_pass_button_pressed = true;
