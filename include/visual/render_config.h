@@ -24,8 +24,8 @@ namespace render_config {
     }
 
     namespace card {
-        constexpr float CARD_WIDTH = 100.0f;
-        constexpr float CARD_HEIGHT = 150.0f;
+        constexpr float CARD_WIDTH = 110.0f;
+        constexpr float CARD_HEIGHT = 165.0f;
         constexpr float CARD_SPACING = 10.0f;
     }
 
@@ -35,20 +35,20 @@ namespace render_config {
     }
 
     namespace graveyard {
-        constexpr float GY_X = 2200.0f;
+        constexpr float GY_X = 2300.0f;
         constexpr float GY_Y = 600.0f;
         constexpr float GY_SPACING = 3.0f;
     }
 
     namespace deck {
         constexpr float DECK_X = 2200.0f;
-        constexpr Rectangle DECK_PLAYER = {2350.0f, 970.0f, 130.0f, 180.0f};
-        constexpr Rectangle DECK_OPPONENT = {2350.0f, 50.0f, 130.0f, 180.0f};
+        constexpr Rectangle DECK_PLAYER = {500.0f, 1100.0f, 130.0f, 180.0f};
+        constexpr Rectangle DECK_OPPONENT = {500.0f, 160.0f, 130.0f, 180.0f};
     }
 
     namespace board {
         // main board area
-        constexpr float ROW_WIDTH = 1100.0f;
+        constexpr float ROW_WIDTH = 1200.0f;
         constexpr float BOARD_SPECIAL_WIDTH = 300.0f;
         constexpr float ROW_SPACING = 30.0f;
         constexpr float START_X = 750.0f;
@@ -58,8 +58,8 @@ namespace render_config {
         constexpr float CENTER_Y_SPACING = 50.0f;
 
         // board bounds
-        constexpr float BOARD_EDGE_X = 650.0f;
-        constexpr float BOARD_EDGE_X2 = 2500.0f;
+        constexpr float BOARD_EDGE_X = 660.0f;
+        constexpr float BOARD_EDGE_X2 = 2000.0f;
         constexpr float BOARD_Y_CENTER = 720;
     }
 

@@ -10,7 +10,7 @@ void widget_player_info::init_player_info(row_side side) {
         case row_side::PLAYER:      y += 150; break;
         case row_side::OPPONENT:    y -= 350; break;
     }
-    bounds = {0, y, render_config::board::BOARD_EDGE_X, 200};
+    bounds = {20, y, render_config::board::BOARD_EDGE_X - 50, 200};
 }
 
 
@@ -20,6 +20,8 @@ void widget_player_info::update_from_player(const player &player, const player_c
     name = player.get_name();
 
     current_state = p_ctx.current_state;
+    total_score_p1 = p_ctx.total_score_p1;
+    total_score_p2 = p_ctx.total_score_p2;
 
 }
 
@@ -47,44 +49,62 @@ void widget_player_info::draw() const {
     float lineLen = 25.0f;
     float x = bounds.x;
     float y = bounds.y;
+    float w = bounds.width;
     float h = bounds.height;
     Color cornerColor = is_my_turn ? sideColor : GRAY;
     DrawLineEx({x, y}, {x + lineLen, y}, 2, cornerColor);
     DrawLineEx({x, y}, {x, y + lineLen}, 2, cornerColor);
-    // bottom-left
     DrawLineEx({x, y + h}, {x + lineLen, y + h}, 2, cornerColor);
     DrawLineEx({x, y + h}, {x, y + h - lineLen}, 2, cornerColor);
 
+
+
+    // left side: identity
     float margin = 15.0f;
     float iconSize = 70.0f;
-    float iconX, textX;
-    iconX = bounds.x + margin;
-    textX = iconX + iconSize + 15.0f;
+    float iconX = x + margin;
+    float textX = iconX + iconSize + 15.0f;
 
-    Rectangle dest = { iconX, bounds.y + (bounds.height / 2) - (iconSize / 2), iconSize, iconSize };
-    DrawTexturePro(faction_logo, { 0, 0, static_cast<float>(faction_logo.width), static_cast<float>(faction_logo.height) },
-                   dest, { 0, 0 }, 0.0f, WHITE);
+    // faction logo
+    Rectangle logoDest = { iconX, y + (h / 2) - (iconSize / 2), iconSize, iconSize };
+    DrawTexturePro(faction_logo, { 0, 0, (float)faction_logo.width, (float)faction_logo.height },
+                   logoDest, { 0, 0 }, 0.0f, WHITE);
+    DrawCircleLines(logoDest.x + iconSize/2, logoDest.y + iconSize/2, iconSize/2, borderColor);
 
-
-    DrawCircleLines(dest.x + iconSize/2, dest.y + iconSize/2, iconSize/2, borderColor);
-
-    float nameY = bounds.y + 20;
+    // name and stats
+    float nameY = y + 20;
     float statsY = nameY + 30;
-
     DrawText(name.c_str(), textX, nameY, 22, RAYWHITE);
-    Color pulseColor = Fade(is_my_turn ? sideColor : GOLD, 0.4f + (pulse * 0.4f));
+
+    // hand size icon
     DrawRectangleLinesEx({textX - 2, statsY - 2, 45, 22}, 1, Fade(sideColor, 0.3f));
-    DrawRectangle(textX + 4, statsY + 4, 10, 14, Fade(sideColor, 0.5f));
-    DrawRectangleLines(textX + 2, statsY + 2, 10, 14, pulseColor);
     DrawText(std::to_string(cards_in_hand).c_str(), textX + 18, statsY, 18, GOLD);
 
-    // life gems
+    // lifes
     float gemX = textX + 65;
     for (int i = 0; i < 2; i++) {
-        bool isAlive = (i < current_lives);
-        Color gemColor = isAlive ? RED : DARKGRAY;
-        DrawCircle(gemX + (i * 24), statsY + 10, 6, gemColor);
+        DrawCircle(gemX + (i * 24), statsY + 10, 6, (i < current_lives) ? RED : DARKGRAY);
     }
+
+    // right side: total score
+    float scoreBoxW = 80.0f;
+    float scoreBoxH = 50.0f;
+    float scoreX = (x + w) - scoreBoxW - margin;
+    float scoreY = y + (h / 2) - (scoreBoxH / 2);
+
+    Rectangle scoreRect = { scoreX, scoreY, scoreBoxW, scoreBoxH };
+
+    DrawRectangleRec(scoreRect, Fade(BLACK, 0.6f));
+    DrawRectangleGradientV(scoreX, scoreY, scoreBoxW, scoreBoxH, Fade(sideColor, 0.2f), BLACK);
+    DrawRectangleLinesEx(scoreRect, 2.0f, sideColor);
+
+    DrawText("POWER", scoreX + 5, scoreY - 15, 12, sideColor);
+
+    int displayScore = (side == row_side::PLAYER) ? total_score_p1 : total_score_p2;
+    std::string scoreStr = std::to_string(displayScore);
+    int fontSize = 32;
+    int textW = MeasureText(scoreStr.c_str(), fontSize);
+    DrawText(scoreStr.c_str(), scoreX + (scoreBoxW/2 - textW/2), scoreY + 10, fontSize, RAYWHITE);
 
     // sub panel
     if (side == row_side::PLAYER) {

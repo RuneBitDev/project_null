@@ -22,6 +22,8 @@ struct card_context {
 
 struct player_context {
     current_state current_state;
+    int total_score_p1;
+    int total_score_p2;
 };
 
 struct match_context {

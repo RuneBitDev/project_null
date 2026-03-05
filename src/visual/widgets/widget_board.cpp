@@ -16,7 +16,8 @@ void widget_board::update_from_game(const board &b, widget_manager& manager) {
     for (auto &row : unit_rows) {
         row.update_row(b, manager);
     }
-
+    total_score_p1 = b.calculate_total_score(row_side::PLAYER);
+    total_score_p2 = b.calculate_total_score(row_side::PLAYER);
     special_row.update_from_game(b, manager);
 }
 
@@ -46,13 +47,5 @@ void widget_board::draw() const {
         DrawCircleV({dotX, layoutHorizonY}, 3.0f, Fade(WHITE, pulse));
     }
 
-    // side borders
-    auto draw_tech_border = [&](float x) {
 
-        DrawRectangle(static_cast<int>(x), 0, 10, 1440, Fade(WHITE, 0.3f));
-        DrawRectangleLines(static_cast<int>(x), 0, 10, 1440, WHITE);
-
-    };
-    draw_tech_border(start_x);
-    draw_tech_border(end_x);
 }

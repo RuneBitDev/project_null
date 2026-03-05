@@ -93,10 +93,15 @@ void widget_row::draw() const {
         DrawRectangleRec(scoreTab, Fade(themeColor, 0.2f));
         DrawRectangleLinesEx(scoreTab, 1, themeColor);
 
+        // horizontal "feeder" line
+        float lineOutX = scoreTab.x - 20;
+        Vector2 lineStart = { scoreTab.x, scoreTab.y + 20 };
+        Vector2 lineEnd = { lineOutX, scoreTab.y + 20 };
+        DrawLineEx(lineStart, lineEnd, 2.0f, themeColor);
+        DrawCircleV(lineEnd, 3.0f, themeColor);
+
         std::string scoreStr = std::to_string(current_score);
         int textW = MeasureText(scoreStr.c_str(), 24);
         DrawText(scoreStr.c_str(), scoreTab.x + (scoreTab.width/2 - textW/2), scoreTab.y + 8, 24, RAYWHITE);
-
-        DrawText(label.c_str(), scoreTab.x, scoreTab.y - 15, 12, themeColor);
     }
 }

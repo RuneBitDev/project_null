@@ -17,6 +17,8 @@ class widget_board : public widget {
 private:
     std::vector<widget_row> unit_rows;
     widget_special_row special_row;
+    int total_score_p1;
+    int total_score_p2;
 };
 
 #endif //PROJECT_NULL_WIDGET_BOARD_H

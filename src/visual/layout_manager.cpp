@@ -74,7 +74,7 @@ Rectangle layout_manager::get_hand_card_bounds(int index, int total_cards) {
     float start_x = board::START_X + (board::ROW_WIDTH / 2.0f) - (total_w / 2.0f);
 
     float x = start_x + (index * (w + actual_spacing));
-    float y = hand::Y_OFFSET;
+    float y = hand::Y_OFFSET + 30.0f;
 
     return { x, y, w, h };
 }

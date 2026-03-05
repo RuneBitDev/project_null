@@ -23,6 +23,8 @@ private:
     std::string name;
     int cards_in_hand = 0;
     int current_lives = 0;
+    int total_score_p1 = 0;
+    int total_score_p2 = 0;
 
     std::string get_state_string() const;
     Color get_state_color() const;

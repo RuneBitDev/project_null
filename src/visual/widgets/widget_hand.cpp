@@ -12,7 +12,7 @@ void widget_hand::update_from_player(const player& p, widget_manager& manager) {
 
     float padding = 20.0f;
     float box_h = render_config::card::CARD_HEIGHT + padding;
-    float box_y = render_config::hand::Y_OFFSET - padding / 2.0f;
+    float box_y = render_config::hand::Y_OFFSET + padding ;
 
     float box_w = render_config::board::ROW_WIDTH + padding;
     float box_x = render_config::board::START_X - padding / 2.0f;
@@ -50,7 +50,7 @@ void widget_hand::update_from_player_opponent(const player &p, widget_manager &m
 
         card_context ctx;
         ctx.card_bounds = layout_manager::get_hand_card_bounds(i, hand_cards.size());
-        ctx.card_bounds.y = -150.0f;
+        ctx.card_bounds.y = -render_config::card::CARD_HEIGHT;
         ctx.position = card_position::HAND;
         ctx.face_up = false;
 
@@ -66,14 +66,12 @@ void widget_hand::draw() const {
     float pulse = (sinf(GetTime() * 1.5f) * 0.5f + 0.5f);
     float pulseOpacity = 0.15f + (pulse * 0.35f);
 
-    // 2. Draw Subtle Tray Glow
+    // tray glow
     DrawRectangleGradientV(hand_bounds.x, hand_bounds.y, hand_bounds.width, hand_bounds.height,
                            Fade(themeColor, 0.05f), Fade(BLACK, 0.0f));
 
-    // 3. The Pulsing Border
+    // borders
     DrawRectangleLinesEx(hand_bounds, 1.5f, Fade(themeColor, pulseOpacity));
-
-    // 4. Tech Accents: Decorative Brackets
     float lineLen = 40.0f;
     float x = hand_bounds.x;
     float y = hand_bounds.y;
