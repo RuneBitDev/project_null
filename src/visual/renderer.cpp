@@ -76,7 +76,7 @@ void renderer::draw_game(const render_context& ctx) {
     player_context p_ctx{
         ctx.state,
         ctx.b.calculate_total_score(row_side::PLAYER),
-        ctx.b.calculate_total_score(row_side::PLAYER)
+        ctx.b.calculate_total_score(row_side::OPPONENT)
     };
     player_view_p1.update_from_player(ctx.p1, p_ctx);
     player_view_p2.update_from_player(ctx.p2, p_ctx);

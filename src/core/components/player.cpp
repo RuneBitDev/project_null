@@ -48,6 +48,11 @@ void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_sid
         }
     }
 
+    if (type == "SUPPORT") {
+        target_row = row_type::NET;
+        std::cout << "[DEBUG] Support row_type: " << static_cast<int>(target_row) << std::endl;
+    }
+
     if (type == "SPECIAL") {
         target_row = row_type::SPECIAL;
         std::cout << "[DEBUG] Special row_type: " << static_cast<int>(target_row) << std::endl;
