@@ -12,6 +12,13 @@ void widget_button::init_button(const char* text, button_type b_type, int key, R
 }
 
 void widget_button::update(float dt) {
+    if (!enabled) {
+        is_hovered = false;
+        is_down = false;
+        hold_progress = 0.0f;
+        triggered = false;
+        return;
+    }
     Vector2 mouse_pos = render_config::get_virtual_mouse();
     is_hovered = CheckCollisionPointRec(mouse_pos, bounds);
     triggered = false;
@@ -41,6 +48,10 @@ void widget_button::update(float dt) {
 void widget_button::draw() const {
     float pulse = (sinf(GetTime() * 2.0f) * 0.5f + 0.5f);
     Color themeColor = is_hovered ? LIME : GREEN;
+    if (!enabled) {
+        themeColor = DARKGRAY;
+    }
+
     float alpha = is_hovered ? 0.3f : 0.1f;
 
     float x = bounds.x;

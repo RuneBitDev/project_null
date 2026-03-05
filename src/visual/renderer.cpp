@@ -172,7 +172,12 @@ void renderer::init_menu_widgets(const std::vector<std::string>& factions, const
 
 bool renderer::is_button_triggered(const std::string& id) {
     auto* btn = manager.get_button(id);
-    return btn && btn->is_triggered();
+    return btn->is_triggered();
+}
+
+void renderer::set_button_enabled(const std::string& id, bool enabled) {
+    auto* btn = manager.get_button(id);
+    if (btn) btn->set_enabled(enabled);
 }
 
 void renderer::update_widgets(float dt) {

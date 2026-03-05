@@ -65,6 +65,10 @@ void game_state::update(float dt, renderer& renderer) {
         }
     }
 
+    // pass button logic
+    bool is_player_turn = (match->get_current_state() == current_state::PLAYER_TURN);
+    bool already_passed = match->get_player(row_side::PLAYER).get_has_passed();
+    renderer.set_button_enabled("PASS", is_player_turn && !already_passed);
     if (renderer.is_button_triggered("PASS")) {
         is_pass_button_pressed = true;
     }

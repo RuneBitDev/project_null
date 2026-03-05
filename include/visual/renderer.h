@@ -34,6 +34,7 @@ public:
     void init_match_widgets(const player& p1, const player& p2, texture_factory& tex_factory);
     void init_menu_widgets(const std::vector<std::string>& factions, const std::string& p1_select, const std::string& p2_select);
     bool is_button_triggered(const std::string& id);
+    void set_button_enabled(const std::string& id, bool enabled);
     void update_widgets(float dt);
 
 private:
