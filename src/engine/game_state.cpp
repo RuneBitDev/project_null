@@ -2,6 +2,7 @@
 #include "engine/menu_state.h"
 #include <iostream>
 
+#include "core/game_log.h"
 #include "engine/state_manager.h"
 
 
@@ -71,6 +72,7 @@ void game_state::update(float dt, renderer& renderer) {
     bool already_passed = match->get_player(row_side::PLAYER).get_has_passed();
     renderer.set_button_enabled("PASS", is_player_turn && !already_passed);
     if (renderer.is_button_triggered("PASS")) {
+        game_log::add("Player passed the turn.", GRAY);
         is_pass_button_pressed = true;
     }
 
@@ -80,20 +82,29 @@ void game_state::update(float dt, renderer& renderer) {
         switch (status->game_status) {
             case game_status::CONTINUE:
                 switch (status->round_status) {
-                    case round_status::WIN:  renderer.add_popup("ROUND WON", GREEN, 5.0f, popup_type::BANNER);   break;
-                    case round_status::LOSS: renderer.add_popup("ROUND LOST", RED, 5.0f, popup_type::BANNER);    break;
-                    case round_status::DRAW: renderer.add_popup("ROUND DRAW", GRAY, 5.0f, popup_type::BANNER);   break;
+                    case round_status::WIN:
+                        game_log::add(">> ROUND WON <<", GREEN);
+                        renderer.add_popup("ROUND WON", GREEN, 5.0f, popup_type::BANNER);   break;
+                    case round_status::LOSS:
+                        game_log::add(">> ROUND LOST <<", RED);
+                        renderer.add_popup("ROUND LOST", RED, 5.0f, popup_type::BANNER);    break;
+                    case round_status::DRAW:
+                        game_log::add(">> ROUND DRAW <<", GRAY);
+                        renderer.add_popup("ROUND DRAW", GRAY, 5.0f, popup_type::BANNER);   break;
 
                 } break;
             case game_status::WIN:
-                renderer.add_popup("MISSION SUCCESS", LIME, 5.0f, popup_type::BANNER);
+                game_log::add("CRITICAL SYSTEM VICTORY", LIME);
+                renderer.add_popup("CRITICAL SYSTEM VICTORY", LIME, 5.0f, popup_type::BANNER);
                 game_over = true;
                 break;
             case game_status::LOSS:
+                game_log::add("SYSTEM CRITICAL: DEFEAT", RED);
                 renderer.add_popup("SYSTEM CRITICAL: DEFEAT", RED, 5.0f, popup_type::BANNER);
                 game_over = true;
                 break;
             case game_status::DRAW:
+                game_log::add("MUTUAL DESTRUCTION", GRAY);
                 renderer.add_popup("MUTUAL DESTRUCTION", GRAY, 5.0f, popup_type::BANNER);
                 game_over = true;
                 break;

@@ -2,10 +2,8 @@
 #define PROJECT_NULL_RENDERER_H
 #include "raylib.h"
 #include "ui_types.h"
-#include "layout_manager.h"
 #include "texture_factory.h"
-#include "../core/components/board.h"
-#include "../core/components/player.h"
+#include "core/components/player.h"
 #include "widgets/widget_board.h"
 #include "widgets/widget_deck.h"
 #include "widgets/widget_game_log.h"

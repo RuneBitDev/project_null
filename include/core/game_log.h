@@ -18,6 +18,9 @@ class game_log {
         log.push_back(log_entry{ std::move(msg), col });
         if (log.size() > 50) log.erase(log.begin());
     }
+    static void add_break() {
+        log.push_back({"", BLANK});
+    }
 };
 
 #endif //PROJECT_NULL_GAME_LOG_H

@@ -12,6 +12,7 @@ public:
 private:
     Rectangle bounds = render_config::game_log::CONSOLE;
     bool is_collapsed = true;
+    int scroll_offset = 0;
     float font_size = 16.0f;
 
     Rectangle get_toggle_bounds() const;

@@ -17,8 +17,9 @@ void combat_manager::update(float dt) {
 }
 
 void combat_manager::firefight() {
+    game_log::add_break();
+    game_log::add("--- FIREFIGHT START ---", GOLD);
     current_phase = combat_phase::PLAYER_ATTACKING;
-
     timer = 0.0f;
 }
 
@@ -35,6 +36,7 @@ void combat_manager::cleanup_dead_units() const {
             while (it != row.end()) {
                 if ((*it)->is_dead()) {
                     std::cout << "[GRAVEYARD] " << (*it)->get_name() << "\n";
+                    game_log::add("[!] " + (*it)->get_name() + " destroyed.", DARKGRAY);
                     owner.add_to_graveyard(std::move(*it));
                     it = row.erase(it);
                 } else {
@@ -57,6 +59,8 @@ void combat_manager::advance_phase() {
             break;
         case combat_phase::CLEANUP:
             cleanup_dead_units();
+            game_log::add("--- FIREFIGHT END ---", GOLD);
+            game_log::add_break();
             current_phase = combat_phase::IDLE;
             break;
         case combat_phase::IDLE:
@@ -151,13 +155,15 @@ void combat_manager::apply_damage(const card_unit* attacker, const card_location
     int dmg = attacker->get_attack();
     if (target->is_dead()) return;
 
-    game_log::add("[ATTACK] " + attacker->get_name() + " strikes " + target->get_name(), RAYWHITE);
+    Color logCol = (target_loc.side == row_side::OPPONENT) ? GREEN : RED;
+    game_log::add(attacker->get_name() + " -> " + target->get_name() + " [" + std::to_string(dmg) + "]", logCol);
 
     if (target->get_armor() > 0) {
         target->change_armor(-dmg);
         std::cout << "[DEBUG] " << attacker->get_name() << " is dealing exactly " << dmg << " to " << target->get_name() << std::endl;
         if (target->get_armor() <= 0) {
             target->set_dead();
+            game_log::add(" >> " + target->get_name() + " ARMOR SHATTERED", GOLD);
             std::cout << "    - [CRITICAL] " << target->get_name() << "'s armor shattered! Marked for death.\n";
         }
     } else {
