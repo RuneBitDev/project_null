@@ -63,6 +63,10 @@ namespace render_config {
         constexpr float BOARD_Y_CENTER = 720;
     }
 
+    namespace game_log {
+        constexpr Rectangle CONSOLE = {2000, 250, 500, 700};
+    }
+
 
 
     inline void apply_resolution(Res res) {

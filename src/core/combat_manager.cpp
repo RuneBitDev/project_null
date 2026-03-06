@@ -1,6 +1,8 @@
 #include "core/combat_manager.h"
 #include <iostream>
 
+#include "core/game_log.h"
+
 combat_manager::combat_manager(board &b, player &p1, player &p2)
     : game_board(b), p1(p1), p2(p2) {}
 
@@ -16,6 +18,7 @@ void combat_manager::update(float dt) {
 
 void combat_manager::firefight() {
     current_phase = combat_phase::PLAYER_ATTACKING;
+
     timer = 0.0f;
 }
 
@@ -147,6 +150,8 @@ void combat_manager::apply_damage(const card_unit* attacker, const card_location
     // damage math
     int dmg = attacker->get_attack();
     if (target->is_dead()) return;
+
+    game_log::add("[ATTACK] " + attacker->get_name() + " strikes " + target->get_name(), RAYWHITE);
 
     if (target->get_armor() > 0) {
         target->change_armor(-dmg);

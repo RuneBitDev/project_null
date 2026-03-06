@@ -18,6 +18,7 @@ game_state::game_state(player player1, player player2, factory& factory, texture
     tex_factory.load_texture_for_cards(cards_to_load);
 
     match = std::make_unique<match_manager>(std::move(player1), std::move(player2));
+    
 }
 
 game_state::~game_state() {

@@ -89,6 +89,7 @@ void renderer::draw_game(const render_context& ctx) {
     deck_view_p2.draw();
     player_view_p1.draw();
     player_view_p2.draw();
+    game_log_view.draw();
 
     manager.draw_card_widgets();
     manager.draw_buttons();
@@ -192,6 +193,7 @@ void renderer::update_widgets(float dt) {
     deck_view_p2.update(dt);
     player_view_p1.update(dt);
     player_view_p2.update(dt);
+    game_log_view.update(dt);
 
     for (auto it = active_popups.begin(); it != active_popups.end();) {
         (*it)->update(dt);

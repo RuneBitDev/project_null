@@ -8,6 +8,7 @@
 #include "../core/components/player.h"
 #include "widgets/widget_board.h"
 #include "widgets/widget_deck.h"
+#include "widgets/widget_game_log.h"
 #include "widgets/widget_graveyard.h"
 #include "widgets/widget_hand.h"
 #include "widgets/widget_player_info.h"
@@ -50,6 +51,7 @@ private:
     widget_deck deck_view_p2;
     widget_player_info player_view_p1;
     widget_player_info player_view_p2;
+    widget_game_log game_log_view;
 
     Font main_font;
 
