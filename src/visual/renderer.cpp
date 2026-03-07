@@ -1,25 +1,29 @@
 #include "visual/renderer.h"
 #include "visual/render_config.h"
+#include "visual/ui_util.h"
+#include <cmath>
 
 
 
 renderer::renderer() {
-    main_font = LoadFontEx("data/fonts/Cyberway Riders.otf", 64, nullptr, 0);
+    ui::init();
 }
 
 renderer::~renderer() {
-    UnloadFont(main_font);
+    ui::unload();
 }
 
 void renderer::draw_start_screen() {
     ClearBackground({ 10, 10, 15, 255 });
-    for (int i = 0; i < 1440; i += 5) {
-        DrawLine(0, i, 2560, i, Fade(RAYWHITE, 0.05f));
+    for (int i = 0; i < render_config::VIRTUAL_HEIGHT; i += 4) {
+        DrawLine(0, i, render_config::VIRTUAL_WIDTH, i, Fade(RAYWHITE, 0.03f));
     }
 
-    draw_text_centered("PROJECT    NULL", 300, 80, GREEN);
-    draw_text_centered("PROJECT    NULL", 500, 40, GREEN);
-    draw_text_centered("Press  Enter", 1000, 30, GREEN);
+    ui::draw_text_header("PROJECT NULL", 300, 80, GREEN);
+    ui::draw_text_header("SYSTEM INITIALIZED", 450, 30, Fade(GREEN, 0.6f));
+
+    float alpha = (sinf(GetTime() * 4.0f) * 0.5f + 0.5f);
+    ui::draw_text_header(">> PRESS ENTER <<", 900, 40, Fade(GREEN, alpha));
 }
 
 void renderer::draw_menu(int p1_idx, int p2_idx, const std::vector<std::string>& factions) {
@@ -200,34 +204,4 @@ void renderer::update_widgets(float dt) {
         if ((*it)->is_finished()) it = active_popups.erase(it);
         else ++it;
     }
-}
-
-
-// ---------------------------------------------------------------------
-// HELPER FUNCTIONS
-// ---------------------------------------------------------------------
-
-
-void renderer::draw_text_cyber(const Font &font, const char* text, Vector2 pos, float size, Color mainColor) {
-    float spacing = 2.0f;
-
-    float jitterX = static_cast<float>(GetRandomValue(-100, 100)) / 100.0f;
-    float jitterY = static_cast<float>(GetRandomValue(-100, 100)) / 100.0f;
-
-    DrawTextEx(font, text, { pos.x - 2 + jitterX, pos.y + jitterY }, size, spacing, Fade(RED, 0.4f));
-    DrawTextEx(font, text, { pos.x + 2 - jitterX, pos.y - jitterY }, size, spacing, Fade(BLUE, 0.4f));
-    DrawTextEx(font, text, pos, size, spacing, mainColor);
-}
-
-void renderer::draw_text_centered(const char* text, int y, int size, Color color) {
-    Vector2 textSize = MeasureTextEx(main_font, text, static_cast<float>(size), 2.0f);
-    float x_pos = (render_config::VIRTUAL_WIDTH - textSize.x) / 2.0f;
-    draw_text_cyber(main_font, text, { x_pos, static_cast<float>(y) }, static_cast<float>(size), color);
-}
-
-void renderer::draw_text_in_rect(const char* text, Rectangle rect, int y_offset, int size, Color color) {
-    int textWidth = MeasureText(text, size);
-    float posX = rect.x + (rect.width / 2.0f) - (static_cast<float>(textWidth) / 2.0f);
-
-    DrawText(text, static_cast<int>(posX), static_cast<int>(rect.y) + y_offset, size, color);
 }

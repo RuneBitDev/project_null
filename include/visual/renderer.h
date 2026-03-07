@@ -51,11 +51,6 @@ private:
     widget_player_info player_view_p2;
     widget_game_log game_log_view;
 
-    Font main_font;
-
-    void draw_text_cyber(const Font &font, const char* text, Vector2 pos, float size, Color mainColor);
-    void draw_text_centered(const char* text, int y, int size, Color color);
-    void draw_text_in_rect(const char* text, Rectangle rect, int y_offset, int size, Color color);
 };
 
 #endif //PROJECT_NULL_RENDERER_H

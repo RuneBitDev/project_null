@@ -59,6 +59,7 @@ add_executable(project_null
         src/visual/widgets/widget_button.cpp
         src/visual/texture_factory.cpp
         src/visual/widgets/widget_game_log.cpp
+        src/visual/ui_util.cpp
 )
 
 # ------------------------------------------------------------------
