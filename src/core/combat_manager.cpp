@@ -182,16 +182,14 @@ void combat_manager::apply_damage_by_value(int dmg, const card_location& target_
 
     std::cout << "[ABILITY] Dealing " << dmg << " damage to " << target->get_name() << "\n";
 
-    // If unit has armor, it absorbs damage
+    // absorb damage
     if (target->get_armor() > 0) {
-        // If you want Armor to act as a "Shield" (absorbing the whole hit):
         target->change_armor(-dmg);
     } else {
-        // If they have no armor, they are marked for death immediately by a high-damage strike
         target->set_dead();
     }
 
-    // Post-damage check
+    // post-damage check
     if (target->get_armor() <= 0) {
         target->set_dead();
         std::cout << "  - Target destroyed or armor shattered.\n";

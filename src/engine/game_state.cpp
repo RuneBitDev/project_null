@@ -19,6 +19,11 @@ game_state::game_state(player player1, player player2, factory& factory, texture
     tex_factory.load_texture_for_cards(cards_to_load);
 
     match = std::make_unique<match_manager>(std::move(player1), std::move(player2));
+
+    game_log::add_break();
+    game_log::add("--- ENCOUNTER INITIALIZED ---", GOLD);
+    game_log::add("Match: " + match->get_player(row_side::PLAYER).get_name() + " vs " +
+                  match->get_player(row_side::OPPONENT).get_name(), GRAY);
     
 }
 
@@ -54,7 +59,10 @@ void game_state::update(float dt, renderer& renderer) {
     if (cards_drawn < INITIAL_HAND_SIZE) {
         if (!intro_delay_finished) {
             intro_timer -= dt;
-            if (intro_timer <= 0) intro_delay_finished = true;
+            if (intro_timer <= 0) {
+                intro_delay_finished = true;
+                game_log::add("[SYSTEM]: Distributing initial hand...", GRAY);
+            }
         } else {
             draw_timer += dt;
             if (draw_timer >= TIME_BETWEEN_CARDS) {

@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "core/combat_manager.h"
+#include "core/game_log.h"
 
 
 ability_modifier::ability_modifier(std::string id, std::string name, const std::string &type, std::vector<ParamValue> params)
@@ -24,18 +25,31 @@ void ability_modifier::execute(ability_context &ctx) {
 }
 
 void ability_modifier::execute_mod(const ability_context &ctx) const {
+    // add nicely formatted log
+    game_log::add_break();
+    std::string rowName = ctx.manager.get_board().get_row_name(target_row);
+    std::string sideName = (ctx.owner.get_side() == row_side::PLAYER) ? "Your" : "Enemy";
+    std::string valStr = (m_type == modifier_type::MULTIPLY) ? "x" + std::to_string(m_value) :
+                         (m_type == modifier_type::ADD ? "+" : "-") + std::to_string(m_value);
+    game_log::add("[MODIFIER]: " + sideName + " " + rowName + " units " + valStr, SKYBLUE);
+
     std::cout << "INSIDE EXECUTE BUFF" << std::endl;
     ctx.manager.get_board().save_modifiers(ctx.owner.get_side(), target_row, m_type, m_value);
 }
 
 
 void ability_modifier::execute_weather(const ability_context& ctx) const {
-    std::cout << "INSIDE EXECUTE WEATHER" << std::endl;
     if (m_type == modifier_type::CLEAR) {
-        // clear all weather
+        game_log::add_break();
+        game_log::add(">> [SYSTEM]: Atmospheric conditions cleared <<", SKYBLUE);
         ctx.manager.get_board().clear_modifier(modifier_type::SET);
     } else {
-        // Apply weather to the same row for both players on the board
+        std::string rowName = ctx.manager.get_board().get_row_name(target_row);
+
+        game_log::add_break();
+        game_log::add("[WEATHER]: Extreme conditions on " + rowName + " rows!", SKYBLUE);
+        game_log::add("   All units set to " + std::to_string(m_value) + " power.", DARKGRAY);
+
         ctx.manager.get_board().save_modifiers(row_side::PLAYER, target_row, m_type, m_value);
         ctx.manager.get_board().save_modifiers(row_side::OPPONENT, target_row, m_type, m_value);
     }

@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+#include "visual/ui_util.h"
 
 
 void widget_game_log::update(float dt) {
@@ -42,11 +43,10 @@ void widget_game_log::draw() const {
     if (is_collapsed) { // expand button
         Rectangle btn = get_toggle_bounds();
         DrawRectangleRec({btn.x + 2, btn.y + 2, btn.width, btn.height}, Fade(BLACK, 0.4f));
-        DrawRectangleRec(btn, Fade(BLACK, 0.8f));
+        DrawRectangleRec(btn, Fade(GRAY, 0.2f));
         DrawRectangleLinesEx(btn, 1.0f, GOLD);
-        const char* txt = "LOG [+]";
-        int tw = MeasureText(txt, 16);
-        DrawText(txt, btn.x + (btn.width/2 - tw/2), btn.y + (btn.height/2 - 8), 16, GOLD);
+        ui::draw_text("LOG [+]", {btn.x + (btn.width/2), btn.y + (btn.height/2 - 8)}, 20, GOLD, true);
+
     }
     else { // full console
         float current_x = screen_w - w;
@@ -58,7 +58,7 @@ void widget_game_log::draw() const {
         // header
         Rectangle header = { current_x, y, w, 30 };
         DrawRectangleRec(header, Fade(GRAY, 0.2f));
-        DrawText("COMBAT LOG [-]", current_x + 10, y + 7, 16, GOLD);
+        ui::draw_text("COMBAT LOG [-]", {current_x + 10, y + 7}, 20, GOLD);
         DrawLine(current_x, y + 30, current_x + w, y + 30, GOLD);
 
         int total_logs = static_cast<int>(game_log::log.size());
@@ -81,7 +81,8 @@ void widget_game_log::draw() const {
 
                 // format and draw
                 std::string formattedMsg = (it->color.r == GOLD.r) ? it->message : "> " + it->message;
-                DrawText(formattedMsg.c_str(), current_x + 15, text_y, font_size, it->color);
+                ui::draw_text(formattedMsg.c_str(), {current_x + 15, text_y}, font_size, it->color);
+
 
                 text_y -= (font_size + 6);
                 count++;
@@ -111,7 +112,7 @@ Rectangle widget_game_log::get_toggle_bounds() const {
     auto screen_w = static_cast<float>(GetScreenWidth());
 
     if (is_collapsed) {
-        float btn_h = 40.0f;
+        float btn_h = 30.0f;
         float btn_w = 120.0f;
         return { screen_w - btn_w, bounds.y, btn_w, btn_h };
     } else {

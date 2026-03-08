@@ -1,6 +1,9 @@
 #include "core/components/ability/ability_summon.h"
 #include <iostream>
+
+#include "raylib.h"
 #include "core/combat_manager.h"
+#include "core/game_log.h"
 
 ability_summon::ability_summon(std::string id, std::string name, std::string type, std::vector<ParamValue> params)
     : ability(std::move(id), std::move(name), std::move(type), std::move(params)) {
@@ -25,28 +28,34 @@ void ability_summon::execute(ability_context &ctx) {
 }
 
 void ability_summon::execute_summon(ability_context &ctx) {
-    std::cout << "[DEBUG] Executing SUMMON for ability: " << get_id() << std::endl;
+    game_log::add_break();
+    game_log::add("[ABILITY]: SUMMON calling reinforcements...", SKYBLUE);
 
     for (const auto& target_id : target_ids) {
-        std::cout << "[DEBUG] Searching for target_id: '" << target_id << "'" << std::endl;
-
+        std::string source = "Unknown";
         std::unique_ptr<card> summoned_card = ctx.owner.get_deck().pull_card_by_id(target_id);
+
         if (summoned_card) {
-            std::cout << "[DEBUG] Found '" << target_id << "' in DECK." << std::endl;
+            source = "DECK";
         } else {
             summoned_card = ctx.owner.pull_from_hand_by_id(target_id);
-            if (summoned_card) {
-                std::cout << "[DEBUG] Found '" << target_id << "' in HAND." << std::endl;
-            }
+            if (summoned_card) source = "HAND";
         }
 
         if (summoned_card) {
+            std::string unitName = summoned_card->get_name();
+
             if (auto* unit = dynamic_cast<card_unit*>(summoned_card.get())) {
                 unit->change_stance_by_value(ctx.caster->get_stance());
             }
-            ctx.owner.execute_play_card(std::move(summoned_card), ctx.manager.get_board(), ctx.owner.get_side(), ctx.opponent, ctx.manager);
+
+            // Log the specific unit arrival
+            game_log::add("   + " + unitName + " deployed from " + source, DARKGRAY);
+
+            ctx.owner.execute_play_card(std::move(summoned_card), ctx.manager.get_board(),
+                                        ctx.owner.get_side(), ctx.opponent, ctx.manager);
         } else {
-            std::cout << "[DEBUG] FAILED to find target_id: '" << target_id << "' in Deck or Hand." << std::endl;
+            game_log::add("   - Failed to locate " + target_id, RED);
         }
     }
 }
