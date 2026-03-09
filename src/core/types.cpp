@@ -43,7 +43,7 @@ value_type string_to_value_type(const std::string& str) {
 modifier_type string_to_modifier_type(const std::string& str) {
     std::string s = to_upper(str);
     if (s == "ADD")      return modifier_type::ADD;
-    if (s == "SUBTRACT" || s == "SUB") return modifier_type::SUBTRACT;
+    if (s == "SUB")      return modifier_type::SUBTRACT;
     if (s == "SET")      return modifier_type::SET;
     if (s == "CLEAR")    return modifier_type::CLEAR;
     return modifier_type::ADD;

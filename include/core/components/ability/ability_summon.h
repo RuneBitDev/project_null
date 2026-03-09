@@ -5,6 +5,8 @@
 class ability_summon : public ability {
 public:
     ability_summon(std::string id, std::string name, std::string type, std::vector<ParamValue> params);
+    // PARAMS: summon_type(SUMMON, NECRO, ...),card_id's
+
     void execute(ability_context& ctx) override;
 
 private:

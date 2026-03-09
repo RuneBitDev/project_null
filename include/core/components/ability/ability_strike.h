@@ -5,6 +5,7 @@
 class ability_strike : public ability {
 public:
     ability_strike(std::string id, std::string name, const std::string &type, const std::vector<ParamValue> &params);
+    // PARAMS: strike_type(LETHAL,SPLASH,FRAG,BARRAGE,BREAKER),target(MAX,MIN),value_type,value
     void execute(ability_context &ctx) override;
 
 private:

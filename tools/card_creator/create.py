@@ -2,101 +2,134 @@ import streamlit as st
 import sqlite3
 import os
 
+st.set_page_config(page_title="Card & Ability Creator", layout="wide")
+st.title("🃏 Card & Ability Creator")
 
-
-st.title(" Card Creator")
-
+# --- Setup ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-
 DB_PATH = os.path.join(BASE_DIR, "../../data.sqlite")
 ASSETS_DIR = os.path.join(BASE_DIR, "../../data/textures/cards")
 
-
-print(f"Looking for DB at: {os.path.abspath(DB_PATH)}")
-
 os.makedirs(ASSETS_DIR, exist_ok=True)
-
 conn = sqlite3.connect(DB_PATH, check_same_thread=False)
 cursor = conn.cursor()
 
+# --- Global Selection (Outside Form for Reactivity) ---
+choice = st.sidebar.selectbox("What are you creating?", ["Card", "Ability"])
 
-choice = st.selectbox("What are you creating?", ["Card", "Ability"])
-with st.form("card_data"):
-    if choice == "Card":
-        card_id = st.text_input("Card ID")
-        card_name = st.text_input("Card Name")
-        faction_id = st.selectbox("Faction ID", ["neutral", "arasaka", "maelstrom", "voodoo_boys", "aldecaldos", "barghest", "afterlife", "nusa"])
-        card_type = st.selectbox("Type", ["UNIT", "SPECIAL", "LEADER"])
-        rarity = st.selectbox("Rarity", ["Common", "Uncommon", "Rare", "Epic", "Legendary"])
+# ---------------------------------------------------------
+# CARD CREATION LOGIC
+# ---------------------------------------------------------
+if choice == "Card":
+    st.header("Create New Card")
+    card_type = st.selectbox("Type", ["UNIT", "SPECIAL", "LEADER", "SUPPORT"])
+
+    with st.form("card_form"):
+        col1, col2 = st.columns(2)
+
+        with col1:
+            card_id = st.text_input("Card ID)")
+            card_name = st.text_input("Card Name")
+            faction_id = st.selectbox("Faction ID", ["neutral", "arasaka", "maelstrom", "voodoo_boys", "aldecaldos", "barghest", "afterlife", "nusa"])
+            rarity = st.selectbox("Rarity", ["Common", "Uncommon", "Rare", "Epic", "Legendary"])
 
         if card_type == "UNIT":
-            strength = st.number_input("Power", value=0, step=1, max_value=15)
-            range_type = st.selectbox("Range", ["MELEE", "RANGED", "HEAVY", "NET"])
-            armor = st.number_input("Armor", value=0)
-            attack = st.number_input("Attack", value=0)
-
-    else:
-        ability_id = st.text_input("Card ID (for Special Card)")
-        ability_name = st.text_input("Special Card Name")
-        ability_type = st.selectbox("Ability Type", ["MODIFIER", "SUMMON", "SPY", "STRIKE"])
-        params = st.text_input("Params (JSON or string)")
-
-    ref_art = st.file_uploader("Upload Art", type=['png'])
-    submitted = st.form_submit_button("Submit Data")
-
-if submitted:
-    try:
-        # handle image file
-        if ref_art is not None:
-            file_name = f"{card_id if choice == 'Card' else ability_id}.png"
-            full_path = os.path.join(ASSETS_DIR, file_name)
-
-            with open(full_path, "wb") as f:
-                f.write(ref_art.getbuffer())
-
-            db_relative_path = f"data/textures/cards/{file_name}"
-            asset_id = f"tex_{card_id if choice == 'Card' else ability_id}"
+            with col2:
+                strength = st.number_input("Power", value=0, step=1, max_value=15)
+                range_type = st.selectbox("Range", ["MELEE", "RANGED", "HEAVY", "NET"])
+                armor = st.number_input("Armor", value=0)
+                attack = st.number_input("Attack", value=0)
         else:
-            st.error("Please upload an image!")
-            st.stop()
+            with col2:
+                st.info(f"Stats are disabled for {card_type} cards.")
 
-        # database transaction
-        if choice == "Card":
-            cursor.execute("""
-                           INSERT INTO cards (card_id, name, faction_id, card_type, rarity, is_unlocked)
-                           VALUES (?, ?, ?, ?, ?, 1)""",
-                           (card_id, card_name, faction_id, card_type, rarity))
+                ref_art = st.file_uploader("Upload Card Art (PNG)", type=['png'])
 
-            if card_type == "UNIT":
-                cursor.execute("""
-                               UPDATE unit_stats
-                               SET strength = ?, range_type = ?, armor = ?, attack = ?
-                               WHERE card_id = ?""",
-                               (strength, range_type, armor, attack, card_id))
+        if card_type == "UNIT":
+            ref_art = st.file_uploader("Upload Card Art (PNG)", type=['png'])
 
-            cursor.execute("INSERT INTO assets (asset_id, filepath, asset_type) VALUES (?, ?, ?)",
-                           (asset_id, db_relative_path, "CARD_ART"))
+        submitted_card = st.form_submit_button("Save Card to Database")
 
-            cursor.execute("INSERT INTO card_assets (asset_id, card_id) VALUES (?, ?)",
-                           (asset_id, card_id))
+    if submitted_card:
+        if not card_id or not card_name:
+            st.error("Card ID and Name are required.")
+        elif ref_art is None:
+            st.error("Please upload card art.")
+        else:
+            try:
+                # file saving
+                file_name = f"{card_id}.png"
+                full_path = os.path.join(ASSETS_DIR, file_name)
+                with open(full_path, "wb") as f:
+                    f.write(ref_art.getbuffer())
 
-        elif choice == "Ability":
-            cursor.execute("""
-                           INSERT INTO cards (card_id, name, faction_id, card_type, rarity, is_unlocked)
-                           VALUES (?, ?, ?, 'SPECIAL', 'Common', 1)""",
-                           (ability_id, ability_name, "neutral"))
+                # database insertion
+                db_relative_path = f"data/textures/cards/{file_name}"
+                asset_id = f"tex_{card_id}"
 
-            cursor.execute("INSERT INTO assets (asset_id, filepath, file_type) VALUES (?, ?, ?)",
-                           (asset_id, db_relative_path, "ABILITY_ART"))
+                cursor.execute("""INSERT INTO cards (card_id, name, faction_id, card_type, rarity, is_unlocked)
+                                  VALUES (?, ?, ?, ?, ?, 1)""", (card_id, card_name, faction_id, card_type, rarity))
 
-            cursor.execute("INSERT INTO card_assets (asset_id, card_id) VALUES (?, ?)",
-                           (asset_id, ability_id))
+                if card_type == "UNIT":
+                    cursor.execute("""INSERT INTO unit_stats (card_id, strength, range_type, armor, attack)
+                                      VALUES (?, ?, ?, ?, ?)""", (card_id, strength, range_type, armor, attack))
 
-        conn.commit()
-        st.success(f"Successfully created {card_id if choice == 'Card' else ability_id} and linked assets!")
+                cursor.execute("INSERT INTO assets (asset_id, filepath, asset_type) VALUES (?, ?, ?)",
+                               (asset_id, db_relative_path, "CARD_ART"))
+                cursor.execute("INSERT INTO card_assets (asset_id, card_id) VALUES (?, ?)", (asset_id, card_id))
 
-    except sqlite3.Error as e:
-        st.error(f"Database error: {e}")
-    except Exception as e:
-        st.error(f"Error: {e}")
+                conn.commit()
+                st.success(f"Successfully created Card: {card_name}")
+            except sqlite3.Error as e:
+                st.error(f"Database error: {e}")
+
+# ---------------------------------------------------------
+# ABILITY CREATION LOGIC
+# ---------------------------------------------------------
+elif choice == "Ability":
+    st.header("Create New Ability")
+
+    ability_id = st.text_input("Ability ID (e.g., abil_strike_fire)")
+    ability_name = st.text_input("Ability Name")
+    ability_type = st.selectbox("Ability Type", ["MODIFIER", "SUMMON", "SPY", "STRIKE"])
+
+    with st.form("ability_form"):
+        st.subheader(f"Parameters for {ability_type}")
+
+        if ability_type == "SUMMON":
+            s_type = st.selectbox("Summon Type", ["SUMMON", "NECRO", "REINFORCE"])
+            s_ids = st.text_input("Card IDs (comma separated)", help="e.g. c_01,c_02")
+            params = f"{s_type}:{s_ids}"
+
+        elif ability_type == "MODIFIER":
+            m_type = st.selectbox("Mod Type", ["SET", "ADD", "SUB", "CLEAR"])
+            m_row = st.selectbox("Row Target", ["MELEE", "RANGED", "HEAVY", "ALL"])
+            m_target = st.selectbox("Stat Target", ["STRENGTH", "ARMOR", "ATTACK"])
+            m_val = st.number_input("Value", step=1)
+            params = f"{m_type},{m_row},{m_target},{m_val}"
+
+        elif ability_type == "SPY":
+            draw_amt = st.number_input("Amount to Draw", 1, 5, 1)
+            params = str(draw_amt)
+
+        elif ability_type == "STRIKE":
+            st_type = st.selectbox("Strike Type", ["LETHAL", "SPLASH", "FRAG", "BARRAGE", "BREAKER"])
+            st_target = st.selectbox("Target Logic", ["MAX", "MIN", "RANDOM"])
+            st_val_type = st.selectbox("Value Type", ["FLAT", "PERCENT"])
+            st_val = st.number_input("Value", step=1)
+            params = f"{st_type},{st_target},{st_val_type},{st_val}"
+
+        st.info(f"Generated Param String: `{params}`")
+        submitted_abil = st.form_submit_button("Save Ability")
+
+    if submitted_abil:
+        if not ability_id:
+            st.error("Ability ID is required.")
+        else:
+            try:
+                cursor.execute("""INSERT INTO abilities (ability_id, name, ability_type, params)
+                                  VALUES (?, ?, ?, ?)""", (ability_id, ability_name, ability_type, params))
+                conn.commit()
+                st.success(f"Successfully created Ability: {ability_name}")
+            except sqlite3.Error as e:
+                st.error(f"Database error: {e}")

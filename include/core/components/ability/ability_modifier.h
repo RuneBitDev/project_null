@@ -7,6 +7,7 @@
 class ability_modifier : public ability {
 public:
     ability_modifier(std::string id, std::string name, const std::string &type, std::vector<ParamValue> params);
+    // PARAMS: mod_type(SET,ADD,SUB,CLEAR),row_type,modifier_target,value
     void execute(ability_context &ctx) override;
 
 private:

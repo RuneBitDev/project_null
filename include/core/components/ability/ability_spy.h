@@ -5,6 +5,7 @@
 class ability_spy : public ability {
 public:
     ability_spy(std::string id, std::string name, std::string type, std::vector<ParamValue> params);
+    // PARAMS: amount to draw
     void execute(ability_context &ctx) override;
 private:
     int number_of_cards;
