@@ -2,6 +2,7 @@
 #include <iostream>
 #include <utility>
 #include "core/combat_manager.h"
+#include "core/game_log.h"
 #include "core/components/card_unit.h"
 #include "core/components/board.h"
 
@@ -20,6 +21,7 @@ ability_strike::ability_strike(std::string id, std::string name, const std::stri
 }
 
 void ability_strike::execute(ability_context &ctx) {
+    game_log::add_break();
     switch (s_type) {
         case strike_type::LETHAL:   execute_lethal(ctx);    break;
         case strike_type::SPLASH:   execute_splash(ctx);    break;
@@ -34,6 +36,8 @@ void ability_strike::execute_lethal(const ability_context &ctx) const {
     std::vector<card_location> targets;
     board& b = ctx.manager.get_board();
 
+
+
     switch (s_strike_target) {
         case strike_target::MAX:
             targets = b.get_max_value_locations_on_board(s_target_type);
@@ -46,10 +50,18 @@ void ability_strike::execute_lethal(const ability_context &ctx) const {
             return;
     }
 
+    if (!targets.empty()) {
+        game_log::add("[ABILITY]: Lethal Strike [" + std::to_string(damage_amount) + " DMG]", SKYBLUE);
+    }
+
     for (const auto& loc : targets) {
         auto& row = b.get_row_cards(loc.side, loc.type);
 
         if (loc.index >= 0 && loc.index < static_cast<int>(row.size())) {
+
+            if (auto* unit = dynamic_cast<card_unit*>(row[loc.index].get())) {
+                game_log::add(" > Eliminated: " + unit->get_name(), DARKGRAY);
+            }
             ctx.manager.apply_damage_by_value(damage_amount, loc);
         }
     }
@@ -64,7 +76,11 @@ void ability_strike::execute_splash(const ability_context &ctx) const {
     if (centers.empty()) return;
 
     card_location center_loc = centers[0];
-    ctx.manager.apply_damage_by_value(damage_amount, center_loc);;
+    ctx.manager.apply_damage_by_value(damage_amount, center_loc);
+
+    auto* target = dynamic_cast<card_unit*>(b.get_row_cards(center_loc.side, center_loc.type)[center_loc.index].get());
+    game_log::add("[ABILITY]: Splash Impact [" + std::to_string(damage_amount) + " DMG]", SKYBLUE);
+    game_log::add(" Primary: " + target->get_name(), DARKGRAY);
 
     int side_dmg = (damage_amount + 1) / 2;
     auto& center_row = b.get_row_cards(center_loc.side, center_loc.type);
@@ -82,6 +98,8 @@ void ability_strike::execute_splash(const ability_context &ctx) const {
         right_loc.index++;
         ctx.manager.apply_damage_by_value(side_dmg, right_loc);
     }
+
+    game_log::add("   + Splashed adjacent units for " + std::to_string(side_dmg), DARKGRAY);
 }
 
 void ability_strike::execute_frag(const ability_context &ctx) const {
@@ -95,6 +113,10 @@ void ability_strike::execute_frag(const ability_context &ctx) const {
     int side_dmg = (damage_amount + 1) / 2;
 
     ctx.manager.apply_damage_by_value(damage_amount, center_loc);
+
+    auto* target = dynamic_cast<card_unit*>(b.get_row_cards(center_loc.side, center_loc.type)[center_loc.index].get());
+    game_log::add("[ABILITY]: Frag Impact [" + std::to_string(damage_amount) + " DMG]", SKYBLUE);
+    game_log::add(" Primary: " + target->get_name(), DARKGRAY);
 
     // horizontal splash
     card_location left = center_loc; left.index--;
@@ -114,6 +136,8 @@ void ability_strike::execute_frag(const ability_context &ctx) const {
         back.type = static_cast<row_type>(static_cast<int>(center_loc.type) + 1);
         ctx.manager.apply_damage_by_value(side_dmg, back);
     }
+
+    game_log::add("   + Splashed adjacent units for " + std::to_string(side_dmg), DARKGRAY);
 }
 
 void ability_strike::execute_barrage(ability_context &ctx) {

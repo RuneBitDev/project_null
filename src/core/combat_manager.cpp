@@ -156,7 +156,7 @@ void combat_manager::apply_damage(const card_unit* attacker, const card_location
     if (target->is_dead()) return;
 
     Color logCol = (target_loc.side == row_side::OPPONENT) ? GREEN : RED;
-    game_log::add(attacker->get_name() + " -> " + target->get_name() + " [" + std::to_string(dmg) + "]", logCol);
+    game_log::add(attacker->get_name() + " -> " + target->get_name() + " [" + std::to_string(dmg) + " DMG]", logCol);
 
     if (target->get_armor() > 0) {
         target->change_armor(-dmg);

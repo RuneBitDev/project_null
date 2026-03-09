@@ -62,7 +62,7 @@ void widget_game_log::draw() const {
         DrawLine(current_x, y + 30, current_x + w, y + 30, GOLD);
 
         int total_logs = static_cast<int>(game_log::log.size());
-        int max_render = 30;
+        int max_render = 27;
         float text_y = (current_bounds.y + current_bounds.height) - 25;
 
         // scrolling logic
