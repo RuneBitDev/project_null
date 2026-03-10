@@ -55,6 +55,7 @@ namespace render_config {
         constexpr float START_Y = 600.0f;               // center y of board
 
         constexpr float START_SPECIAL_X = 300.0f;
+        constexpr float START_SPECIAL_Y = 625.0f;
         constexpr float CENTER_Y_SPACING = 50.0f;
 
         // board bounds

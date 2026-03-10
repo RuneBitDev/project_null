@@ -50,8 +50,11 @@ void widget_graveyard::draw() const {
     DrawRectangleLinesEx(graveyard_bounds, 2.0f, Fade(themeColor, 0.4f));
 
     // label
-    const char* statusText = "MIKOSHI";
-    DrawText(statusText, graveyard_bounds.x, graveyard_bounds.y - 20, 15, Fade(themeColor, 0.7f));
+    if (!is_opponent) {
+        const char* statusText = "MIKOSHI";
+        DrawText(statusText, graveyard_bounds.x, graveyard_bounds.y - 20, 15, Fade(themeColor, 0.7f));
+    }
+
 
     // large x
     float centerX = graveyard_bounds.x + graveyard_bounds.width / 2.0f;
