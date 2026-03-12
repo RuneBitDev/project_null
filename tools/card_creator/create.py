@@ -71,8 +71,10 @@ if choice == "Card":
                                   VALUES (?, ?, ?, ?, ?, 1)""", (card_id, card_name, faction_id, card_type, rarity))
 
                 if card_type == "UNIT":
-                    cursor.execute("""INSERT INTO unit_stats (card_id, strength, range_type, armor, attack)
-                                      VALUES (?, ?, ?, ?, ?)""", (card_id, strength, range_type, armor, attack))
+                    cursor.execute("""UPDATE unit_stats
+                                      SET strength = ?, range_type = ?, armor = ?, attack = ?
+                                      WHERE card_id = ?""",
+                                   (strength, range_type, armor, attack, card_id))
 
                 cursor.execute("INSERT INTO assets (asset_id, filepath, asset_type) VALUES (?, ?, ?)",
                                (asset_id, db_relative_path, "CARD_ART"))
@@ -99,7 +101,7 @@ elif choice == "Ability":
         if ability_type == "SUMMON":
             s_type = st.selectbox("Summon Type", ["SUMMON", "NECRO", "REINFORCE"])
             s_ids = st.text_input("Card IDs (comma separated)", help="e.g. c_01,c_02")
-            params = f"{s_type}:{s_ids}"
+            params = f"{s_type},{s_ids}"
 
         elif ability_type == "MODIFIER":
             m_type = st.selectbox("Mod Type", ["SET", "ADD", "SUB", "CLEAR"])
