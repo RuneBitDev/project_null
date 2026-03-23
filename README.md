@@ -64,14 +64,21 @@ A showcase of the modular ability system. Each card effect is handled through a 
 ### Build Instructions
 ```bash
 # clone the repository
-git clone [https://github.com/RuneBitDev/project_null.git](https://github.com/RuneBitDev/project_null.git)
-cd ProjectNull
+git clone https://github.com/RuneBitDev/project_null
+cd project_null
 
 # configure the project
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
 # build the executable
 cmake --build build --config Release
+
+# run the application
+# Windows (PowerShell):
+.\build\Release\project_null.exe
+# Linux/macOS:
+./build/project_null
+# note: executable must be run from the project root directory (as shown above) so it can locate the data/ folder and data.sqlite database
 ```
 
 ---
