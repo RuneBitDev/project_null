@@ -21,14 +21,14 @@ struct card_context {
 };
 
 struct player_context {
-    current_state current_state;
+    current_state c_state;
     int total_score_p1;
     int total_score_p2;
 };
 
 struct match_context {
     match_status m_status;
-    current_state current_state;
+    current_state c_state;
 };
 
 

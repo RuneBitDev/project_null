@@ -16,6 +16,8 @@ public:
 
     bool is_valid();
     void shuffle();
+    bool is_empty() const;
+    size_t get_count() const;
 
 private:
     std::unique_ptr<card> leader;

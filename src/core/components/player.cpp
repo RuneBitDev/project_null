@@ -3,6 +3,8 @@
 #include "core/components/ability/ability.h"
 #include <iostream>
 
+#include "core/game_log.h"
+
 player::player(std::string c_name, deck c_deck)
     : name(std::move(c_name)), player_deck(std::move(c_deck)) {
     player_deck.shuffle();
@@ -11,7 +13,17 @@ player::player(std::string c_name, deck c_deck)
 
 void player::draw_card(int times) {
     for (int i = 0; i < times; ++i) {
-        hand.push_back(player_deck.draw_top_card());
+        // 1. Check if the deck is empty before attempting to draw
+        if (player_deck.is_empty()) {
+            game_log::add("[" + name + "] DECK EMPTY - Out of cards!", RED);
+            break;
+        }
+
+        // 2. Draw and move to hand
+        auto card = player_deck.draw_top_card();
+        if (card) {
+            hand.push_back(std::move(card));
+        }
     }
 }
 

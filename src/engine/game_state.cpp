@@ -87,9 +87,9 @@ void game_state::update(float dt, renderer& renderer) {
     auto status = match->update(dt);
 
     if (status.has_value()) {
-        switch (status->game_status) {
+        switch (status->g_status) {
             case game_status::CONTINUE:
-                switch (status->round_status) {
+                switch (status->r_status) {
                     case round_status::WIN:
                         game_log::add(">> ROUND WON <<", GREEN);
                         renderer.add_popup("ROUND WON", GREEN, 5.0f, popup_type::BANNER);   break;

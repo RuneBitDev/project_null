@@ -61,3 +61,11 @@ void deck::shuffle() {
     std::shuffle(cards.begin(), cards.end(), g);
 }
 
+bool deck::is_empty() const{
+    return cards.empty();
+}
+
+size_t deck::get_count() const {
+    return cards.size();
+}
+

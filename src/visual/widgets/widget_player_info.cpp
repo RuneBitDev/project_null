@@ -19,7 +19,7 @@ void widget_player_info::update_from_player(const player &player, const player_c
     current_lives = player.get_lives();
     name = player.get_name();
 
-    current_state = p_ctx.current_state;
+    c_state = p_ctx.c_state;
     total_score_p1 = p_ctx.total_score_p1;
     total_score_p2 = p_ctx.total_score_p2;
 
@@ -31,8 +31,8 @@ void widget_player_info::update(float dt) {
 
 void widget_player_info::draw() const {
 
-    bool is_my_turn = (side == row_side::PLAYER && current_state == current_state::PLAYER_TURN) ||
-                      (side == row_side::OPPONENT && current_state == current_state::AI_TURN);
+    bool is_my_turn = (side == row_side::PLAYER && c_state == current_state::PLAYER_TURN) ||
+                      (side == row_side::OPPONENT && c_state == current_state::AI_TURN);
 
     Color sideColor = (side == row_side::PLAYER) ? GREEN : RED;
 
@@ -138,7 +138,7 @@ void widget_player_info::draw() const {
 
 
 std::string widget_player_info::get_state_string() const {
-    switch (current_state) {
+    switch (c_state) {
         case current_state::PLAYER_TURN: return "ACTIVE: USER AUTHORIZED";
         case current_state::AI_TURN:     return "ACTIVE: SYSTEM UPLOAD";
         case current_state::FIREFIGHT:   return "FIREFIGHT";
@@ -149,7 +149,7 @@ std::string widget_player_info::get_state_string() const {
 }
 
 Color widget_player_info::get_state_color() const {
-    switch (current_state) {
+    switch (c_state) {
         case current_state::PLAYER_TURN: return LIME;
         case current_state::AI_TURN:     return RED;
         case current_state::FIREFIGHT:   return WHITE;

@@ -9,7 +9,7 @@
 int main() {
 
     render_config::Res current_res = render_config::screen_1440p;
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT | FLAG_FULLSCREEN_MODE | FLAG_WINDOW_HIGHDPI);
     InitWindow(current_res.width, current_res.height, "PROJECT NULL");
     SetTargetFPS(60);
 

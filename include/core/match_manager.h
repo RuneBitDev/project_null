@@ -11,8 +11,8 @@ enum class round_status {WIN, LOSS, DRAW};
 enum class game_status {WIN, LOSS, DRAW, CONTINUE};
 
 struct match_status {
-    round_status round_status;
-    game_status game_status;
+    round_status r_status;
+    game_status g_status;
 };
 
 enum class current_state {

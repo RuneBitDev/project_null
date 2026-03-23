@@ -17,8 +17,8 @@ private:
     Rectangle bounds{};
     Texture2D faction_logo = {};
 
-    row_side side;
-    current_state current_state;
+    row_side side {};
+    current_state c_state {};
 
     std::string name;
     int cards_in_hand = 0;
