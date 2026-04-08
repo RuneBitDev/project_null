@@ -21,7 +21,7 @@ int main() {
     texture_factory texture_factory;
     renderer renderer;
 
-    if (!game_factory.load_master_data("data.sqlite")) {
+    if (!game_factory.load_master_data()) {
         std::cerr << "CRITICAL ERROR: Could not load data.sqlite" << std::endl;
         CloseWindow();
         return 1;

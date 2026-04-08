@@ -11,16 +11,21 @@
 #include "core/components/ability/ability_strike.h"
 
 
-bool factory::load_master_data(const std::string &filepath) {
+bool factory::load_master_data() {
     sqlite3* db;
 
     std::cout << "\n===========================[FACTORY START]=============================" << std::endl;
 
 
     // Open the database
-    if (sqlite3_open(filepath.c_str(), &db) != SQLITE_OK) {
+    if (sqlite3_open(DB_PATH.c_str(), &db) != SQLITE_OK) {
         std::cerr << "Failed to open DB: " << sqlite3_errmsg(db) << std::endl;
         return false;
+    }
+    char* zErrMsg = nullptr;
+    if (sqlite3_exec(db, "PRAGMA foreign_keys = ON;", nullptr, nullptr, &zErrMsg) != SQLITE_OK) {
+        std::cerr << "SQL error: " << zErrMsg << std::endl;
+        sqlite3_free(zErrMsg);
     }
 
     // LOAD ABILITIES
@@ -152,6 +157,65 @@ deck factory::build_deck(const std::string& faction) {
     return deck(std::move(leader_ptr), std::move(deck_cards));
 }
 
+deck factory::load_deck(const std::string &deck_id) {
+    std::vector<std::unique_ptr<card>> deck_cards;
+    std::unique_ptr<card> leader_ptr = nullptr;
+    sqlite3* db;
+
+    // open connection specifically for this load
+    if (sqlite3_open(DB_PATH.c_str(), &db) != SQLITE_OK) {
+        std::cerr << "Failed to open DB for loading deck: " << sqlite3_errmsg(db) << std::endl;
+        return deck(nullptr, {});
+    }
+
+    const char* sql = "SELECT card_id, quantity FROM deck_cards WHERE deck_id = ?";
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, deck_id.c_str(), -1, SQLITE_STATIC);
+
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            std::string cid = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+            int quantity = sqlite3_column_int(stmt, 1);
+
+            // find card in pre-loaded libraries
+            card* base_card = nullptr;
+
+            for (auto& u : unit_library) {
+                if (u.get_id() == cid) {
+                    base_card = &u;
+                    break;
+                }
+            }
+
+            if (!base_card) {
+                for (auto& s : special_library) {
+                    if (s.get_id() == cid) {
+                        base_card = &s;
+                        break;
+                    }
+                }
+            }
+
+            // if found, clone it into deck
+            if (base_card) {
+                if (base_card->get_card_type() == "LEADER") {
+                    leader_ptr = base_card->clone();
+                } else {
+                    for (int i = 0; i < quantity; ++i) {
+                        deck_cards.push_back(base_card->clone());
+                    }
+                }
+            }
+        }
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    std::cout << "[DEBUG] Loaded deck '" << deck_id << "' with " << deck_cards.size() << " cards." << std::endl;
+    return deck(std::move(leader_ptr), std::move(deck_cards));
+}
 
 
 // -----------------------------

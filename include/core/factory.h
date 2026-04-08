@@ -9,12 +9,14 @@
 #include "components/deck.h"
 #include "components/ability/ability.h"
 
+static const std::string DB_PATH = "data.sqlite";
 using ParamValue = std::variant<int, std::string>;
 
 class factory {
 public:
-    bool load_master_data(const std::string& filepath);
+    bool load_master_data();
     deck build_deck(const std::string& faction);
+    deck load_deck(const std::string& deck_id);
 
     const std::vector<card>& get_special_library() const;
     const std::vector<card_unit>& get_unit_library() const;
