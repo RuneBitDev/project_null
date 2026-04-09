@@ -27,9 +27,11 @@ public:
     void draw_start_screen();
     void draw_menu(int p1_idx, int p2_idx, const std::vector<std::string>& factions);
     void draw_game(const render_context& ctx);
+    void draw_deck();
 
     // widget management
     void add_popup(const std::string& text, Color color, float duration, popup_type p_type);
+    void init_deck_widgets();
     void init_match_widgets(const player& p1, const player& p2, texture_factory& tex_factory);
     void init_menu_widgets(const std::vector<std::string>& factions, const std::string& p1_select, const std::string& p2_select);
     bool is_button_triggered(const std::string& id);

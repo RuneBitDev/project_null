@@ -8,6 +8,8 @@
 class menu_state : public state {
 public:
     menu_state(factory& game_factory, texture_factory& texture_factory);
+    ~menu_state();
+
     void handle_input(state_manager& manager) override;
     void update(float dt, renderer& renderer) override;
     void render(renderer& renderer) override;
@@ -21,6 +23,7 @@ private:
     bool show_start_screen = true;
     bool widgets_initialized = false;
     bool start_button_is_pressed = false;
+    bool deck_button_is_pressed = false;
     std::string p1_faction = "arasaka";
     std::string p2_faction = "arasaka";
 

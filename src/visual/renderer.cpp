@@ -63,6 +63,15 @@ void renderer::draw_menu(int p1_idx, int p2_idx, const std::vector<std::string>&
     manager.draw_buttons();
 }
 
+void renderer::draw_deck() {
+    ClearBackground({ 10, 10, 15, 255 });
+    for (int i = 0; i < 1440; i += 5) {
+        DrawLine(0, i, 2560, i, Fade(RAYWHITE, 0.05f));
+    }
+
+    manager.draw_buttons();
+}
+
 void renderer::draw_game(const render_context& ctx) {
     ClearBackground({ 10, 10, 15, 255 });
     for (int i = 0; i < 1440; i += 5) {
@@ -111,6 +120,13 @@ void renderer::draw_game(const render_context& ctx) {
 
 void renderer::add_popup(const std::string& text, Color color, float duration, popup_type p_type) {
     active_popups.push_back(std::make_unique<widget_popup>(text, color, duration, p_type));
+}
+
+void renderer::init_deck_widgets() {
+    manager.clear_button_widgets();
+
+    Rectangle back_rect = { 100, 100, 300, 100 };
+    manager.manage_button_widget("BACK", "BACK", CLICKABLE, 0, back_rect);
 }
 
 void renderer::init_match_widgets(const player& p1, const player& p2, texture_factory& tex_factory) {
@@ -173,6 +189,9 @@ void renderer::init_menu_widgets(const std::vector<std::string>& factions, const
 
     Rectangle start_rect = { centerX - 250, 670, 500, 100 };
     manager.manage_button_widget("START", "INITIALIZE OPERATION", CLICKABLE, 0, start_rect);
+    Rectangle deck_rect = {2000, 800, 400, 100};
+    manager.manage_button_widget("DECK", "EDIT DECK", CLICKABLE, 0, deck_rect);
+
 }
 
 bool renderer::is_button_triggered(const std::string& id) {

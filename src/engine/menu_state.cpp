@@ -1,11 +1,16 @@
 #include "engine/menu_state.h"
 #include "core/factory.h"
+#include "engine/deck_state.h"
 #include "engine/game_state.h"
 #include "engine/state_manager.h"
 
 
 menu_state::menu_state(factory& game_factory, texture_factory& texture_factory)
     : data_factory(game_factory), tex_factory(texture_factory) {}
+
+menu_state::~menu_state() {
+    tex_factory.unload_all();
+}
 
 
 void menu_state::handle_input(state_manager &manager) {
@@ -18,6 +23,9 @@ void menu_state::handle_input(state_manager &manager) {
         player player2("Opponent", data_factory.build_deck(p2_faction));
 
         manager.change_state(std::make_unique<game_state>(std::move(player1), std::move(player2), data_factory, tex_factory));
+    }
+    if (deck_button_is_pressed) {
+        manager.change_state(std::make_unique<deck_state>(data_factory, tex_factory));
     }
 }
 
@@ -48,6 +56,9 @@ void menu_state::update(float dt, renderer& renderer) {
 
     if (!show_start_screen && renderer.is_button_triggered("START")) {
         start_button_is_pressed = true;
+    }
+    if (!show_start_screen && renderer.is_button_triggered("DECK")) {
+        deck_button_is_pressed = true;
     }
 }
 
