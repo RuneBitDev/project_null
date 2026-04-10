@@ -14,7 +14,7 @@ menu_state::~menu_state() = default;
 void menu_state::handle_input(state_manager &manager) {
 
     if (start_button_is_pressed) {
-        player player1("V", data_factory.build_deck(p1_faction));
+        player player1("V", data_factory.load_deck("arasaka_01"));
         player player2("Opponent", data_factory.build_deck(p2_faction));
 
         manager.change_state(std::make_unique<game_state>(std::move(player1), std::move(player2), data_factory, tex_factory));

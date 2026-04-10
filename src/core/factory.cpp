@@ -61,9 +61,9 @@ bool factory::load_master_data() {
 
     // LOAD CARDS
     const char* sql = "SELECT c.card_id, c.name, c.faction_id, c.card_type, c.rarity, "
-                      "c.is_unlocked, u.strength, u.range_type, u.armor, u.attack "
-                      "FROM cards c "
-                      "LEFT JOIN unit_stats u ON c.card_id = u.card_id";
+                   "c.is_unlocked, c.max_copies, u.strength, u.range_type, u.armor, u.attack "
+                   "FROM cards c "
+                   "LEFT JOIN unit_stats u ON c.card_id = u.card_id";
 
     sqlite3_stmt* stmt;
 
@@ -77,18 +77,18 @@ bool factory::load_master_data() {
         std::string card_id     = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
         std::string name        = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
         std::string faction_id  = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
-        std::string c_type_col   = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+        std::string c_type_col  = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+        card_type c_type = get_card_type(c_type_col);
         std::string rarity      = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
         bool is_unlocked        = sqlite3_column_int(stmt, 5) != 0;
-
-        card_type c_type = get_card_type(c_type_col);
+        int max_copies          = sqlite3_column_int(stmt, 6);
 
         if (c_type == card_type::UNIT) {
-            int strength            = sqlite3_column_int(stmt, 6);
-            const char* rg_ptr      = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7));
+            int strength            = sqlite3_column_int(stmt, 7);
+            const char* rg_ptr      = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 8));
             std::string range_type  = rg_ptr ? rg_ptr : "SPECIAL";
-            int armor            = sqlite3_column_int(stmt, 8);
-            int attack            = sqlite3_column_int(stmt, 9);
+            int armor               = sqlite3_column_int(stmt, 9);
+            int attack              = sqlite3_column_int(stmt, 10);
             unit_library.emplace_back(card_id, name, faction_id, c_type, rarity, is_unlocked, strength, range_type, armor, attack);
         } else {
             special_library.emplace_back(card_id, name, faction_id, c_type, rarity, is_unlocked);
@@ -205,6 +205,7 @@ deck factory::load_deck(const std::string &deck_id) {
                     leader_ptr = base_card->clone();
                 } else {
                     for (int i = 0; i < quantity; ++i) {
+
                         deck_cards.push_back(base_card->clone());
                     }
                 }
@@ -215,7 +216,11 @@ deck factory::load_deck(const std::string &deck_id) {
     sqlite3_finalize(stmt);
     sqlite3_close(db);
 
-    std::cout << "[DEBUG] Loaded deck '" << deck_id << "' with " << deck_cards.size() << " cards." << std::endl;
+    std::cout << "[DEBUG] Loaded deck for: " << deck_id << " | Found: " << deck_cards.size() << " units." << std::endl;
+    for(const auto& c : deck_cards) {
+        std::cout << "  -> Card: " << c->get_name() << " | Row: " << c->get_range_type() << std::endl;
+    }
+
     return deck(std::move(leader_ptr), std::move(deck_cards));
 }
 
