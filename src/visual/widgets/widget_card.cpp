@@ -48,7 +48,7 @@ void widget_card::draw() const {
             draw_rect,
             { 0, 0 }, 0.0f, WHITE);
 
-        if (card_data->get_card_type() == "UNIT") {
+        if (card_data->get_card_type() == card_type::UNIT) {
 
             Vector2 stat_pos = {draw_rect.x,draw_rect.y + 10.0f};
 

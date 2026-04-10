@@ -4,11 +4,13 @@
 #include <memory>
 #include <vector>
 
+#include "core/types.h"
+
 class ability;
 
 class card {
 public:
-    card(std::string card_id, std::string name, std::string faction_id, std::string card_type,
+    card(std::string card_id, std::string name, std::string faction_id, card_type c_type,
         std::string rarity, bool is_unlocked);
     virtual ~card() = default;
     virtual std::unique_ptr<card> clone() const;
@@ -17,7 +19,7 @@ public:
     std::string get_id() const { return card_id; };
     std::string get_name() const { return name; };
     std::string get_faction_id() const { return faction_id; };
-    std::string get_card_type() const { return card_type; };
+    card_type get_card_type() const { return c_type; };
     std::string get_rarity() const { return rarity; };
     bool get_is_unlocked() const { return is_unlocked; };
     virtual int get_strength() const { return 0; }
@@ -33,7 +35,7 @@ private:
     std::string card_id;
     std::string name;
     std::string faction_id;
-    std::string card_type;
+    card_type c_type;
     std::string rarity;
     bool is_unlocked;
     std::vector<std::shared_ptr<ability>> card_abilities;

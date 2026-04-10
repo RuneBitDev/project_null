@@ -20,10 +20,10 @@ bool deck::is_valid() {
     int count_specials = 0;
 
     for (auto& c : cards) {
-        std::string type = c->get_card_type();
-        if (type == "UNIT") {
+        card_type type = c->get_card_type();
+        if (type == card_type::UNIT) {
             count_units++;
-        } else if (type == "SPECIAL") {
+        } else if (type == card_type::SPECIAL) {
             count_specials++;
         }
     }

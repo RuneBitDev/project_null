@@ -47,9 +47,9 @@ void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_sid
     std::cout << "  -> Deploying: " << card_ptr->get_name() << " [" << card_ptr->get_id() << "]" << std::endl;
 
     row_type target_row = row_type::SPECIAL;
-    std::string type = card_ptr->get_card_type();
+    card_type type = card_ptr->get_card_type();
 
-    if (type == "UNIT") {
+    if (type == card_type::UNIT) {
         if (auto* unit_ptr = dynamic_cast<card_unit*>(card_ptr.get())) {
             std::string range = unit_ptr->get_range_type();
             if (range == "MELEE") target_row = row_type::MELEE;
@@ -60,12 +60,12 @@ void player::execute_play_card(std::unique_ptr<card> card_ptr, board &b, row_sid
         }
     }
 
-    if (type == "SUPPORT") {
+    if (type == card_type::SUPPORT) {
         target_row = row_type::NET;
         std::cout << "[DEBUG] Support row_type: " << static_cast<int>(target_row) << std::endl;
     }
 
-    if (type == "SPECIAL") {
+    if (type == card_type::SPECIAL) {
         target_row = row_type::SPECIAL;
         std::cout << "[DEBUG] Special row_type: " << static_cast<int>(target_row) << std::endl;
     }

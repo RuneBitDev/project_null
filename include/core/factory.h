@@ -26,6 +26,7 @@ private:
     std::vector<card_unit> unit_library;
     std::vector<std::shared_ptr<ability>> ability_library;
     std::vector<ParamValue> parse_params(const std::string& col_data);
+    card_type get_card_type(const std::string& col_data);
 };
 
 #endif //PROJECT_NULL_FACTORY_H

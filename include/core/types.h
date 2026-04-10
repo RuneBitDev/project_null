@@ -4,7 +4,7 @@
 
 // card specific types
 enum class value_type {STRENGTH, ARMOR, ATTACK};
-enum class card_type { UNIT, SPECIAL, LEADER };
+enum class card_type { UNIT, SPECIAL, SUPPORT, LEADER, UNKNOWN };
 
 // board specific types
 enum class row_side { PLAYER, OPPONENT };

@@ -19,7 +19,7 @@ void board::clear_board(player &p1, player &p2) {
             auto& current_row = rows[side][type];
 
             for (auto& card_ptr : current_row) {
-                if (card_ptr && card_ptr->get_card_type() == "UNIT") {
+                if (card_ptr && card_ptr->get_card_type() == card_type::UNIT) {
                     target_player.add_to_graveyard(std::move(card_ptr));
                 }
             }
@@ -37,7 +37,7 @@ void board::remove_card_at(card_location loc, player& p) {
 
     if (loc.index >= 0 && loc.index < (int)row.size()) {
         // move to graveyard
-        if (row[loc.index]->get_card_type() == "UNIT") {
+        if (row[loc.index]->get_card_type() == card_type::UNIT) {
             p.add_to_graveyard(std::move(row[loc.index]));
         }
         // erase from vector (unique_ptr should clear)

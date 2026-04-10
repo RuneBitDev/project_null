@@ -77,20 +77,22 @@ bool factory::load_master_data() {
         std::string card_id     = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
         std::string name        = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
         std::string faction_id  = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
-        std::string card_type   = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+        std::string c_type_col   = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
         std::string rarity      = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
         bool is_unlocked        = sqlite3_column_int(stmt, 5) != 0;
 
-        if (card_type == "UNIT") {
+        card_type c_type = get_card_type(c_type_col);
+
+        if (c_type == card_type::UNIT) {
             int strength            = sqlite3_column_int(stmt, 6);
             const char* rg_ptr      = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7));
             std::string range_type  = rg_ptr ? rg_ptr : "SPECIAL";
             int armor            = sqlite3_column_int(stmt, 8);
             int attack            = sqlite3_column_int(stmt, 9);
-
-            unit_library.emplace_back(card_id, name, faction_id, card_type, rarity, is_unlocked, strength, range_type, armor, attack);
+            unit_library.emplace_back(card_id, name, faction_id, c_type, rarity, is_unlocked, strength, range_type, armor, attack);
         } else {
-            special_library.emplace_back(card_id, name, faction_id, card_type, rarity, is_unlocked);
+            special_library.emplace_back(card_id, name, faction_id, c_type, rarity, is_unlocked);
+
         }
     }
     sqlite3_finalize(stmt);
@@ -141,7 +143,7 @@ deck factory::build_deck(const std::string& faction) {
 
     for (const auto& special : special_library) {
         if (special.get_faction_id() == faction) {
-            if (special.get_card_type() == "LEADER") {
+            if (special.get_card_type() == card_type::LEADER) {
                 leader_ptr = special.clone();
             } else {
                 deck_cards.push_back(special.clone());
@@ -199,7 +201,7 @@ deck factory::load_deck(const std::string &deck_id) {
 
             // if found, clone it into deck
             if (base_card) {
-                if (base_card->get_card_type() == "LEADER") {
+                if (base_card->get_card_type() == card_type::LEADER) {
                     leader_ptr = base_card->clone();
                 } else {
                     for (int i = 0; i < quantity; ++i) {
@@ -245,4 +247,12 @@ std::vector<ParamValue> factory::parse_params(const std::string& col_data) {
     }
 
     return params;
+}
+
+card_type factory::get_card_type(const std::string& col_data) {
+    if (col_data == "UNIT") return card_type::UNIT;
+    if (col_data == "SPECIAL") return card_type::SPECIAL;
+    if (col_data == "SUPPORT") return card_type::SUPPORT;
+    if (col_data == "LEADER") return card_type::LEADER;
+    return card_type::UNKNOWN;
 }
