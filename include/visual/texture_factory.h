@@ -1,7 +1,7 @@
 #ifndef PROJECT_NULL_TEXTURE_FACTORY_H
 #define PROJECT_NULL_TEXTURE_FACTORY_H
-#include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "raylib.h"
@@ -29,12 +29,13 @@ public:
     Texture2D get_texture_for_card(const std::string& card_id);
 
     void unload_all();
+    void unload_transient();
 
     void debug_print_manifest();
 
 private:
-    std::map<std::string, asset_info> manifest;
-    std::map<std::string, Texture2D> texture_map;
+    std::unordered_map<std::string, asset_info> manifest;
+    std::unordered_map<std::string, Texture2D> texture_map;
 };
 
 #endif //PROJECT_NULL_TEXTURE_FACTORY_H

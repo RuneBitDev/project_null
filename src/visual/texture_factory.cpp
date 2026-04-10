@@ -128,6 +128,24 @@ void texture_factory::unload_all() {
     TraceLog(LOG_INFO, "TEXTURE: All textures unloaded from VRAM");
 }
 
+void texture_factory::unload_transient() {
+    int count = 0;
+    for (auto it = texture_map.begin(); it != texture_map.end(); ) {
+        const std::string& id = it->first;
+        auto m_it = manifest.find(id);
+
+        // check if the asset is NOT UI or BACKGROUND
+        if (m_it != manifest.end() && m_it->second.type != "UI" && m_it->second.type != "BACKGROUND") {
+            UnloadTexture(it->second);
+            it = texture_map.erase(it);
+            count++;
+        } else {
+            ++it;
+        }
+    }
+    TraceLog(LOG_INFO, "TEXTURE: Unloaded %d transient assets (Cards/Factions). UI remains.", count);
+}
+
 
 void texture_factory::debug_print_manifest() {
     std::cout << "\n--- [MANIFEST DEBUG START] ---" << std::endl;

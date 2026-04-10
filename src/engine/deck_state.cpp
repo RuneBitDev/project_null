@@ -7,7 +7,7 @@ deck_state::deck_state(factory &factory, texture_factory &texture_factory)
     : data_factory(factory), tex_factory(texture_factory) {}
 
 deck_state::~deck_state() {
-    tex_factory.unload_all();
+    tex_factory.unload_transient();
 }
 
 void deck_state::handle_input(state_manager &manager) {

@@ -28,7 +28,7 @@ game_state::game_state(player player1, player player2, factory& factory, texture
 }
 
 game_state::~game_state() {
-    tex_factory.unload_all();
+    tex_factory.unload_transient();
 }
 
 void game_state::handle_input(state_manager &manager) {
