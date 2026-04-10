@@ -8,15 +8,10 @@
 menu_state::menu_state(factory& game_factory, texture_factory& texture_factory)
     : data_factory(game_factory), tex_factory(texture_factory) {}
 
-menu_state::~menu_state() {
-    tex_factory.unload_all();
-}
+menu_state::~menu_state() = default;
 
 
 void menu_state::handle_input(state_manager &manager) {
-    if (show_start_screen) {
-        if (IsKeyPressed(KEY_ENTER)) show_start_screen = false;
-    }
 
     if (start_button_is_pressed) {
         player player1("V", data_factory.build_deck(p1_faction));
@@ -54,19 +49,14 @@ void menu_state::update(float dt, renderer& renderer) {
     update_selection("P1_PREV", "P1_NEXT", p1_select, p1_faction);
     update_selection("P2_PREV", "P2_NEXT", p2_select, p2_faction);
 
-    if (!show_start_screen && renderer.is_button_triggered("START")) {
+    if (renderer.is_button_triggered("START")) {
         start_button_is_pressed = true;
     }
-    if (!show_start_screen && renderer.is_button_triggered("DECK")) {
+    if (renderer.is_button_triggered("DECK")) {
         deck_button_is_pressed = true;
     }
 }
 
 void menu_state::render(renderer& renderer) {
-    if (show_start_screen) {
-        renderer.draw_start_screen();
-    } else {
-        renderer.draw_menu(p1_select, p2_select, available_factions);
-
-    }
+    renderer.draw_menu(p1_select, p2_select, available_factions);
 }

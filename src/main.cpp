@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include <iostream>
 #include "core/factory.h"
-#include "engine/menu_state.h"
+#include "engine/start_state.h"
 #include "engine/state_manager.h"
 #include "visual/render_config.h"
 #include "visual/texture_factory.h"
@@ -38,7 +38,7 @@ int main() {
 
     texture_factory.load_texture_all_ui();
 
-    manager.push_state(std::make_unique<menu_state>(game_factory, texture_factory));
+    manager.push_state(std::make_unique<start_state>(game_factory, texture_factory));
 
     while (!WindowShouldClose()) {
 

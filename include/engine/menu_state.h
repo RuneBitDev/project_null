@@ -20,7 +20,6 @@ private:
     texture_factory& tex_factory;
 
     std::vector< std::string > available_factions = {"arasaka", "afterlife", "aldecaldos", "maelstrom", "vodoo_boys", "fia", "barghest"};
-    bool show_start_screen = true;
     bool widgets_initialized = false;
     bool start_button_is_pressed = false;
     bool deck_button_is_pressed = false;
