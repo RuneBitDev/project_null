@@ -1,7 +1,7 @@
 #ifndef PROJECT_NULL_WIDGET_CARD_H
 #define PROJECT_NULL_WIDGET_CARD_H
 #include "raylib.h"
-#include "widget.h"
+#include "../widget.h"
 #include "core/components/card.h"
 #include "visual/ui_types.h"
 

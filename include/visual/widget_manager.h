@@ -1,6 +1,6 @@
 #ifndef PROJECT_NULL_WIDGET_MANAGER_H
 #define PROJECT_NULL_WIDGET_MANAGER_H
-#include "widgets/widget_card.h"
+#include "widgets/match/widget_card.h"
 #include "widgets/widget_button.h"
 #include <map>
 

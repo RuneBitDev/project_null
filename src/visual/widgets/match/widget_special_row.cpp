@@ -1,4 +1,4 @@
-#include "visual/widgets/widget_special_row.h"
+#include "../../../../include/visual/widgets/match/widget_special_row.h"
 
 #include <cmath>
 

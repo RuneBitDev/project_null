@@ -1,5 +1,5 @@
 #include "core/game_log.h"
-#include "visual/widgets/widget_game_log.h"
+#include "../../../../include/visual/widgets/match/widget_game_log.h"
 
 #include <iostream>
 

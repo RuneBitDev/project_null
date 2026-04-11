@@ -1,4 +1,4 @@
-#include "visual/widgets/widget_player_info.h"
+#include "../../../../include/visual/widgets/match/widget_player_info.h"
 #include <cmath>
 #include "visual/render_config.h"
 

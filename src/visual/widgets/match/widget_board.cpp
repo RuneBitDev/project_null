@@ -1,4 +1,4 @@
-#include "visual/widgets/widget_board.h"
+#include "../../../../include/visual/widgets/match/widget_board.h"
 
 #include <cmath>
 

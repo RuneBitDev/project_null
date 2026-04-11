@@ -1,7 +1,7 @@
 #ifndef PROJECT_NULL_WIDGET_BOARD_H
 #define PROJECT_NULL_WIDGET_BOARD_H
 #include <vector>
-#include "widget.h"
+#include "../widget.h"
 #include "widget_row.h"
 #include "widget_special_row.h"
 

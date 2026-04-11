@@ -46,21 +46,22 @@ add_executable(project_null
         src/core/combat_manager.cpp
         src/core/components/abilities/ability.cpp
         src/core/types.cpp
-        src/visual/widgets/widget_card.cpp
-        src/visual/widgets/widget_row.cpp
-        src/visual/widgets/widget_board.cpp
-        src/visual/widgets/widget_hand.cpp
-        src/visual/widgets/widget_special_row.cpp
-        src/visual/widgets/widget_graveyard.cpp
+        src/visual/widgets/match/widget_card.cpp
+        src/visual/widgets/match/widget_row.cpp
+        src/visual/widgets/match/widget_board.cpp
+        src/visual/widgets/match/widget_hand.cpp
+        src/visual/widgets/match/widget_special_row.cpp
+        src/visual/widgets/match/widget_graveyard.cpp
         src/visual/widget_manager.cpp
-        src/visual/widgets/widget_deck.cpp
-        src/visual/widgets/widget_popup.cpp
-        src/visual/widgets/widget_player_info.cpp
+        src/visual/widgets/match/widget_deck.cpp
+        src/visual/widgets/match/widget_popup.cpp
+        src/visual/widgets/match/widget_player_info.cpp
         src/visual/widgets/widget_button.cpp
         src/visual/texture_factory.cpp
-        src/visual/widgets/widget_game_log.cpp
+        src/visual/widgets/match/widget_game_log.cpp
         src/visual/ui_util.cpp
         src/engine/start_state.cpp
+        src/visual/widgets/deck_builder/widget_deck_grid.cpp
 )
 
 # ------------------------------------------------------------------

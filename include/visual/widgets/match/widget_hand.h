@@ -1,6 +1,6 @@
 #ifndef PROJECT_NULL_WIDGET_HAND_H
 #define PROJECT_NULL_WIDGET_HAND_H
-#include "widget.h"
+#include "../widget.h"
 #include "widget_card.h"
 #include "core/components/player.h"
 #include "visual/widget_manager.h"

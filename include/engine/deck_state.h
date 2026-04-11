@@ -18,8 +18,9 @@ private:
     factory& data_factory;
     texture_factory& tex_factory;
 
-    bool widgets_initialized;
+    all_cards cards;
 
+    bool widgets_initialized = false;
     bool is_back_button_pressed = false;
 
 };

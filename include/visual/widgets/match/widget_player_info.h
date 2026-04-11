@@ -1,6 +1,6 @@
 #ifndef PROJECT_NULL_WIDGET_PLAYER_INFO_H
 #define PROJECT_NULL_WIDGET_PLAYER_INFO_H
-#include "widget.h"
+#include "../widget.h"
 #include "core/components/player.h"
 #include "visual/ui_types.h"
 #include "visual/widget_manager.h"

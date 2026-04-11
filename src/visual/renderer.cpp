@@ -26,6 +26,48 @@ void renderer::draw_start_screen() {
     ui::draw_text_header(">> PRESS ENTER <<", 900, 40, Fade(GREEN, alpha));
 }
 
+void renderer::draw_deck_builder(all_cards &cards, int current_faction_idx) {
+    ClearBackground({ 10, 10, 15, 255 });
+    for (int i = 0; i < render_config::VIRTUAL_HEIGHT; i += 4) {
+        DrawLine(0, i, render_config::VIRTUAL_WIDTH, i, Fade(RAYWHITE, 0.03f));
+    }
+
+    float width = render_config::VIRTUAL_WIDTH;
+    float height = render_config::VIRTUAL_HEIGHT;
+
+    // central divider
+    Rectangle bridge = { width * 0.62f, 0, width * 0.08f, height };
+    DrawRectangleRec(bridge, { 15, 15, 20, 200 });
+    DrawLineEx({ bridge.x, 0 }, { bridge.x, height }, 2.0f, GREEN);
+
+    // header
+    ui::draw_text_header("DECK_CONSTRUCT_MODE // V.04", 50, 40, GREEN);
+
+    // resource thingy
+    float ram_usage = 0.75f;
+    DrawRectangle(width * 0.75f, 50, 400, 20, Fade(GREEN, 0.2f));
+    DrawRectangle(width * 0.75f, 50, 400 * ram_usage, 20, GREEN);
+    DrawText("RAM USAGE", width * 0.75f, 30, 15, GREEN);
+
+    // card pool
+    deck_grid_view.draw();
+
+    // deck grid
+    for (int i = 0; i < 10; i++) {
+        float y_pos = 150 + (i * 55);
+        Rectangle slot = { width * 0.72f, y_pos, 500, 50 };
+
+        DrawRectangleRec(slot, Fade(GREEN, 0.1f));
+        DrawRectangle(slot.x, slot.y, 5, slot.height, GREEN);
+
+        DrawText("UNIT_NAME_SHARD", slot.x + 15, slot.y + 15, 20, GREEN);
+        DrawText("10", slot.x + 460, slot.y + 15, 20, GREEN); // Cost
+    }
+
+    manager.draw_buttons();
+}
+
+
 void renderer::draw_menu(int p1_idx, int p2_idx, const std::vector<std::string>& factions) {
     ClearBackground({ 10, 10, 15, 255 });
     for (int i = 0; i < 1440; i += 5) {
@@ -63,14 +105,6 @@ void renderer::draw_menu(int p1_idx, int p2_idx, const std::vector<std::string>&
     manager.draw_buttons();
 }
 
-void renderer::draw_deck() {
-    ClearBackground({ 10, 10, 15, 255 });
-    for (int i = 0; i < 1440; i += 5) {
-        DrawLine(0, i, 2560, i, Fade(RAYWHITE, 0.05f));
-    }
-
-    manager.draw_buttons();
-}
 
 void renderer::draw_game(const render_context& ctx) {
     ClearBackground({ 10, 10, 15, 255 });
@@ -122,8 +156,10 @@ void renderer::add_popup(const std::string& text, Color color, float duration, p
     active_popups.push_back(std::make_unique<widget_popup>(text, color, duration, p_type));
 }
 
-void renderer::init_deck_widgets() {
+void renderer::init_deck_builder_widgets() {
     manager.clear_button_widgets();
+
+    deck_grid_view.init_deck_grid();
 
     Rectangle back_rect = { 100, 100, 300, 100 };
     manager.manage_button_widget("BACK", "BACK", CLICKABLE, 0, back_rect);
@@ -223,4 +259,9 @@ void renderer::update_widgets(float dt) {
         if ((*it)->is_finished()) it = active_popups.erase(it);
         else ++it;
     }
+}
+
+void renderer::update_deck_builder_widgets(float dt) {
+    manager.update(dt);
+    deck_grid_view.update(dt);
 }

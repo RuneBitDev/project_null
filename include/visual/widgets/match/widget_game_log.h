@@ -1,7 +1,7 @@
 #ifndef PROJECT_NULL_WIDGET_GAME_LOG_H
 #define PROJECT_NULL_WIDGET_GAME_LOG_H
 #include "raylib.h"
-#include "widget.h"
+#include "../widget.h"
 #include "visual/render_config.h"
 
 class widget_game_log : public widget {

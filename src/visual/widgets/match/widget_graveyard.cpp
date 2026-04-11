@@ -1,4 +1,4 @@
-#include "visual/widgets/widget_graveyard.h"
+#include "../../../../include/visual/widgets/match/widget_graveyard.h"
 #include "core/components/card_unit.h"
 #include "visual/layout_manager.h"
 #include "visual/render_config.h"
