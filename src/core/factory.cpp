@@ -154,11 +154,6 @@ deck factory::load_deck(const std::string &deck_id) {
                     break;
                 }
             }
-
-            if (base_card) {
-                deck_cards.push_back(base_card->clone());
-            }
-
             // if found, clone it into deck
             if (base_card) {
                 if (base_card->get_card_type() == card_type::LEADER) {
