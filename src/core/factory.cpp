@@ -89,9 +89,11 @@ bool factory::load_master_data() {
             std::string range_type  = rg_ptr ? rg_ptr : "SPECIAL";
             int armor               = sqlite3_column_int(stmt, 9);
             int attack              = sqlite3_column_int(stmt, 10);
-            unit_library.emplace_back(card_id, name, faction_id, c_type, rarity, is_unlocked, strength, range_type, armor, attack);
+            card_library.push_back(std::make_unique<card_unit>(
+                card_id, name, faction_id, c_type, rarity, is_unlocked, strength, range_type, armor, attack));
         } else {
-            special_library.emplace_back(card_id, name, faction_id, c_type, rarity, is_unlocked);
+            card_library.push_back(std::make_unique<card>(
+                card_id, name, faction_id, c_type, rarity, is_unlocked));
 
         }
     }
@@ -108,8 +110,7 @@ bool factory::load_master_data() {
 
             for (auto& ab : ability_library) {
                 if (ab->get_id() == aid) {
-                    for (auto& u : unit_library) if (u.get_id() == cid) u.add_ability(ab);
-                    for (auto& s : special_library) if (s.get_id() == cid) s.add_ability(ab);
+                    for (auto& u : card_library) if (u->get_id() == cid) u->add_ability(ab);
                     break;
                 }
             }
@@ -123,41 +124,6 @@ bool factory::load_master_data() {
 
 }
 
-const std::vector<card_unit>& factory::get_unit_library() const{
-    return unit_library;
-}
-
-const std::vector<card>& factory::get_special_library() const{
-    return special_library;
-}
-
-
-deck factory::build_deck(const std::string& faction) {
-    std::vector<std::unique_ptr<card>> deck_cards;
-    std::unique_ptr<card> leader_ptr;
-    for (const auto& unit : unit_library) {
-        if (unit.get_faction_id() == faction) {
-            deck_cards.push_back(unit.clone());
-        }
-    }
-
-    for (const auto& special : special_library) {
-        if (special.get_faction_id() == faction) {
-            if (special.get_card_type() == card_type::LEADER) {
-                leader_ptr = special.clone();
-            } else {
-                deck_cards.push_back(special.clone());
-            }
-        }
-    }
-
-    std::cout << "[DEBUG] Building deck for: " << faction << " | Found: " << deck_cards.size() << " units." << std::endl;
-    for(const auto& c : deck_cards) {
-        std::cout << "  -> Card: " << c->get_name() << " | Row: " << c->get_range_type() << std::endl;
-    }
-
-    return deck(std::move(leader_ptr), std::move(deck_cards));
-}
 
 deck factory::load_deck(const std::string &deck_id) {
     std::vector<std::unique_ptr<card>> deck_cards;
@@ -180,23 +146,17 @@ deck factory::load_deck(const std::string &deck_id) {
             std::string cid = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
             int quantity = sqlite3_column_int(stmt, 1);
 
-            // find card in pre-loaded libraries
+            // find card in pre-loaded library
             card* base_card = nullptr;
-
-            for (auto& u : unit_library) {
-                if (u.get_id() == cid) {
-                    base_card = &u;
+            for (auto& c : card_library) {
+                if (c->get_id() == cid) {
+                    base_card = c.get(); // raw pinter for cloning
                     break;
                 }
             }
 
-            if (!base_card) {
-                for (auto& s : special_library) {
-                    if (s.get_id() == cid) {
-                        base_card = &s;
-                        break;
-                    }
-                }
+            if (base_card) {
+                deck_cards.push_back(base_card->clone());
             }
 
             // if found, clone it into deck
@@ -221,7 +181,7 @@ deck factory::load_deck(const std::string &deck_id) {
         std::cout << "  -> Card: " << c->get_name() << " | Row: " << c->get_range_type() << std::endl;
     }
 
-    return deck(std::move(leader_ptr), std::move(deck_cards));
+    return {std::move(leader_ptr), std::move(deck_cards)};
 }
 
 

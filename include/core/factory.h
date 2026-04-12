@@ -15,15 +15,12 @@ using ParamValue = std::variant<int, std::string>;
 class factory {
 public:
     bool load_master_data();
-    deck build_deck(const std::string& faction);
     deck load_deck(const std::string& deck_id);
 
-    const std::vector<card>& get_special_library() const;
-    const std::vector<card_unit>& get_unit_library() const;
+    const std::vector<std::unique_ptr<card>>& get_card_library() const { return card_library; }
 
 private:
-    std::vector<card> special_library;
-    std::vector<card_unit> unit_library;
+    std::vector<std::unique_ptr<card>> card_library;
     std::vector<std::shared_ptr<ability>> ability_library;
     std::vector<ParamValue> parse_params(const std::string& col_data);
     card_type get_card_type(const std::string& col_data);
