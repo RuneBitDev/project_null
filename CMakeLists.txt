@@ -62,6 +62,7 @@ add_executable(project_null
         src/visual/ui_util.cpp
         src/engine/start_state.cpp
         src/visual/widgets/deck_builder/widget_deck_grid.cpp
+        src/visual/widgets/deck_builder/widget_full_card.cpp
 )
 
 # ------------------------------------------------------------------

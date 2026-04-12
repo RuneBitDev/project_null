@@ -5,7 +5,9 @@
 
 deck_state::deck_state(factory &factory, texture_factory &texture_factory)
     : data_factory(factory), tex_factory(texture_factory) {
-    cards = {data_factory.get_special_library(), data_factory.get_unit_library()};
+    for (auto& c : data_factory.get_card_library()) {
+        card_pool.push_back(c.get());
+    }
 }
 
 deck_state::~deck_state() {
@@ -21,7 +23,7 @@ void deck_state::handle_input(state_manager &manager) {
 void deck_state::update(float dt, renderer &renderer) {
 
     if (!widgets_initialized) {
-        renderer.init_deck_builder_widgets();
+        renderer.init_deck_builder_widgets("TEST", card_pool);
         widgets_initialized = true;
     }
 
@@ -33,6 +35,7 @@ void deck_state::update(float dt, renderer &renderer) {
 }
 
 void deck_state::render(renderer &ren) {
-    ren.draw_deck_builder(cards, 0);
+
+    ren.draw_deck_builder();
 }
 

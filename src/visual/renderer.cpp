@@ -26,7 +26,7 @@ void renderer::draw_start_screen() {
     ui::draw_text_header(">> PRESS ENTER <<", 900, 40, Fade(GREEN, alpha));
 }
 
-void renderer::draw_deck_builder(all_cards &cards, int current_faction_idx) {
+void renderer::draw_deck_builder() {
     ClearBackground({ 10, 10, 15, 255 });
     for (int i = 0; i < render_config::VIRTUAL_HEIGHT; i += 4) {
         DrawLine(0, i, render_config::VIRTUAL_WIDTH, i, Fade(RAYWHITE, 0.03f));
@@ -50,7 +50,7 @@ void renderer::draw_deck_builder(all_cards &cards, int current_faction_idx) {
     DrawText("RAM USAGE", width * 0.75f, 30, 15, GREEN);
 
     // card pool
-    deck_grid_view.draw();
+    deck_grid_view->draw();
 
     // deck grid
     for (int i = 0; i < 10; i++) {
@@ -156,10 +156,12 @@ void renderer::add_popup(const std::string& text, Color color, float duration, p
     active_popups.push_back(std::make_unique<widget_popup>(text, color, duration, p_type));
 }
 
-void renderer::init_deck_builder_widgets() {
+void renderer::init_deck_builder_widgets(const std::string& faction_id, const std::vector<card*>& pool) {
     manager.clear_button_widgets();
 
-    deck_grid_view.init_deck_grid();
+    Rectangle grid_bounds { 100, 150, 1200, 1000 };
+    deck_grid_view = std::make_unique<widget_deck_grid>(faction_id, pool, grid_bounds);
+
 
     Rectangle back_rect = { 100, 100, 300, 100 };
     manager.manage_button_widget("BACK", "BACK", CLICKABLE, 0, back_rect);
@@ -240,7 +242,7 @@ void renderer::set_button_enabled(const std::string& id, bool enabled) {
     if (btn) btn->set_enabled(enabled);
 }
 
-void renderer::update_widgets(float dt) {
+void renderer::update_match_widgets(float dt) {
 
     manager.update(dt);
 
@@ -263,5 +265,5 @@ void renderer::update_widgets(float dt) {
 
 void renderer::update_deck_builder_widgets(float dt) {
     manager.update(dt);
-    deck_grid_view.update(dt);
+    deck_grid_view->update(dt);
 }

@@ -26,9 +26,8 @@ int main() {
         CloseWindow();
         return 1;
     } else {
-        std::cout << "[INIT] Factory loaded " << game_factory.get_unit_library().size()
-              << " units and " << game_factory.get_special_library().size()
-              << " special cards." << std::endl;
+        std::cout << "[INIT] Factory loaded " << game_factory.get_card_library().size()
+              << " units and special cards." << std::endl;
     }
     if (!texture_factory.initialize_manifest("data.sqlite")) {
         std::cerr << "CRITICAL ERROR: Could not load data.sqlite" << std::endl;

@@ -54,7 +54,7 @@ void game_state::update(float dt, renderer& renderer) {
         widgets_initialized = true;
     }
 
-    renderer.update_widgets(dt);
+    renderer.update_match_widgets(dt);
 
     if (cards_drawn < INITIAL_HAND_SIZE) {
         if (!intro_delay_finished) {

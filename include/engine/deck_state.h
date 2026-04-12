@@ -18,7 +18,7 @@ private:
     factory& data_factory;
     texture_factory& tex_factory;
 
-    all_cards cards;
+    std::vector<card*> card_pool;
 
     bool widgets_initialized = false;
     bool is_back_button_pressed = false;

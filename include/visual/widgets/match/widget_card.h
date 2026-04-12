@@ -6,7 +6,7 @@
 #include "visual/ui_types.h"
 
 class widget_card : public widget {
-    public:
+public:
     widget_card(const card* c_ptr, const card_context &card_ctx);
     void update(float dt) override;
     void draw() const override;

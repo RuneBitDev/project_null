@@ -15,7 +15,7 @@ void menu_state::handle_input(state_manager &manager) {
 
     if (start_button_is_pressed) {
         player player1("V", data_factory.load_deck("arasaka_01"));
-        player player2("Opponent", data_factory.build_deck(p2_faction));
+        player player2("Opponent", data_factory.load_deck("arasaka_01"));
 
         manager.change_state(std::make_unique<game_state>(std::move(player1), std::move(player2), data_factory, tex_factory));
     }
@@ -30,7 +30,7 @@ void menu_state::update(float dt, renderer& renderer) {
         widgets_initialized = true;
     }
 
-    renderer.update_widgets(dt);
+    renderer.update_match_widgets(dt);
 
 
     auto update_selection = [&](const std::string& prev_id, const std::string& next_id, int& index, std::string& faction) {

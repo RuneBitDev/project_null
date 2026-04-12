@@ -1,9 +1,8 @@
-#include "../../../../include/visual/widgets/match/widget_card.h"
+#include "visual/widgets/match/widget_card.h"
 #include "core/components/card_unit.h"
 #include "visual/render_config.h"
 #include <cmath>
 #include <iostream>
-
 #include "visual/texture_factory.h"
 
 widget_card::widget_card(const card* c_ptr, const card_context &card_ctx)
