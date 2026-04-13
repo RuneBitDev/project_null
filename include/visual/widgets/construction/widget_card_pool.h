@@ -7,10 +7,10 @@
 
 
 
-class widget_deck_grid : public widget {
+class widget_card_pool : public widget {
 public:
 
-    widget_deck_grid(std::string faction_id, const std::vector<card*>& pool, Rectangle bounds);
+    widget_card_pool(std::string faction_id, const std::vector<card*>& pool, Rectangle bounds);
 
     void update(float dt) override;
     void draw() const override;

@@ -3,10 +3,10 @@
 #include "core/factory.h"
 #include "engine/state.h"
 
-class deck_state : public state {
+class construction_state : public state {
 public:
-    deck_state(factory &factory, texture_factory &texture_factory);
-    ~deck_state();
+    construction_state(factory &factory, texture_factory &texture_factory);
+    ~construction_state();
 
     void handle_input(state_manager& manager) override;
     void update(float dt, renderer& renderer) override;

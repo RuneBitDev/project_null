@@ -3,7 +3,7 @@
 #include "visual/layout_manager.h"
 #include "visual/render_config.h"
 
-void widget_graveyard::update_from_player(const player &player, widget_manager& manager) {
+void widget_graveyard::update_from_player(const player &player, widget_manager_game& manager) {
     const auto& graveyard = player.get_graveyard();
     int total_cards = static_cast<int>(graveyard.size());
     row_side side = player.get_side();

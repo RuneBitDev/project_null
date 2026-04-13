@@ -1,10 +1,10 @@
 #ifndef PROJECT_NULL_WIDGET_MANAGER_H
 #define PROJECT_NULL_WIDGET_MANAGER_H
-#include "widgets/match/widget_card.h"
-#include "widgets/widget_button.h"
+#include "../widgets/match/widget_card.h"
+#include "../widgets/widget_button.h"
 #include <map>
 
-class widget_manager {
+class widget_manager_game {
     public:
     void update(float dt);
 

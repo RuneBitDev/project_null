@@ -160,7 +160,7 @@ void renderer::init_deck_builder_widgets(const std::string& faction_id, const st
     manager.clear_button_widgets();
 
     Rectangle grid_bounds { 100, 150, 1200, 1000 };
-    deck_grid_view = std::make_unique<widget_deck_grid>(faction_id, pool, grid_bounds);
+    deck_grid_view = std::make_unique<widget_card_pool>(faction_id, pool, grid_bounds);
 
 
     Rectangle back_rect = { 100, 100, 300, 100 };

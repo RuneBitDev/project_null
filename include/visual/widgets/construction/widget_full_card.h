@@ -4,9 +4,11 @@
 #include "visual/ui_types.h"
 #include "visual/widgets/widget.h"
 
+enum class card_detail {MIN, MAX};
+
 class widget_full_card : public widget {
 public:
-    widget_full_card(const card* c_ptr);
+    widget_full_card(const card* c_ptr, card_detail c_detail);
     void update(float dt) override;
     void draw() const override;
 
@@ -17,6 +19,7 @@ public:
 
 private:
     const card* card_data;
+    card_detail c_detail;
 
     Texture2D card_texture;
     Rectangle card_bounds;

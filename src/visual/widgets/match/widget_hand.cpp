@@ -6,7 +6,7 @@
 #include "core/components/card_unit.h"
 #include "visual/render_config.h"
 
-void widget_hand::update_from_player(const player& p, widget_manager& manager) {
+void widget_hand::update_from_player(const player& p, widget_manager_game& manager) {
     const auto& hand = p.get_hand();
     int total_cards = static_cast<int>(hand.size());
 
@@ -42,7 +42,7 @@ void widget_hand::update_from_player(const player& p, widget_manager& manager) {
     }
 }
 
-void widget_hand::update_from_player_opponent(const player &p, widget_manager &manager) {
+void widget_hand::update_from_player_opponent(const player &p, widget_manager_game &manager) {
     const auto& hand_cards = p.get_hand();
 
     for (size_t i = 0; i < hand_cards.size(); i++) {

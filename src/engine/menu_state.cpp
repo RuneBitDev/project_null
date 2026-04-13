@@ -1,6 +1,6 @@
 #include "engine/menu_state.h"
 #include "core/factory.h"
-#include "engine/deck_state.h"
+#include "engine/construction_state.h"
 #include "engine/game_state.h"
 #include "engine/state_manager.h"
 
@@ -20,7 +20,7 @@ void menu_state::handle_input(state_manager &manager) {
         manager.change_state(std::make_unique<game_state>(std::move(player1), std::move(player2), data_factory, tex_factory));
     }
     if (deck_button_is_pressed) {
-        manager.change_state(std::make_unique<deck_state>(data_factory, tex_factory));
+        manager.change_state(std::make_unique<construction_state>(data_factory, tex_factory));
     }
 }
 

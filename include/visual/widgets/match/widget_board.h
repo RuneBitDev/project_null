@@ -9,7 +9,7 @@ class widget_board : public widget {
     public:
     widget_board();
 
-    void update_from_game(const board& b, widget_manager& manager);
+    void update_from_game(const board& b, widget_manager_game& manager);
 
     void update(float dt) override;
     void draw() const override;

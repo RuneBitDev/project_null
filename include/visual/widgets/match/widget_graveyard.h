@@ -4,13 +4,13 @@
 #include "widget_card.h"
 #include "core/components/player.h"
 #include "visual/render_config.h"
-#include "visual/widget_manager.h"
+#include "../../managers/widget_manager_game.h"
 
 class widget_graveyard : public widget {
     public:
     widget_graveyard() = default;
 
-    void update_from_player(const player& player, widget_manager& manager);
+    void update_from_player(const player& player, widget_manager_game& manager);
     void update(float dt) override;
     void draw() const override;
 

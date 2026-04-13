@@ -6,7 +6,7 @@
 #include "core/components/player.h"
 #include "widgets/match/widget_board.h"
 #include "widgets/match/widget_deck.h"
-#include "widgets/deck_builder/widget_deck_grid.h"
+#include "widgets/construction/widget_card_pool.h"
 #include "widgets/match/widget_game_log.h"
 #include "widgets/match/widget_graveyard.h"
 #include "widgets/match/widget_hand.h"
@@ -50,9 +50,9 @@ public:
 private:
     std::vector<std::unique_ptr<widget_popup>> active_popups;
 
-    widget_manager manager;
+    widget_manager_game manager;
 
-    std::unique_ptr<widget_deck_grid> deck_grid_view;
+    std::unique_ptr<widget_card_pool> deck_grid_view;
 
     widget_board board_view;
     widget_hand hand_view;

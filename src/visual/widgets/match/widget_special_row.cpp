@@ -5,7 +5,7 @@
 #include "visual/layout_manager.h"
 #include "visual/render_config.h"
 
-void widget_special_row::update_from_game(const board &game_board, widget_manager& manager) {
+void widget_special_row::update_from_game(const board &game_board, widget_manager_game& manager) {
     auto row_specials = game_board.get_all_specials();
     int total_cards = static_cast<int>(row_specials.size());
 

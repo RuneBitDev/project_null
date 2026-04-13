@@ -1,11 +1,11 @@
 #include <utility>
-#include "visual/widgets/deck_builder/widget_deck_grid.h"
+#include "visual/widgets/construction/widget_card_pool.h"
 
 #include <cmath>
 
-#include "visual/widgets/deck_builder/widget_full_card.h"
+#include "visual/widgets/construction/widget_full_card.h"
 
-widget_deck_grid::widget_deck_grid(std::string faction_id, const std::vector<card*>& pool, Rectangle bounds)
+widget_card_pool::widget_card_pool(std::string faction_id, const std::vector<card*>& pool, Rectangle bounds)
     : faction_id(std::move(faction_id)), grid_bounds(bounds) {
 
     float padding = 30.0f;
@@ -17,7 +17,7 @@ widget_deck_grid::widget_deck_grid(std::string faction_id, const std::vector<car
         int column = i % cols;
         int row = static_cast<int>(i / cols);
 
-        auto w = std::make_unique<widget_full_card>(pool[i]);
+        auto w = std::make_unique<widget_full_card>(pool[i], card_detail::MAX);
 
         bounds = {
             grid_bounds.x + 20 + (column * (cardW + padding)),
@@ -36,7 +36,7 @@ widget_deck_grid::widget_deck_grid(std::string faction_id, const std::vector<car
 }
 
 
-void widget_deck_grid::update(float dt) {
+void widget_card_pool::update(float dt) {
     Vector2 mousePos = GetMousePosition();
 
     if (CheckCollisionPointRec(mousePos, grid_bounds)) {
@@ -51,7 +51,7 @@ void widget_deck_grid::update(float dt) {
     }
 }
 
-void widget_deck_grid::draw() const {
+void widget_card_pool::draw() const {
 
     DrawRectangleRec(grid_bounds, { 10, 10, 20, 200 }); // Dark background
     DrawRectangleLinesEx(grid_bounds, 2.0f, Fade(GREEN, 0.3f));
