@@ -3,6 +3,7 @@
 #include "state.h"
 #include "core/factory.h"
 #include "visual/texture_factory.h"
+#include "visual/managers/widget_manager_menu.h"
 
 
 class menu_state : public state {
@@ -20,9 +21,7 @@ private:
     texture_factory& tex_factory;
 
     std::vector< std::string > available_factions = {"arasaka", "afterlife", "aldecaldos", "maelstrom", "vodoo_boys", "fia", "barghest"};
-    bool widgets_initialized = false;
-    bool start_button_is_pressed = false;
-    bool deck_button_is_pressed = false;
+
     std::string p1_faction = "arasaka";
     std::string p2_faction = "arasaka";
 

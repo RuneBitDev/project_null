@@ -4,9 +4,9 @@
 #include <utility>
 #include <algorithm>
 
-card_unit::card_unit(std::string card_id, std::string name, std::string faction_id, card_type card_type,
+card_unit::card_unit(std::string card_id, std::string name, faction f_id, card_type card_type,
         std::string rarity, bool is_unlocked, int strength, std::string range_type, int armor, int attack)
-    : card(std::move(card_id), std::move(name), std::move(faction_id), card_type, std::move(rarity), is_unlocked),
+    : card(std::move(card_id), std::move(name), f_id, card_type, std::move(rarity), is_unlocked),
         strength(strength), range_type(std::move(range_type)), armor(armor), attack(attack), current_stance(stances::PASSIVE) {}
 
 

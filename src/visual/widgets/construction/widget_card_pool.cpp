@@ -5,8 +5,8 @@
 
 #include "visual/widgets/construction/widget_full_card.h"
 
-widget_card_pool::widget_card_pool(std::string faction_id, const std::vector<card*>& pool, Rectangle bounds)
-    : faction_id(std::move(faction_id)), grid_bounds(bounds) {
+widget_card_pool::widget_card_pool(faction f_id, const std::vector<widget_full_card*>& pool, Rectangle bounds)
+    : faction_id(faction_id), grid_bounds(bounds), grid_entries(pool) {
 
     float padding = 30.0f;
     float cardW = 200.0f;
@@ -17,7 +17,7 @@ widget_card_pool::widget_card_pool(std::string faction_id, const std::vector<car
         int column = i % cols;
         int row = static_cast<int>(i / cols);
 
-        auto w = std::make_unique<widget_full_card>(pool[i], card_detail::MAX);
+        auto w = grid_entries[i];
 
         bounds = {
             grid_bounds.x + 20 + (column * (cardW + padding)),
@@ -27,7 +27,6 @@ widget_card_pool::widget_card_pool(std::string faction_id, const std::vector<car
         };
 
         w->set_bounds(bounds);
-        grid_entries.push_back(std::move(w));
 
         float total_content_height = (row + 1) * (cardH + padding) + 40;
         max_scroll = fmaxf(0, total_content_height - grid_bounds.height);

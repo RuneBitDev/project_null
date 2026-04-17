@@ -1,7 +1,9 @@
 #ifndef PROJECT_NULL_DECK_STATE_H
 #define PROJECT_NULL_DECK_STATE_H
-#include "core/factory.h"
 #include "engine/state.h"
+#include "core/factory.h"
+#include "visual/texture_factory.h"
+#include "visual/managers/widget_manager_construction.h"
 
 class construction_state : public state {
 public:
@@ -17,6 +19,7 @@ public:
 private:
     factory& data_factory;
     texture_factory& tex_factory;
+
 
     std::vector<card*> card_pool;
 

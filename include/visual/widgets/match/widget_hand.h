@@ -3,12 +3,12 @@
 #include "../widget.h"
 #include "widget_card.h"
 #include "core/components/player.h"
-#include "../../managers/widget_manager_game.h"
+#include "../../managers/card_manager.h"
 
 class widget_hand : public widget {
     public:
-    void update_from_player(const player& p, widget_manager_game& manager);
-    void update_from_player_opponent(const player& p, widget_manager_game& manager);
+    void update_from_player(const player& p, card_manager& manager);
+    void update_from_player_opponent(const player& p, card_manager& manager);
 
     void update(float dt) override;
     void draw() const override;

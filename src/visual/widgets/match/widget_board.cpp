@@ -12,7 +12,7 @@ widget_board::widget_board() {
     }
 }
 
-void widget_board::update_from_game(const board &b, widget_manager_game& manager) {
+void widget_board::update_from_game(const board &b, card_manager& manager) {
     for (auto &row : unit_rows) {
         row.update_row(b, manager);
     }

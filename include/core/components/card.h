@@ -10,7 +10,7 @@ class ability;
 
 class card {
 public:
-    card(std::string card_id, std::string name, std::string faction_id, card_type c_type,
+    card(std::string card_id, std::string name, faction f_id, card_type c_type,
         std::string rarity, bool is_unlocked);
     virtual ~card() = default;
     virtual std::unique_ptr<card> clone() const;
@@ -18,7 +18,7 @@ public:
 
     std::string get_id() const { return card_id; };
     std::string get_name() const { return name; };
-    std::string get_faction_id() const { return faction_id; };
+    faction get_faction() const { return faction_id; };
     card_type get_card_type() const { return c_type; };
     std::string get_rarity() const { return rarity; };
     bool get_is_unlocked() const { return is_unlocked; };
@@ -34,7 +34,7 @@ public:
 private:
     std::string card_id;
     std::string name;
-    std::string faction_id;
+    faction faction_id;
     card_type c_type;
     std::string rarity;
     bool is_unlocked;

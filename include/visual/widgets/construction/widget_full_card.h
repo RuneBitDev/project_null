@@ -8,11 +8,13 @@ enum class card_detail {MIN, MAX};
 
 class widget_full_card : public widget {
 public:
-    widget_full_card(const card* c_ptr, card_detail c_detail);
+    widget_full_card(const card* c_ptr);
     void update(float dt) override;
     void draw() const override;
 
     void draw_at(Rectangle target_bounds) const;
+
+    void set_detail(card_detail new_c_detail) { c_detail = new_c_detail; }
 
     void set_bounds(Rectangle new_bounds) { card_bounds = new_bounds; }
     Rectangle get_bounds() const { return card_bounds; }

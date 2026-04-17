@@ -1,8 +1,8 @@
 #include "visual/widgets/construction/widget_full_card.h"
 #include "visual/texture_factory.h"
 
-widget_full_card::widget_full_card(const card *c_ptr, card_detail card_detail)
-    : card_data(c_ptr), c_detail(card_detail) {
+widget_full_card::widget_full_card(const card *c_ptr)
+    : card_data(c_ptr) {
     if (texture_factory::instance) {
         this->card_texture = texture_factory::instance->get_texture_for_card(c_ptr->get_id());
     }

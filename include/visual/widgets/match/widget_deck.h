@@ -5,12 +5,12 @@
 #include "widget_card.h"
 #include "core/types.h"
 #include "core/components/deck.h"
-#include "../../managers/widget_manager_game.h"
+#include "../../managers/card_manager.h"
 
 class widget_deck : public widget {
 public:
     void init_deck(row_side side);
-    void update_from_deck(const deck& d, widget_manager_game& manager);
+    void update_from_deck(const deck& d, card_manager& manager);
 
     void update(float dt) override;
     void draw() const override;

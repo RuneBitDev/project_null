@@ -4,12 +4,13 @@
 #include "core/factory.h"
 #include "core/match_manager.h"
 #include "visual/texture_factory.h"
+#include "visual/managers/widget_manager_match.h"
 
 
-class game_state : public state {
+class match_state : public state {
 public:
-    game_state(player player1, player player2, factory& factory, texture_factory& texture_factory);
-    ~game_state();
+    match_state(player player1, player player2, factory& factory, texture_factory& texture_factory);
+    ~match_state();
     void handle_input(state_manager& manager) override;
     void update(float dt, renderer& renderer) override;
     void render(renderer& ren) override;
@@ -17,14 +18,14 @@ public:
     std::string get_name() const override { return "game_state"; }
 
 private:
-    std::unique_ptr<match_manager> match;
-    bool widgets_initialized = false;
-    bool is_pass_button_pressed = false;
+    factory& data_factory;
+    texture_factory& tex_factory;
+
+    std::unique_ptr<match_manager> match; // logic
+
 
     bool game_over = false;
     float end_screen_timer = 10.0f;
-    factory& data_factory;
-    texture_factory& tex_factory;
 
     // initialization hand drawing
     const int INITIAL_HAND_SIZE = game_config::player_config::HAND_SIZE;

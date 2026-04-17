@@ -32,7 +32,7 @@ add_executable(project_null
         src/core/factory.cpp
         src/core/components/board.cpp
         src/core/components/player.cpp
-        src/engine/game_state.cpp
+        src/engine/match_state.cpp
         src/engine/construction_state.cpp
         src/engine/menu_state.cpp
         src/engine/state_manager.cpp
@@ -52,7 +52,7 @@ add_executable(project_null
         src/visual/widgets/match/widget_hand.cpp
         src/visual/widgets/match/widget_special_row.cpp
         src/visual/widgets/match/widget_graveyard.cpp
-        src/visual/managers/widget_manager_game.cpp
+        src/visual/managers/card_manager.cpp
         src/visual/widgets/match/widget_deck.cpp
         src/visual/widgets/match/widget_popup.cpp
         src/visual/widgets/match/widget_player_info.cpp
@@ -64,6 +64,9 @@ add_executable(project_null
         src/visual/widgets/construction/widget_card_pool.cpp
         src/visual/widgets/construction/widget_full_card.cpp
         src/visual/widgets/construction/widget_deck_list.cpp
+        src/visual/managers/widget_manager_construction.cpp
+        src/visual/managers/widget_manager_match.cpp
+        src/visual/managers/widget_manager_menu.cpp
 )
 
 # ------------------------------------------------------------------

@@ -12,7 +12,7 @@ enum class stances {PASSIVE, AGGRESSIVE, SUPPRESSIVE, DEFENSIVE, MAX_STANCES};
 
 class card_unit : public card {
 public:
-    card_unit(std::string card_id, std::string name, std::string faction_id, card_type c_type,
+    card_unit(std::string card_id, std::string name, faction f_id, card_type c_type,
         std::string rarity, bool is_unlocked, int strength, std::string range_type, int armor, int attack);
 
     std::unique_ptr<card> clone() const override;

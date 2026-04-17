@@ -3,7 +3,7 @@
 #include "../widget.h"
 #include "core/components/player.h"
 #include "visual/ui_types.h"
-#include "../../managers/widget_manager_game.h"
+#include "../../managers/card_manager.h"
 
 class widget_player_info : public widget {
 public:

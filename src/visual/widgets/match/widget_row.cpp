@@ -17,7 +17,7 @@ widget_row::widget_row(row_side side, row_type type)
     }
 }
 
-void widget_row::update_row(const board &game_board, widget_manager_game& manager) {
+void widget_row::update_row(const board &game_board, card_manager& manager) {
     if (type == row_type::SPECIAL) return;
     const auto& row_cards = game_board.get_row_cards(side, type);
 

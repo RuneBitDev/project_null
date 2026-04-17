@@ -77,6 +77,7 @@ bool factory::load_master_data() {
         std::string card_id     = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
         std::string name        = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
         std::string faction_id  = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+        faction f_id = get_faction(faction_id);
         std::string c_type_col  = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
         card_type c_type = get_card_type(c_type_col);
         std::string rarity      = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
@@ -90,10 +91,10 @@ bool factory::load_master_data() {
             int armor               = sqlite3_column_int(stmt, 9);
             int attack              = sqlite3_column_int(stmt, 10);
             card_library.push_back(std::make_unique<card_unit>(
-                card_id, name, faction_id, c_type, rarity, is_unlocked, strength, range_type, armor, attack));
+                card_id, name, f_id, c_type, rarity, is_unlocked, strength, range_type, armor, attack));
         } else {
             card_library.push_back(std::make_unique<card>(
-                card_id, name, faction_id, c_type, rarity, is_unlocked));
+                card_id, name, f_id, c_type, rarity, is_unlocked));
 
         }
     }
@@ -215,4 +216,16 @@ card_type factory::get_card_type(const std::string& col_data) {
     if (col_data == "SUPPORT") return card_type::SUPPORT;
     if (col_data == "LEADER") return card_type::LEADER;
     return card_type::UNKNOWN;
+}
+
+faction factory::get_faction(const std::string &col_data) {
+    if (col_data == "arasaka") return faction::ARASAKA;
+    if (col_data == "maelstrom") return faction::MAELSTROM;
+    if (col_data == "aldecaldos") return faction::ALDECALDOS;
+    if (col_data == "afterlife") return faction::AFTERLIFE;
+    if (col_data == "vodoo_boys") return faction::VODOO_BOYS;
+    if (col_data == "barghest") return faction::BARGHEST;
+    if (col_data == "nusa") return faction::NUSA;
+    return faction::NEUTRAL;
+
 }

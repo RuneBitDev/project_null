@@ -10,15 +10,15 @@
 class widget_card_pool : public widget {
 public:
 
-    widget_card_pool(std::string faction_id, const std::vector<card*>& pool, Rectangle bounds);
+    widget_card_pool(faction f_id, const std::vector<widget_full_card*>& pool, Rectangle bounds);
 
     void update(float dt) override;
     void draw() const override;
 
 
 private:
-    std::string faction_id;
-    std::vector<std::unique_ptr<widget_full_card>> grid_entries;
+    faction faction_id;
+    std::vector<widget_full_card*> grid_entries;
     Rectangle grid_bounds {};
 
     float scroll_y = 0.0f;

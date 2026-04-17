@@ -2,6 +2,8 @@
 #define PROJECT_NULL_TYPES_H
 #include <string>
 
+enum class faction { ARASAKA, MAELSTROM, ALDECALDOS, AFTERLIFE, VODOO_BOYS, BARGHEST, NUSA, NEUTRAL };
+
 // card specific types
 enum class value_type {STRENGTH, ARMOR, ATTACK};
 enum class card_type { UNIT, SPECIAL, SUPPORT, LEADER, UNKNOWN };

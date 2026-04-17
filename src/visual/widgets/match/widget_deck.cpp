@@ -9,7 +9,7 @@ void widget_deck::init_deck(row_side side) {
     this->side = side;
 }
 
-void widget_deck::update_from_deck(const deck &d, widget_manager_game &manager) {
+void widget_deck::update_from_deck(const deck &d, card_manager &manager) {
     this-> card_count = d.get_size();
 
     for (card* c : d.get_card_ptrs()) {
