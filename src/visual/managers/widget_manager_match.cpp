@@ -22,7 +22,7 @@ widget_manager_match::widget_manager_match(const player& p1, const player& p2, t
             ctx.position = card_position::DECK;
             ctx.face_up = false;
 
-            widget_card* w = c_manager->manage_card_widget(c, ctx);
+            widget_card* w = manage_card_widget(c, ctx);
 
             w->set_card_texture(tex_factory.get_texture_for_card(c->get_id()));
             w->set_bounds(deck_pos);
@@ -35,6 +35,10 @@ widget_manager_match::widget_manager_match(const player& p1, const player& p2, t
 
 void widget_manager_match::update(float dt) {
     update_buttons(dt);
+
+    for (auto& [key, value] : card_cache) {
+        value.update(dt);
+    }
 
     board_view.update(dt);
     hand_view.update(dt);
@@ -49,13 +53,13 @@ void widget_manager_match::update(float dt) {
 
 void widget_manager_match::sync_with_game(const render_context& ctx) {
 
-    board_view.update_from_game(ctx.b, *c_manager);
-    hand_view.update_from_player(ctx.p1, *c_manager);
-    hand_view.update_from_player_opponent(ctx.p2, *c_manager);
-    graveyard_p1.update_from_player(ctx.p1, *c_manager);
-    graveyard_p2.update_from_player(ctx.p2, *c_manager);
-    deck_p1.update_from_deck(ctx.p1.get_deck(), *c_manager);
-    deck_p2.update_from_deck(ctx.p2.get_deck(), *c_manager);
+    board_view.update_from_game(ctx.b, *this);
+    hand_view.update_from_player(ctx.p1, *this);
+    hand_view.update_from_player_opponent(ctx.p2, *this);
+    graveyard_p1.update_from_player(ctx.p1, *this);
+    graveyard_p2.update_from_player(ctx.p2, *this);
+    deck_p1.update_from_deck(ctx.p1.get_deck(), *this);
+    deck_p2.update_from_deck(ctx.p2.get_deck(), *this);
 
     player_context p_ctx{
         ctx.state,
@@ -82,14 +86,14 @@ void widget_manager_match::draw(renderer& ren) const {
     draw_buttons();
 
     // draw cards
-    for (auto& [ptr, widget] : card_cache) {
-        widget->draw();
+    for (const auto& [key, value] : card_cache) {
+        value.draw();
     }
 }
 
 void widget_manager_match::clear() {
     clear_buttons();
-    c_manager->clear_card_widgets();
+    clear_card_widgets();
 }
 
 void widget_manager_match::handle_input() {
@@ -98,5 +102,20 @@ void widget_manager_match::handle_input() {
 
 void widget_manager_match::add_popup(const std::string &text, Color color, float duration, popup_type p_type) {
     active_popups.push_back(std::make_unique<widget_popup>(text, color, duration, p_type));
+}
+
+widget_card* widget_manager_match::manage_card_widget(const card* card_ptr, card_context card_ctx) {
+    auto it = card_cache.find(card_ptr);
+    if (it == card_cache.end()) {
+        auto result = card_cache.emplace(card_ptr, widget_card(card_ptr, card_ctx));
+        return &result.first->second;
+    }
+
+    it->second.sync_card_context(card_ctx);
+    return &it->second;
+}
+
+void widget_manager_match::clear_card_widgets() {
+    card_cache.clear();
 }
 

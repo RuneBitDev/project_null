@@ -1,12 +1,11 @@
-#include "../../../../include/visual/widgets/match/widget_hand.h"
-
+#include "visual/widgets/match/widget_hand.h"
+#include "visual/managers/widget_manager_match.h"
 #include <cmath>
-
 #include "visual/layout_manager.h"
 #include "core/components/card_unit.h"
 #include "visual/render_config.h"
 
-void widget_hand::update_from_player(const player& p, card_manager& manager) {
+void widget_hand::update_from_player(const player& p, widget_manager_match& manager) {
     const auto& hand = p.get_hand();
     int total_cards = static_cast<int>(hand.size());
 
@@ -42,7 +41,7 @@ void widget_hand::update_from_player(const player& p, card_manager& manager) {
     }
 }
 
-void widget_hand::update_from_player_opponent(const player &p, card_manager &manager) {
+void widget_hand::update_from_player_opponent(const player &p, widget_manager_match& manager) {
     const auto& hand_cards = p.get_hand();
 
     for (size_t i = 0; i < hand_cards.size(); i++) {

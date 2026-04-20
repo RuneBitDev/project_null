@@ -1,7 +1,6 @@
-#include "../../../../include/visual/widgets/match/widget_board.h"
-
+#include "visual/widgets/match/widget_board.h"
+#include "visual/managers/widget_manager_match.h"
 #include <cmath>
-
 #include "visual/render_config.h"
 
 widget_board::widget_board() {
@@ -12,7 +11,7 @@ widget_board::widget_board() {
     }
 }
 
-void widget_board::update_from_game(const board &b, card_manager& manager) {
+void widget_board::update_from_game(const board &b, widget_manager_match& manager) {
     for (auto &row : unit_rows) {
         row.update_row(b, manager);
     }

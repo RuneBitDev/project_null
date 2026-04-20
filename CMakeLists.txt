@@ -52,7 +52,6 @@ add_executable(project_null
         src/visual/widgets/match/widget_hand.cpp
         src/visual/widgets/match/widget_special_row.cpp
         src/visual/widgets/match/widget_graveyard.cpp
-        src/visual/managers/card_manager.cpp
         src/visual/widgets/match/widget_deck.cpp
         src/visual/widgets/match/widget_popup.cpp
         src/visual/widgets/match/widget_player_info.cpp

@@ -3,15 +3,6 @@
 #include "raylib.h"
 #include "ui_types.h"
 #include "texture_factory.h"
-#include "widgets/match/widget_board.h"
-#include "widgets/match/widget_deck.h"
-#include "widgets/construction/widget_card_pool.h"
-#include "widgets/match/widget_game_log.h"
-#include "widgets/match/widget_graveyard.h"
-#include "widgets/match/widget_hand.h"
-#include "widgets/match/widget_player_info.h"
-#include "widgets/match/widget_popup.h"
-#include "visual/managers/card_manager.h"
 
 
 

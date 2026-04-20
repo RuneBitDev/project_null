@@ -5,11 +5,13 @@
 #include "widget_row.h"
 #include "widget_special_row.h"
 
+class widget_manager_match;
+
 class widget_board : public widget {
     public:
     widget_board();
 
-    void update_from_game(const board& b, card_manager& manager);
+    void update_from_game(const board& b, widget_manager_match& manager);
 
     void update(float dt) override;
     void draw() const override;

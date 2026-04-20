@@ -29,14 +29,16 @@ public:
     void handle_input() override;
 
     void sync_with_game(const render_context& ctx);
-    void add_popup(const std::string& text, Color color, float duration, popup_type p_type);
+    void add_popup(const std::string& text, Color color, float duration, popup_type p_type) override;
+
+    // card management
+    widget_card* manage_card_widget(const card* card_ptr, card_context card_ctx);
+    void clear_card_widgets();
 
 private:
 
-    std::map<const card*, std::unique_ptr<widget_card>> card_cache;
+    std::map<const card*, widget_card> card_cache;
     std::vector<std::unique_ptr<widget_popup>> active_popups;
-
-    card_manager* c_manager;
 
     // view containers
     widget_board board_view;

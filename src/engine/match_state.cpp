@@ -9,8 +9,7 @@
 match_state::match_state(player player1, player player2, factory& factory, texture_factory& texture_factory)
     : data_factory(factory), tex_factory(texture_factory) {
 
-    ui_manager = std::make_unique<widget_manager_match>(player1, player2, texture_factory);
-
+    // identify what needs to be loaded
     std::vector<std::string> cards_to_load;
     for (const auto& card : player1.get_deck().get_card_ptrs()) {
         cards_to_load.push_back(card->get_id());
@@ -18,7 +17,10 @@ match_state::match_state(player player1, player player2, factory& factory, textu
     for (const auto& card : player2.get_deck().get_card_ptrs()) {
         cards_to_load.push_back(card->get_id());
     }
+    // load before creating ui!!!!
     tex_factory.load_texture_for_cards(cards_to_load);
+    // then ui
+    ui_manager = std::make_unique<widget_manager_match>(player1, player2, texture_factory);
 
     match = std::make_unique<match_manager>(std::move(player1), std::move(player2));
 

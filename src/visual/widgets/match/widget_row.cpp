@@ -1,7 +1,6 @@
-#include "../../../../include/visual/widgets/match/widget_row.h"
-
+#include "visual/widgets/match/widget_row.h"
+#include "visual/managers/widget_manager_match.h"
 #include <cmath>
-
 #include "visual/layout_manager.h"
 #include "visual/render_config.h"
 
@@ -17,7 +16,7 @@ widget_row::widget_row(row_side side, row_type type)
     }
 }
 
-void widget_row::update_row(const board &game_board, card_manager& manager) {
+void widget_row::update_row(const board &game_board, widget_manager_match& manager) {
     if (type == row_type::SPECIAL) return;
     const auto& row_cards = game_board.get_row_cards(side, type);
 

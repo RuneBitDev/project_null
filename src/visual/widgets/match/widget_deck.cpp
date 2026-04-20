@@ -1,4 +1,5 @@
-#include "../../../../include/visual/widgets/match/widget_deck.h"
+#include "visual/widgets/match/widget_deck.h"
+#include "visual/managers/widget_manager_match.h"
 
 #include <cmath>
 
@@ -9,7 +10,7 @@ void widget_deck::init_deck(row_side side) {
     this->side = side;
 }
 
-void widget_deck::update_from_deck(const deck &d, card_manager &manager) {
+void widget_deck::update_from_deck(const deck &d, widget_manager_match& manager) {
     this-> card_count = d.get_size();
 
     for (card* c : d.get_card_ptrs()) {
