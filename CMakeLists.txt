@@ -46,7 +46,7 @@ add_executable(project_null
         src/core/combat_manager.cpp
         src/core/components/abilities/ability.cpp
         src/core/types.cpp
-        src/visual/widgets/match/widget_card.cpp
+        src/visual/widgets/widget_card.cpp
         src/visual/widgets/match/widget_row.cpp
         src/visual/widgets/match/widget_board.cpp
         src/visual/widgets/match/widget_hand.cpp
@@ -61,7 +61,6 @@ add_executable(project_null
         src/visual/ui_util.cpp
         src/engine/start_state.cpp
         src/visual/widgets/construction/widget_card_pool.cpp
-        src/visual/widgets/construction/widget_full_card.cpp
         src/visual/widgets/construction/widget_deck_list.cpp
         src/visual/managers/widget_manager_construction.cpp
         src/visual/managers/widget_manager_match.cpp

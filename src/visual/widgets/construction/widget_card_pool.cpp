@@ -1,12 +1,9 @@
 #include <utility>
 #include "visual/widgets/construction/widget_card_pool.h"
-
 #include <cmath>
 
-#include "visual/widgets/construction/widget_full_card.h"
-
-widget_card_pool::widget_card_pool(faction f_id, const std::vector<widget_full_card*>& pool, Rectangle bounds)
-    : faction_id(faction_id), grid_bounds(bounds), grid_entries(pool) {
+widget_card_pool::widget_card_pool(const faction f_id, const std::vector<widget_card*>& pool, Rectangle bounds)
+    : faction_id(f_id), grid_entries(pool), grid_bounds(bounds) {
 
     float padding = 30.0f;
     float cardW = 200.0f;
@@ -42,17 +39,26 @@ void widget_card_pool::update(float dt) {
         float wheel = GetMouseWheelMove();
         if (wheel != 0) {
             scroll_y += wheel * 80.0f;
-
-            // constrain scrolling
             if (scroll_y > 0) scroll_y = 0;
             if (scroll_y < -max_scroll) scroll_y = -max_scroll;
         }
+    }
+
+    // update every card's internal state with the scroll offset
+    for (auto& entry : grid_entries) {
+        Rectangle b = entry->get_base_bounds();
+        entry->sync_card_context({
+            { b.x, b.y + scroll_y, b.width, b.height },
+            card_position::POOL,
+            card_detail::MAX
+        });
+        entry->update(dt);
     }
 }
 
 void widget_card_pool::draw() const {
 
-    DrawRectangleRec(grid_bounds, { 10, 10, 20, 200 }); // Dark background
+    DrawRectangleRec(grid_bounds, { 10, 10, 20, 200 });
     DrawRectangleLinesEx(grid_bounds, 2.0f, Fade(GREEN, 0.3f));
 
     // corners
@@ -68,14 +74,12 @@ void widget_card_pool::draw() const {
     BeginScissorMode(grid_bounds.x, grid_bounds.y, grid_bounds.width, grid_bounds.height);
 
     for (const auto& entry : grid_entries) {
-        Rectangle b = entry->get_bounds();
-        Rectangle scroll_rect = { b.x, b.y + scroll_y, b.width, b.height };
+        // current_bounds ALREADY contains scroll offset from sync_card_context in update()
+        Rectangle b = entry->get_current_bounds();
 
-        if (scroll_rect.y + scroll_rect.height > grid_bounds.y &&
-            scroll_rect.y < grid_bounds.y + grid_bounds.height) {
-
-            entry->draw_at(scroll_rect);
-            }
+        if (b.y + b.height > grid_bounds.y && b.y < grid_bounds.y + grid_bounds.height) {
+            entry->draw_at(b);
+        }
     }
 
     EndScissorMode();

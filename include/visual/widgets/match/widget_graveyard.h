@@ -1,7 +1,7 @@
 #ifndef PROJECT_NULL_WIDGET_GRAVEYARD_H
 #define PROJECT_NULL_WIDGET_GRAVEYARD_H
 #include "../widget.h"
-#include "widget_card.h"
+#include "../widget_card.h"
 #include "core/components/player.h"
 #include "visual/render_config.h"
 

@@ -1,7 +1,8 @@
 #ifndef PROJECT_NULL_WIDGET_DECK_VIEW_H
 #define PROJECT_NULL_WIDGET_DECK_VIEW_H
-#include "widget_full_card.h"
+
 #include "visual/widgets/widget.h"
+#include "visual/widgets/widget_card.h"
 
 class widget_deck_list : public widget {
 public:
@@ -10,7 +11,7 @@ public:
     void draw() const override;
 
 private:
-    std::vector<widget_full_card> deck_entries;
+    std::vector<widget_card> deck_entries;
     Rectangle bounds;
 
 };

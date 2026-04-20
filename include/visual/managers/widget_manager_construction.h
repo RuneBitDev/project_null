@@ -16,13 +16,12 @@ public:
     void handle_input() override;
 
 private:
-    std::unordered_map<const card*, std::unique_ptr<widget_full_card>> card_cache;
+    std::unordered_map<const card*, std::unique_ptr<widget_card>> card_cache;
 
     std::unordered_map<faction, widget_card_pool> card_pool_view;
     std::unique_ptr<widget_deck_list> deck_list_view;
 
     faction current_faction = faction::ARASAKA;
-
 
 };
 

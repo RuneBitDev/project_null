@@ -2,7 +2,7 @@
 #define PROJECT_NULL_WIDGET_ROW_H
 #include <vector>
 #include "../widget.h"
-#include "widget_card.h"
+#include "../widget_card.h"
 #include "core/types.h"
 
 

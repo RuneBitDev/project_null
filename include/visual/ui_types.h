@@ -4,20 +4,18 @@
 #include "core/match_manager.h"
 
 enum button_type { CLICKABLE, HOLDABLE};
-enum class card_position { DECK, HAND, ROW, GRAVEYARD };
+enum class card_position { DECK, HAND, ROW, GRAVEYARD, POOL };
 enum class popup_type { BANNER };
+enum class card_detail { MIN, MAX, MATCH };
 
 
 struct card_context {
-    int strength = 0;
-    int virtual_strength = 0;
-    int armor = 0;
-    int attack = 0;
-    Color border_color = WHITE;
-    Rectangle card_bounds{};
+    Rectangle card_bounds;
     card_position position;
-
+    card_detail detail = card_detail::MATCH;
     bool face_up = false;
+    int strength, virtual_strength, armor, attack;
+    Color border_color = WHITE;
 };
 
 struct player_context {

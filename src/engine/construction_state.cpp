@@ -6,11 +6,15 @@
 construction_state::construction_state(factory &factory, texture_factory &texture_factory)
     : data_factory(factory), tex_factory(texture_factory) {
 
-    ui_manager = std::make_unique<widget_manager_construction>(factory);
-
+    std::vector<std::string> cards_to_load;
     for (auto& c : data_factory.get_card_library()) {
         card_pool.push_back(c.get());
+        cards_to_load.push_back(c->get_id());
     }
+
+    tex_factory.load_texture_for_cards(cards_to_load);
+
+    ui_manager = std::make_unique<widget_manager_construction>(factory);
 
 }
 
@@ -32,7 +36,7 @@ void construction_state::update(float dt, renderer &renderer) {
 }
 
 void construction_state::render(renderer &ren) {
-    ui_manager->draw(ren);
     ren.draw_construction();
+    ui_manager->draw(ren);
 }
 
